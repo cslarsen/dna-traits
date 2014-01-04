@@ -3,6 +3,10 @@
 #include <sstream>
 #include "dna.h"
 
+/**
+ * Reads a 23andme-formatted genome file.  It currently uses reference human
+ * assembly build 37 (annotation release 104).
+ */
 DNA parse_file(const std::string& name)
 {
   using namespace std;
@@ -32,4 +36,3 @@ DNA parse_file(const std::string& name)
 
   return dna;
 }
-
