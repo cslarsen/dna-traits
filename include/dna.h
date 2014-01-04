@@ -1,3 +1,4 @@
+#include <string>
 #include <iostream>
 #include <unordered_map>
 #include <inttypes.h>
@@ -22,3 +23,5 @@ typedef std::unordered_map<RSID, SNP> DNA;
 
 std::istream& operator>>(std::istream& i, Nucleotide& n);
 std::istream& operator>>(std::istream& i, BasePair& bp);
+
+DNA parse_file(const std::string& filename);
