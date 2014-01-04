@@ -12,9 +12,10 @@ int main(int argc, char** argv)
       auto dna = parse_file(file);
       cout << "done" << endl;
 
-      cout << "Read " << dna.size() << " SNPs" << endl;
-      cout << "rs7495174 " << dna["rs7495174"] << endl;
-      cout << "rs1805007 " << dna["rs1805007"] << endl;
+      cout << endl << "Read " << dna.size() << " SNPs" << endl << endl;
+
+      cout << dna["rs7495174"] << endl;
+      cout << dna["rs1805007"] << endl;
     }
     return 0;
   } catch ( const exception& e) {

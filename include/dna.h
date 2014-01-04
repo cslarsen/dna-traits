@@ -23,6 +23,7 @@ typedef uint32_t Position; // [0-9]+
 typedef std::string Chromosome; // [0-9]+|X|Y
 
 struct SNP {
+  ID id;
   BasePair genotype;
   Chromosome chromosome;
   Position position;

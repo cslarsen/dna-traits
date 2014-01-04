@@ -28,6 +28,7 @@ DNA parse_file(const std::string& name)
     }
 
     SNP snp;
+    snp.id = id;
     f >> snp.chromosome;
     f >> snp.position;
     f >> snp.genotype;

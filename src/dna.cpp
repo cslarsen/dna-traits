@@ -41,6 +41,7 @@ std::ostream& operator<<(std::ostream& o, SNP& snp)
 {
   return
     o << "{"
+      << snp.id << " "
       << "genotype=" << snp.genotype << " "
       << "chromosome=" << snp.chromosome << " "
       << "position=" << snp.position
