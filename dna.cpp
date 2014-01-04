@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "dna.h"
 
 int main(int argc, char** argv)
@@ -10,16 +11,16 @@ int main(int argc, char** argv)
       cout << "Reading " << file << " ... ";
       cout.flush();
       auto dna = parse_file(file);
-      cout << "done" << endl;
+      cout << "done" << endl << endl;
 
-      cout << endl << "Read " << dna.size() << " SNPs" << endl << endl;
+      cout << "Read " << dna.size() << " SNPs" << endl << endl;
 
       cout << dna["rs7495174"] << endl;
       cout << dna["rs1805007"] << endl;
     }
     return 0;
-  } catch ( const exception& e) {
-    cout << e.what() << endl;
+  }catch ( const exception& e) {
+    cout << endl << "Error: " << e.what() << endl;
     return 1;
   }
 }
