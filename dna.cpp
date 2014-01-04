@@ -1,54 +1,10 @@
 #include <fstream>
-#include <iostream>
-#include <unordered_map>
 #include <string>
 #include <sstream>
 #include <stdio.h>
-#include <inttypes.h>
+#include "dna.h"
 
 using namespace std;
-
-enum Nucleotide {
-  MISSING, A, G, C, T
-};
-
-typedef pair<Nucleotide, Nucleotide> BasePair;
-typedef uint32_t RSID;
-typedef uint32_t Position;
-typedef uint8_t Chromosome;
-
-struct SNP {
-  RSID rsid;
-  Position position;
-  BasePair genotype;
-  Chromosome chromosome;
-};
-
-typedef unordered_map<RSID, SNP> DNA;
-
-istream& operator>>(istream& i, Nucleotide& n)
-{
-  char ch;
-  i >> ch;
-
-  switch ( ch ) {
-    case 'A': n = A; break;
-    case 'G': n = G; break;
-    case 'C': n = C; break;
-    case 'T': n = T; break;
-    default: n = MISSING; break;
-  }
-
-  return i;
-}
-
-istream& operator>>(istream& i, BasePair& bp)
-{
-  i >> bp.first;
-  i >> bp.second;
-  return i;
-}
-
 
 DNA parse_file(const string& name)
 {

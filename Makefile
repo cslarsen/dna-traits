@@ -1,5 +1,5 @@
 CXX = /usr/local-gcc/bin/c++
-CXXFLAGS = --std=c++11 -Wall -O4 -march=native -mtune=native -fomit-frame-pointer
+CXXFLAGS = -Iinclude --std=c++11 -Wall -O4 -march=native -mtune=native -fomit-frame-pointer
 TARGETS = dna
 
 run: dna
