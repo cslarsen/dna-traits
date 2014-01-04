@@ -27,3 +27,4 @@ Places of interest
 
 * SNPedia, http://snpedia.com
 * OpenSNP, http://opensnp.org/genotypes
+* dbSNP, http://www.ncbi.nlm.nih.gov/SNP/

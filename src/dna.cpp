@@ -10,7 +10,7 @@ std::istream& operator>>(std::istream& i, Nucleotide& n)
     case 'G': n = G; break;
     case 'C': n = C; break;
     case 'T': n = T; break;
-    default: n = MISSING; break;
+    case '-': default: n = NONE; break;
   }
 
   return i;
@@ -18,7 +18,31 @@ std::istream& operator>>(std::istream& i, Nucleotide& n)
 
 std::istream& operator>>(std::istream& i, BasePair& bp)
 {
-  i >> bp.first;
-  i >> bp.second;
-  return i;
+  return i >> bp.first >> bp.second;
+}
+
+std::ostream& operator<<(std::ostream& o, Nucleotide& n)
+{
+  switch ( n ) {
+    case A: return o << 'A';
+    case G: return o << 'G';
+    case C: return o << 'C';
+    case T: return o << 'T';
+    default: return o << '-';
+  }
+}
+
+std::ostream& operator<<(std::ostream& o, BasePair& bp)
+{
+  return o << bp.first << bp.second;
+}
+
+std::ostream& operator<<(std::ostream& o, SNP& snp)
+{
+  return
+    o << "{"
+      << "genotype=" << snp.genotype << " "
+      << "chromosome=" << snp.chromosome << " "
+      << "position=" << snp.position
+      << "}";
 }

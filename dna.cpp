@@ -5,11 +5,16 @@ int main(int argc, char** argv)
   using namespace std;
 
   try {
-    for ( int n=1; n<argc; ++n ) {
+    for ( auto n=1; n<argc; ++n ) {
       auto file = argv[n];
-      cout << "Reading " << file << endl;
+      cout << "Reading " << file << " ... ";
+      cout.flush();
       auto dna = parse_file(file);
-      cout << "Done" << endl;
+      cout << "done" << endl;
+
+      cout << "Read " << dna.size() << " SNPs" << endl;
+      cout << "rs7495174 " << dna["rs7495174"] << endl;
+      cout << "rs1805007 " << dna["rs1805007"] << endl;
     }
     return 0;
   } catch ( const exception& e) {

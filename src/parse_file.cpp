@@ -1,3 +1,4 @@
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -17,21 +18,21 @@ DNA parse_file(const std::string& name)
   if ( !f.is_open() )
     throw runtime_error("Could not open " + name);
 
-  string token;
-  while ( f >> token ) {
+  string id;
+  while ( f >> id ) {
 
     // if comment, skip rest of line
-    if ( token[0] == '#' ) {
-      getline(f, token);
+    if ( id[0] == '#' ) {
+      getline(f, id);
       continue;
     }
 
     SNP snp;
-    stringstream(token) >> snp.rsid;
     f >> snp.chromosome;
     f >> snp.position;
     f >> snp.genotype;
-    dna.insert({snp.rsid, snp});
+
+    dna.insert({id, snp});
   }
 
   return dna;
