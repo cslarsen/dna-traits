@@ -21,3 +21,9 @@ Author
 
 Christian Stigen Larsen,
 http://csl.name
+
+Places of interest
+------------------
+
+* SNPedia, http://snpedia.com
+* OpenSNP, http://opensnp.org/genotypes
