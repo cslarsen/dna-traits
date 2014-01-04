@@ -15,8 +15,13 @@ int main(int argc, char** argv)
 
       cout << "Read " << dna.size() << " SNPs" << endl << endl;
 
-      cout << dna["rs7495174"] << endl;
-      cout << dna["rs1805007"] << endl;
+      cout << "Example SNPs:" << endl
+           << dna["rs7495174"] << endl
+           << dna["rs1805007"] << endl
+           << dna["rs1800401"] << endl
+           << endl;
+
+      summary(dna);
     }
     return 0;
   }catch ( const exception& e) {

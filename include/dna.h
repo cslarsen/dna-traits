@@ -38,3 +38,4 @@ std::ostream& operator<<(std::ostream&, BasePair&);
 std::ostream& operator<<(std::ostream&, SNP&);
 
 DNA parse_file(const std::string& filename);
+void summary(const DNA&);
