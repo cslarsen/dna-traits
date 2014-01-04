@@ -11,6 +11,16 @@ Supported file formats
 
 Currently only text files from 23andme are supported.
 
+Usage
+-----
+
+Build the sources by using `make -j32 dna`, save your 23andme genome as
+`genome.txt` and run
+
+    ./dna genome.txt
+
+And you should get some output.
+
 License
 -------
 
