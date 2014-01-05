@@ -35,32 +35,31 @@ and you should get some output like
     Read 960613 SNPs
 
     Example SNPs:
-    {rs7495174 genotype=AA chromosome=15 position=28344238}
-    {rs1805007 genotype=CC chromosome=16 position=89986117}
-    {rs1800401 genotype=GG chromosome=15 position=28260053}
+      {rs7495174 genotype=AA chromosome=1 position=28344238}
+      {rs1805007 genotype=CC chromosome=1 position=89986117}
+      {rs1800401 genotype=GG chromosome=1 position=28260053}
 
-    EXAMPLE FINDINGS
+    Summary of findings:
+      Gender (has Y-chromosome): male
+      Blue eyes (criteria gs237): Yes
 
-    Gender: male
-    Blue eye color? Yes
-
-    real         4.11
-    user         3.98
+    real         4.71
+    user         4.59
     sys          0.11
-      89391104  maximum resident set size
+      73793536  maximum resident set size
              0  average shared memory size
              0  average unshared data size
              0  average unshared stack size
-         21841  page reclaims
-             0  page faults
+         18024  page reclaims
+             9  page faults
              0  swaps
              0  block input operations
              0  block output operations
              0  messages sent
              0  messages received
              0  signals received
-             0  voluntary context switches
-           226  involuntary context switches
+             1  voluntary context switches
+           270  involuntary context switches
 
 License
 -------

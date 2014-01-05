@@ -42,8 +42,10 @@ void summary(DNA& dna)
 {
   using namespace std;
 
-  cout << "EXAMPLE FINDINGS" << endl << endl;
-  cout << "Gender: " << gender(dna) << endl;
-  cout << "Blue eye color? " << (blue_eyes(dna)? "Yes" : "No") << endl;
-  cout << endl;
+  cout
+    << "Summary of findings:" << endl
+    << "  Gender (has Y-chromosome): " << gender(dna) << endl
+    << "  Blue eyes (criteria gs237): " <<
+       (blue_eyes(dna)? "Yes" : "No") << endl
+    << endl;
 }
