@@ -11,10 +11,9 @@ static bool has_key(const DNA& haystack, const ID& needle)
 /*
  * Compare positively oriented genotype.
  */
-static bool eqpos(const SNP& snp, const Nucleotide& n1, const Nucleotide& n2)
+static bool eqpos(const SNP& snp, const Genotype& genotype)
 {
-  return snp.genotype.first == n1 &&
-         snp.genotype.second == n2;
+  return snp.genotype == genotype;
 }
 
 /*
@@ -34,10 +33,10 @@ static Nucleotide complement(const Nucleotide& n)
 /*
  * Compare negatively oriented genotype.
  */
-static bool eqmin(const SNP& snp, const Nucleotide& n1, const Nucleotide& n2)
+static bool eqmin(const SNP& snp, const Genotype& genotype)
 {
-  return snp.genotype.first == complement(n1) &&
-         snp.genotype.second == complement(n2);
+  return snp.genotype.first == complement(genotype.first) &&
+         snp.genotype.second == complement(genotype.second);
 }
 
 /**
@@ -62,12 +61,12 @@ string gender(const DNA& dna)
  */
 bool blue_eyes(DNA& dna)
 {
-  return eqpos(dna["rs4778241"], C, C)
-      && eqpos(dna["rs12913832"], G, G)
-      && eqpos(dna["rs7495174"], A, A)
-      && eqpos(dna["rs8028689"], T, T)
-      && eqpos(dna["rs7183877"], C, C)
-      && eqmin(dna["rs1800401"], C, C);
+  return eqpos(dna["rs4778241"], CC)
+      && eqpos(dna["rs12913832"], GG)
+      && eqpos(dna["rs7495174"], AA)
+      && eqpos(dna["rs8028689"], TT)
+      && eqpos(dna["rs7183877"], CC)
+      && eqmin(dna["rs1800401"], CC);
 }
 
 void summary(DNA& dna)

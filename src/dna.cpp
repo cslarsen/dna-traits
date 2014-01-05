@@ -16,7 +16,7 @@ std::istream& operator>>(std::istream& i, Nucleotide& n)
   return i;
 }
 
-std::istream& operator>>(std::istream& i, BasePair& bp)
+std::istream& operator>>(std::istream& i, Genotype& bp)
 {
   i >> bp.first;
 
@@ -38,7 +38,7 @@ std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
   }
 }
 
-std::ostream& operator<<(std::ostream& o, const BasePair& bp)
+std::ostream& operator<<(std::ostream& o, const Genotype& bp)
 {
   return o << bp.first << bp.second;
 }
