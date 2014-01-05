@@ -85,3 +85,25 @@ std::ostream& operator<<(std::ostream& o, const ID& id)
 
   return o << id.index;
 }
+
+/**
+ * Compare genotypes of same orientation.
+ */
+bool operator==(const Genotype& lhs, const Genotype& rhs)
+{
+  return lhs.first == rhs.first && lhs.second == rhs.second;
+}
+
+/**
+ * Returns the complement nucleotide.
+ */
+Nucleotide complement(const Nucleotide& n)
+{
+  switch ( n ) {
+    case A: return T;
+    case C: return G;
+    case G: return C;
+    case T: return A;
+    case NONE: return NONE;
+  }
+}

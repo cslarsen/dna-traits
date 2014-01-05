@@ -8,37 +8,6 @@ static bool has_key(const DNA& haystack, const ID& needle)
   return haystack.snps.find(needle) != haystack.snps.end();
 }
 
-/*
- * Compare positively oriented genotype.
- */
-static bool eqpos(const SNP& snp, const Genotype& genotype)
-{
-  return snp.genotype == genotype;
-}
-
-/*
- * Flip orientation
- */
-static Nucleotide complement(const Nucleotide& n)
-{
-  switch ( n ) {
-    case A: return T;
-    case C: return G;
-    case G: return C;
-    case T: return A;
-    default: return NONE;
-  }
-}
-
-/*
- * Compare negatively oriented genotype.
- */
-static bool eqmin(const SNP& snp, const Genotype& genotype)
-{
-  return snp.genotype.first == complement(genotype.first) &&
-         snp.genotype.second == complement(genotype.second);
-}
-
 /**
  * Male if we have a Y-chromosome.
  */
@@ -61,13 +30,13 @@ string gender(const DNA& dna)
  */
 bool blue_eyes(DNA& dna)
 {
-  return eqpos(dna["rs4778241"], CC)
-      && eqpos(dna["rs12913832"], GG)
-      && eqpos(dna["rs7495174"], AA)
-      && eqpos(dna["rs8028689"], TT)
-      && eqpos(dna["rs7183877"], CC)
-      && eqmin(dna["rs1800401"], CC);
-}
+  return dna["rs4778241"] == CC
+      && dna["rs12913832"] == GG
+      && dna["rs7495174"] == AA
+      && dna["rs8028689"] == TT
+      && dna["rs7183877"] == CC
+      && dna["rs1800401"] == ~CC;
+ }
 
 void summary(DNA& dna)
 {

@@ -8,17 +8,22 @@ enum Nucleotide {
   NONE, A, G, C, T
 };
 
-/*
- * TODO:
- *
- * Improve data structure:
- *
- *   - RSID/internal id should only occupy 32-bits
- *   - Chromosome should only occupy 6-8 bits (numbers 1-22, X, Y)
- *
- */
+Nucleotide complement(const Nucleotide& n);
 
-typedef std::pair<Nucleotide, Nucleotide> Genotype; // [AGCT-]
+struct Genotype {
+  Nucleotide first, second; // [AGCT-]
+
+  Genotype(const Nucleotide& a = NONE,
+           const Nucleotide& b = NONE)
+    : first(a), second(b)
+  {
+  }
+
+  friend Genotype operator~(const Genotype& g)
+  {
+    return Genotype(complement(g.first), complement(g.second));
+  }
+};
 
 // Some shorthand constants
 const Genotype AA (A, A);
@@ -83,20 +88,20 @@ struct SNP {
 struct DNA {
   std::unordered_map<ID, SNP> snps;
 
-  const SNP operator[](const ID& id) const
+  const Genotype operator[](const ID& id) const
   {
-    return snps.at(id);
+    return snps.at(id).genotype;
   }
 };
 
+bool operator==(const Genotype& lhs, const Genotype& rhs);
 bool operator==(const ID&, const ID&);
-std::istream& operator>>(std::istream&, ID&);
 std::istream& operator>>(std::istream&, Genotype&);
+std::istream& operator>>(std::istream&, ID&);
 std::istream& operator>>(std::istream&, Nucleotide&);
-std::ostream& operator<<(std::ostream&, const ID& id);
 std::ostream& operator<<(std::ostream&, const Genotype&);
+std::ostream& operator<<(std::ostream&, const ID& id);
 std::ostream& operator<<(std::ostream&, const Nucleotide&);
 std::ostream& operator<<(std::ostream&, const SNP&);
-
 void parse_file(const std::string& filename, DNA&);
 void summary(DNA&);

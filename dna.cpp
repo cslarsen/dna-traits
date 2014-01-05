@@ -20,9 +20,9 @@ int main(int argc, char** argv)
       cout << "Read " << dna.snps.size() << " SNPs" << endl << endl;
 
       cout << "Example SNPs:" << endl
-           << dna["rs7495174"] << endl
-           << dna["rs1805007"] << endl
-           << dna["rs1800401"] << endl
+           << dna.snps["rs7495174"] << endl
+           << dna.snps["rs1805007"] << endl
+           << dna.snps["rs1800401"] << endl
            << endl;
 
       summary(dna);
