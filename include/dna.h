@@ -145,4 +145,4 @@ std::ostream& operator<<(std::ostream&, const ID& id);
 std::ostream& operator<<(std::ostream&, const Nucleotide&);
 std::ostream& operator<<(std::ostream&, const SNP&);
 void parse_file(const std::string& filename, DNA&);
-void summary(DNA&);
+void summary(const DNA&);

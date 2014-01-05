@@ -26,17 +26,17 @@ static bool has_ychromo(const DNA& dna)
  * Has blue eye color? gs237 criteria http://snpedia.com/index.php/Gs237/criteria
  * For more info, see http://snpedia.com/index.php/Eye_color
  */
-static bool gs237(DNA& dna)
+static bool gs237(const DNA& dna)
 {
-  return dna["rs4778241"] == CC
-      && dna["rs12913832"] == GG
-      && dna["rs7495174"] == AA
-      && dna["rs8028689"] == TT
-      && dna["rs7183877"] == CC
-      && dna["rs1800401"] == ~CC;
- }
+  return dna[ "rs4778241"] ==  CC
+      && dna["rs12913832"] ==  GG
+      && dna[ "rs7495174"] ==  AA
+      && dna[ "rs8028689"] ==  TT
+      && dna[ "rs7183877"] ==  CC
+      && dna[ "rs1800401"] == ~CC;
+}
 
-void summary(DNA& dna)
+void summary(const DNA& dna)
 {
   using namespace std;
 

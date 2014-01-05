@@ -60,6 +60,41 @@ and you should get some output like
              1  voluntary context switches
            546  involuntary context switches
 
+How to add your own rules
+-------------------------
+
+Here is how we determine/guess/approximate if the person in question has
+blue eyes:
+
+    static bool gs237(const DNA& dna)
+    {
+      return dna[ "rs4778241"] ==  CC
+          && dna["rs12913832"] ==  GG
+          && dna[ "rs7495174"] ==  AA
+          && dna[ "rs8028689"] ==  TT
+          && dna[ "rs7183877"] ==  CC
+          && dna[ "rs1800401"] == ~CC;
+    }
+
+If you look up the corresponding `gs237` criteria on SNPedia -- at
+http://snpedia.com/index.php/Gs237/criteria -- you can see that the code is
+almost completely the same as they state:
+
+    and(
+      rs4778241(C;C),
+      rs12913832(G;G),
+      rs7495174(A;A),
+      rs8028689(T;T),
+      rs7183877(C;C),
+      rs1800401(C;C))
+
+The only thing to note is each SNP's orientation. 23andme uses positive
+orientation, while SNPedia has varying orientation. That's why we flip the
+orientation in the last check for the `rs1800401` SNP 
+
+You can make your own rules like this. (Later on, I should put the rules in
+a text file.)
+
 License
 -------
 
