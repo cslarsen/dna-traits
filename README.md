@@ -4,12 +4,21 @@ dna-traits
 dna-traits infers various traits from a human genome by using data available
 from SNPedia.
 
-It's very much a personal hobby-project to teach me more about DNA.
+This is very much a personal hobby-project to teach me more about DNA and
+bioinformatics.
 
-Supported file formats
-----------------------
+Current status
+--------------
 
 Currently only text files from 23andme are supported.
+You can run it on a genome and it will report if this person has blue eyes
+and the person's gender. Not very interesting at the moment, but still this
+is enough code to be able to report on almost everything SNPedia has to
+offer (medical conditions, traits, etc.).
+
+Other than that, the code is a bit messy, the parsing is extremely slow (as
+slow as the Python prototype), etc.
+
 
 Usage
 -----
@@ -19,22 +28,53 @@ Build the sources by using `make -j32 dna`, save your 23andme genome as
 
     ./dna genome.txt
 
-And you should get some output.
+and you should get some output like
+
+    Reading genome.txt ... done
+
+    Read 960613 SNPs
+
+    Example SNPs:
+    {rs7495174 genotype=AA chromosome=15 position=28344238}
+    {rs1805007 genotype=CC chromosome=16 position=89986117}
+    {rs1800401 genotype=GG chromosome=15 position=28260053}
+
+    EXAMPLE FINDINGS
+
+    Gender: male
+    Blue eye color? Yes
+
+    real         4.11
+    user         3.98
+    sys          0.11
+      89391104  maximum resident set size
+             0  average shared memory size
+             0  average unshared data size
+             0  average unshared stack size
+         21841  page reclaims
+             0  page faults
+             0  swaps
+             0  block input operations
+             0  block output operations
+             0  messages sent
+             0  messages received
+             0  signals received
+             0  voluntary context switches
+           226  involuntary context switches
 
 License
 -------
 
-Public domain
+GPL v3 or later.
 
 Author
 ------
 
-Christian Stigen Larsen,
-http://csl.name
+Christian Stigen Larsen, http://csl.name
 
 Places of interest
 ------------------
 
-* SNPedia, http://snpedia.com
-* OpenSNP, http://opensnp.org/genotypes
-* dbSNP, http://www.ncbi.nlm.nih.gov/SNP/
+  * SNPedia, http://snpedia.com
+  * OpenSNP, http://opensnp.org/genotypes
+  * dbSNP, http://www.ncbi.nlm.nih.gov/SNP/
