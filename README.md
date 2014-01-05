@@ -68,12 +68,12 @@ blue eyes:
 
     static bool gs237(const DNA& dna)
     {
-      return dna[ "rs4778241"] ==  CC
+      return dna["rs4778241"]  ==  CC
           && dna["rs12913832"] ==  GG
-          && dna[ "rs7495174"] ==  AA
-          && dna[ "rs8028689"] ==  TT
-          && dna[ "rs7183877"] ==  CC
-          && dna[ "rs1800401"] == ~CC;
+          && dna["rs7495174"]  ==  AA
+          && dna["rs8028689"]  ==  TT
+          && dna["rs7183877"]  ==  CC
+          && dna["rs1800401"]  == ~CC;
     }
 
 If you look up the corresponding `gs237` criteria on SNPedia -- at
