@@ -17,12 +17,12 @@ int main(int argc, char** argv)
       cout << "done" << endl << endl;
       cout.flush();
 
-      cout << "Read " << dna.size() << " SNPs" << endl << endl;
+      cout << "Read " << dna.snps.size() << " SNPs" << endl << endl;
 
       cout << "Example SNPs:" << endl
-           << dna[ID("rs7495174")] << endl
-           << dna[ID("rs1805007")] << endl
-           << dna[ID("rs1800401")] << endl
+           << dna["rs7495174"] << endl
+           << dna["rs1805007"] << endl
+           << dna["rs1800401"] << endl
            << endl;
 
       summary(dna);

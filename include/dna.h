@@ -20,6 +20,9 @@ enum Nucleotide {
 
 typedef std::pair<Nucleotide, Nucleotide> BasePair; // [AGCT-]
 
+// Some constants
+//const BasePair AA(Nucleotide::A, Nucleotide::A);
+
 #pragma pack(1)
 struct ID {
   enum Type {
@@ -28,6 +31,10 @@ struct ID {
   } type : 1;
 
   uint32_t index;
+
+  ID(const char* s) : ID(std::string(s))
+  {
+  }
 
   ID(const std::string& s)
   {
@@ -64,11 +71,6 @@ struct DNA {
   const SNP operator[](const ID& id) const
   {
     return snps.at(id);
-  }
-
-  const std::size_t size() const
-  {
-    return snps.size();
   }
 };
 
