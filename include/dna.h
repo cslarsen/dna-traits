@@ -10,8 +10,9 @@ enum Nucleotide {
 
 Nucleotide complement(const Nucleotide& n);
 
-struct Genotype {
-  Nucleotide first, second; // [AGCT-]
+struct Genotype { // should only occupy 5 bits, i.e. 1 byte
+  Nucleotide first;
+  Nucleotide second;
 
   Genotype(const Nucleotide& a = NONE,
            const Nucleotide& b = NONE)
@@ -43,14 +44,15 @@ const Genotype GT (G, T);
 const Genotype GC (G, C);
 const Genotype GG (G, G);
 
-#pragma pack(1)
+// Can most likely pack into a 32-bit value
+#pragma pack(2)
 struct ID {
+  std::uint32_t index;
+
   enum Type {
     RSID,
     INTERNAL_ID
   } type : 1;
-
-  std::uint32_t index;
 
   ID(const char* s) : ID(std::string(s))
   {
@@ -61,7 +63,7 @@ struct ID {
     std::stringstream(s) >> *this;
   }
 
-  ID() : type(RSID), index(0)
+  ID() : index(0), type(RSID)
   {
   }
 };
@@ -76,7 +78,46 @@ struct std::hash<ID> {
 };
 
 typedef std::uint32_t Position; // [0-9]+
-typedef std::string Chromosome; // [0-9]+|X|Y|MT
+
+struct Chromosome { // [0-9]+|X|Y|MT
+  std::uint8_t type; // 0--22, 23=X, 24=Y, 25=MT
+
+  Chromosome() : type(0)
+  {
+  }
+
+  Chromosome(const std::string& s)
+  {
+    if ( isdigit(s[0]) )
+      std::stringstream(s) >> type;
+    else if ( s == "X" )
+      type = 23;
+    else if ( s == "Y" )
+      type = 24;
+    else if ( s == "MT" )
+      type = 25;
+    else
+      throw std::runtime_error("Unknown chromosome type: " + s);
+  }
+
+  friend std::ostream& operator<<(std::ostream& o, const Chromosome& c)
+  {
+    switch ( c.type ) {
+    default: return o << c.type;
+    case 23: return o << "X";
+    case 24: return o << "Y";
+    case 25: return o << "MT";
+    }
+  }
+
+  friend std::istream& operator>>(std::istream& i, Chromosome& c)
+  {
+    std::string s;
+    i >> s;
+    c = Chromosome(s);
+    return i;
+  }
+};
 
 struct SNP {
   ID id;

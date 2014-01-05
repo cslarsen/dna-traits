@@ -19,6 +19,13 @@ int main(int argc, char** argv)
 
       cout << "Read " << dna.snps.size() << " SNPs" << endl << endl;
 
+      cout << "Size of SNP: " << sizeof(SNP) << endl
+           << "Size of Chromosome: " << sizeof(Chromosome) << endl
+           << "Size of Genotype: " << sizeof(Genotype) << endl
+           << "Size of ID: " << sizeof(ID) << endl
+           << "Size of Position: " << sizeof(Position) << endl
+           << endl;
+
       cout << "Example SNPs:" << endl
            << dna.snps["rs7495174"] << endl
            << dna.snps["rs1805007"] << endl
