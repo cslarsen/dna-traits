@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
-#include <inttypes.h>
+#include <cstdint>
 
 enum Nucleotide {
   NONE, A, G, C, T
@@ -50,7 +50,7 @@ struct ID {
     INTERNAL_ID
   } type : 1;
 
-  uint32_t index;
+  std::uint32_t index;
 
   ID(const char* s) : ID(std::string(s))
   {
@@ -70,12 +70,12 @@ template<>
 struct std::hash<ID> {
   std::size_t operator()(const ID& id) const
   {
-    return std::hash<uint32_t>()(id.index)
+    return std::hash<std::uint32_t>()(id.index)
          ^ ((id.type & 0x3) << 29);
   }
 };
 
-typedef uint32_t Position; // [0-9]+
+typedef std::uint32_t Position; // [0-9]+
 typedef std::string Chromosome; // [0-9]+|X|Y|MT
 
 struct SNP {
