@@ -19,7 +19,6 @@ offer (medical conditions, traits, etc.).
 Other than that, the code is a bit messy, the parsing is extremely slow (as
 slow as the Python prototype), etc.
 
-
 Usage
 -----
 
@@ -40,17 +39,17 @@ and you should get some output like
       {rs1800401 genotype=GG chromosome=1 position=28260053}
 
     Summary of findings:
-      Gender (has Y-chromosome): male
+      Gender (has Y-chromosome): Male
       Blue eyes (criteria gs237): Yes
 
-    real         4.71
-    user         4.59
+    real         4.70
+    user         4.57
     sys          0.11
-      73793536  maximum resident set size
+      73789440  maximum resident set size
              0  average shared memory size
              0  average unshared data size
              0  average unshared stack size
-         18024  page reclaims
+         18023  page reclaims
              9  page faults
              0  swaps
              0  block input operations
@@ -59,7 +58,7 @@ and you should get some output like
              0  messages received
              0  signals received
              1  voluntary context switches
-           270  involuntary context switches
+           546  involuntary context switches
 
 License
 -------

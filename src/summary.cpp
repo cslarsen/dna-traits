@@ -11,24 +11,22 @@ static bool has_key(const DNA& haystack, const ID& needle)
 /**
  * Male if we have a Y-chromosome.
  */
-string gender(const DNA& dna)
+static bool has_ychromo(const DNA& dna)
 {
   // In case some snips weren't sequenced, query several known ones in the
   // Y-chromosome
-  auto male = has_key(dna, "i4000095")
-           || has_key(dna, "rs9786543")
-           || has_key(dna, "rs9786142")
-           || has_key(dna, "rs35679774")
-           || has_key(dna, "rs9724556");
-
-  return male? "male" : "female";
+  return has_key(dna, "i4000095")
+      || has_key(dna, "rs9786543")
+      || has_key(dna, "rs9786142")
+      || has_key(dna, "rs35679774")
+      || has_key(dna, "rs9724556");
 }
 
 /**
- * Guess eye-color based on http://snpedia.com/index.php/Gs237/criteria
+ * Has blue eye color? gs237 criteria http://snpedia.com/index.php/Gs237/criteria
  * For more info, see http://snpedia.com/index.php/Eye_color
  */
-bool blue_eyes(DNA& dna)
+static bool gs237(DNA& dna)
 {
   return dna["rs4778241"] == CC
       && dna["rs12913832"] == GG
@@ -44,8 +42,9 @@ void summary(DNA& dna)
 
   cout
     << "Summary of findings:" << endl
-    << "  Gender (has Y-chromosome): " << gender(dna) << endl
-    << "  Blue eyes (criteria gs237): " <<
-       (blue_eyes(dna)? "Yes" : "No") << endl
+    << "  Gender (has Y-chromosome): "
+    << (has_ychromo(dna)? "Male" : "Female") << endl
+    << "  Blue eyes (criteria gs237): "
+    << (gs237(dna)? "Yes" : "No") << endl
     << endl;
 }
