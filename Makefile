@@ -1,4 +1,4 @@
-CXXPATH = /usr/local-gcc/bin
+CXXPATH = /usr/bin
 CXX = $(CXXPATH)/c++
 CC = $(CXXPATH)/c++
 CXXFLAGS = -Iinclude --std=c++11 -Wall \

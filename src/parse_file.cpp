@@ -8,17 +8,16 @@
  * Reads a 23andme-formatted genome file.  It currently uses reference human
  * assembly build 37 (annotation release 104).
  */
-DNA parse_file(const std::string& name)
+void parse_file(const std::string& name, DNA& dna)
 {
   using namespace std;
 
-  DNA dna;
   ifstream f(name);
 
   if ( !f.is_open() )
     throw runtime_error("Could not open " + name);
 
-  string id;
+  string id, foo;
   while ( f >> id ) {
 
     // if comment, skip rest of line
@@ -28,13 +27,11 @@ DNA parse_file(const std::string& name)
     }
 
     SNP snp;
-    snp.id = id;
+    std::stringstream(id) >> snp.id;
     f >> snp.chromosome;
     f >> snp.position;
     f >> snp.genotype;
 
-    dna.insert({id, snp});
+    dna.snps.insert({id, snp});
   }
-
-  return dna;
 }

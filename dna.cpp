@@ -10,19 +10,24 @@ int main(int argc, char** argv)
       auto file = argv[n];
       cout << "Reading " << file << " ... ";
       cout.flush();
-      auto dna = parse_file(file);
+
+      DNA dna;
+      parse_file(file, dna);
+
       cout << "done" << endl << endl;
+      cout.flush();
 
       cout << "Read " << dna.size() << " SNPs" << endl << endl;
 
       cout << "Example SNPs:" << endl
-           << dna["rs7495174"] << endl
-           << dna["rs1805007"] << endl
-           << dna["rs1800401"] << endl
+           << dna[ID("rs7495174")] << endl
+           << dna[ID("rs1805007")] << endl
+           << dna[ID("rs1800401")] << endl
            << endl;
 
       summary(dna);
     }
+
     return 0;
   }catch ( const exception& e) {
     cout << endl << "Error: " << e.what() << endl;

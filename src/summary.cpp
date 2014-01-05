@@ -5,7 +5,7 @@ using namespace std;
 
 static bool has_key(const DNA& haystack, const ID& needle)
 {
-  return haystack.find(needle) != haystack.end();
+  return haystack.snps.find(needle) != haystack.snps.end();
 }
 
 /*
@@ -47,11 +47,11 @@ string gender(const DNA& dna)
 {
   // In case some snips weren't sequenced, query several known ones in the
   // Y-chromosome
-  auto male = has_key(dna, "i4000095")
-           || has_key(dna, "rs9786543")
-           || has_key(dna, "rs9786142")
-           || has_key(dna, "rs35679774")
-           || has_key(dna, "rs9724556");
+  auto male = has_key(dna, ID("i4000095"))
+           || has_key(dna, ID("rs9786543"))
+           || has_key(dna, ID("rs9786142"))
+           || has_key(dna, ID("rs35679774"))
+           || has_key(dna, ID("rs9724556"));
 
   return male? "male" : "female";
 }
@@ -60,17 +60,17 @@ string gender(const DNA& dna)
  * Guess eye-color based on http://snpedia.com/index.php/Gs237/criteria
  * For more info, see http://snpedia.com/index.php/Eye_color
  */
-bool blue_eyes(const DNA& dna)
+bool blue_eyes(DNA& dna)
 {
-  return eqpos(dna.at("rs4778241"), C, C)
-      && eqpos(dna.at("rs12913832"), G, G)
-      && eqpos(dna.at("rs7495174"), A, A)
-      && eqpos(dna.at("rs8028689"), T, T)
-      && eqpos(dna.at("rs7183877"), C, C)
-      && eqmin(dna.at("rs1800401"), C, C);
+  return eqpos(dna.snps.at(ID("rs4778241")), C, C)
+      && eqpos(dna.snps.at(ID("rs12913832")), G, G)
+      && eqpos(dna.snps.at(ID("rs7495174")), A, A)
+      && eqpos(dna.snps.at(ID("rs8028689")), T, T)
+      && eqpos(dna.snps.at(ID("rs7183877")), C, C)
+      && eqmin(dna.snps.at(ID("rs1800401")), C, C);
 }
 
-void summary(const DNA& dna)
+void summary(DNA& dna)
 {
   using namespace std;
 

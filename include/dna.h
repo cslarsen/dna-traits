@@ -1,5 +1,6 @@
-#include <string>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <unordered_map>
 #include <inttypes.h>
 
@@ -18,9 +19,37 @@ enum Nucleotide {
  */
 
 typedef std::pair<Nucleotide, Nucleotide> BasePair; // [AGCT-]
-typedef std::string ID; // (rs|i)[0-9]+
+
+#pragma pack(1)
+struct ID {
+  enum Type {
+    RSID,
+    INTERNAL_ID
+  } type : 1;
+
+  uint32_t index;
+
+  ID(const std::string& s)
+  {
+    std::stringstream(s) >> *this;
+  }
+
+  ID() : type(RSID), index(0)
+  {
+  }
+};
+
+template<>
+struct std::hash<ID> {
+  std::size_t operator()(const ID& id) const
+  {
+    return std::hash<uint32_t>()(id.index)
+         ^ ((id.type & 0x3) << 29);
+  }
+};
+
 typedef uint32_t Position; // [0-9]+
-typedef std::string Chromosome; // [0-9]+|X|Y
+typedef std::string Chromosome; // [0-9]+|X|Y|MT
 
 struct SNP {
   ID id;
@@ -29,13 +58,28 @@ struct SNP {
   Position position;
 };
 
-typedef std::unordered_map<ID, SNP> DNA;
+struct DNA {
+  std::unordered_map<ID, SNP> snps;
 
-std::istream& operator>>(std::istream&, Nucleotide&);
+  const SNP operator[](const ID& id) const
+  {
+    return snps.at(id);
+  }
+
+  const std::size_t size() const
+  {
+    return snps.size();
+  }
+};
+
+bool operator==(const ID&, const ID&);
+std::istream& operator>>(std::istream&, ID&);
 std::istream& operator>>(std::istream&, BasePair&);
-std::ostream& operator<<(std::ostream&, Nucleotide&);
-std::ostream& operator<<(std::ostream&, BasePair&);
-std::ostream& operator<<(std::ostream&, SNP&);
+std::istream& operator>>(std::istream&, Nucleotide&);
+std::ostream& operator<<(std::ostream&, const ID& id);
+std::ostream& operator<<(std::ostream&, const BasePair&);
+std::ostream& operator<<(std::ostream&, const Nucleotide&);
+std::ostream& operator<<(std::ostream&, const SNP&);
 
-DNA parse_file(const std::string& filename);
-void summary(const DNA&);
+void parse_file(const std::string& filename, DNA&);
+void summary(DNA&);
