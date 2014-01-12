@@ -23,7 +23,7 @@ slow as the Python prototype), etc.
 UPDATE: The parsing is now very fast. An entire 23andme file is parsed 5-10x
 faster than the old code (which is on par with Python). It takes 0.5 secs
 and two context switches to parse the file. The code is in read.cpp, though,
-and not integrated into the main code yet.
+and not integrated into the main code yet (`make read` to test it).
 
 Usage
 -----

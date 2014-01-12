@@ -14,59 +14,24 @@
  * Distributed under the GPL v3 or later.
  */
 
+#include "file.h"
+#include "mmap.h"
+#include "filesize.h"
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <string>
-#include <vector>
-#include <unordered_map>
 #include <inttypes.h>
+#include <string>
+#include <unordered_map>
 
-class File {
-  int fd;
-public:
-  File(const std::string& file, const int flags):
-    fd(open(file.c_str(), flags))
-  {
-    if ( fd < 0 )
-      std::runtime_error("Could not open file: " + file);
-  }
-
-  ~File() {
-    close(fd);
-  }
-
-  inline operator int() const {
-    return fd;
-  }
-};
+typedef uint32_t RSID;
+typedef std::pair<char, char> Genotype;
+typedef std::unordered_map<RSID, Genotype> SNPMap;
 
 struct String {
   const char* ptr;
-  size_t len;
-
-  void stop(const char* offset)
-  {
-    len = offset - ptr;
-  }
-
-  std::string str() const
-  {
-    return std::string(ptr, ptr+len);
-  }
-};
-
-typedef uint32_t RSID;
-
-typedef std::pair<char, char> Genotype;
-
-struct SNP {
-  RSID rsid;
-  Genotype genotype;
+  off_t len;
 };
 
 static inline const char*& skipfield(const char*& s)
@@ -80,90 +45,66 @@ static inline const char*& skipfield(const char*& s)
 
 static String readfield(const char*& s)
 {
-  String str;
-  str.ptr = s;
-  str.stop(skipfield(s)-1);
-  return str;
+  return String {s, skipfield(s)-s-1};
 }
 
-static off_t filesize(const int file_descriptor)
-{
-  struct stat stat;
-
-  if ( fstat(file_descriptor, &stat) < 0 )
-    throw std::runtime_error("Could not stat file");
-
-  return stat.st_size;
-}
-
-class MMap {
-  size_t _len;
-  void *_ptr;
-public:
-  MMap(void *addr, size_t len, int prot, int flags, int fd, off_t offset):
-    _len(len),
-    _ptr(mmap(addr, len, prot, flags, fd, offset))
-  {
-    if ( _ptr == reinterpret_cast<caddr_t>(-1) )
-      throw std::runtime_error("mmap error");
-  }
-
-  ~MMap() {
-    munmap(_ptr, _len);
-  }
-
-  inline void* ptr() const {
-    return _ptr;
-  }
-};
-
-int parse(const char* file, std::unordered_map<RSID, Genotype>& map)
+void parse(const char* file, SNPMap& map)
 {
   File fd(file, O_RDONLY);
   MMap fdmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
-  const char *s = static_cast<const char*>(fdmap.ptr());
+  auto s = static_cast<const char*>(fdmap.ptr());
 
-  // skip comments in header
-  while ( *s == '#' ) {
-    while ( *s != '\n' ) ++s;
-    ++s;
-  }
+  // Skip comments in header
+  while ( *s == '#' )
+    while ( *s++ != '\n' );
 
-  // parse SNPs
+  // Parse SNPs
   for ( ; *s; ++s ) {
-    // rsid: skip internal ids, etc
-    auto id = readfield(s);
-    RSID rsid = id.ptr[0]=='r'? atoi(id.ptr+2) : 0;
+    // Parse RSID
+    String str = readfield(s);
+    RSID rsid(str.ptr[0]=='r'? atoi(str.ptr+2) : 0);
 
-    // skip chromosome, but note if mitochondrial dna
-    auto MT = (*s=='M');
+    // Mitochonrdial chromosome?
+    const bool MT = (*s=='M');
+    skipfield(s); // skip chromosome
+
+    // Skip offset
     skipfield(s);
 
-    // skip offset
-    skipfield(s);
+    // Parse genotype
+    str = readfield(s);
+    Genotype genotype(str.ptr[0],
+                      str.len>1? str.ptr[1] : ' ');
 
-    const String geno = readfield(s);
-    Genotype genotype(geno.ptr[0],
-                      geno.len>1? geno.ptr[1] : ' ');
-
-    // skip internal ids, mitochondrial dna, etc.
-    if ( rsid > 0 && !MT ) {
+    // Skip internal IDs and mitochondria
+    if ( rsid>0 && !MT )
       map.insert({rsid, genotype});
-    }
   }
+}
 
-  return 0;
+void print_rsid(const RSID& id, const SNPMap& map)
+{
+  auto genotype = map.at(id);
+  printf("rs%u has genotype %c%c\n", id, genotype.first, genotype.second);
 }
 
 int main(int argc, char** argv)
 {
-  std::unordered_map<RSID, Genotype> map(1000000);
-  parse(argv[1], map);
-  printf("DONE, hash table has %lu entries\n", map.size());
+  if ( argc < 1 )
+    return 1;
 
-  RSID id = (*map.begin()).first;
-  Genotype gt = (*map.begin()).second;
+  auto file = argv[1];
 
-  printf("Lowest-numbered SNP is rs%u with genotype %c%c\n",
-    id, gt.first, gt.second);
+  printf("Reading %s ... ", file);
+
+  SNPMap map(1000000);
+  parse(file, map);
+
+  printf("done\n");
+  printf("Read %lu SNPs\n", map.size());
+
+  printf("Lowest-numbered SNP: ");
+
+  if ( !map.empty() )
+    print_rsid(map.begin()->first, map);
 }
