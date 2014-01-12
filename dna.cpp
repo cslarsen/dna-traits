@@ -11,7 +11,7 @@ int main(int argc, char** argv)
       cout << "Reading " << file << " ... ";
       cout.flush();
 
-      DNA dna;
+      DNA dna(1000000);
       parse_file(file, dna);
 
       cout << "done" << endl << endl;

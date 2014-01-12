@@ -129,6 +129,10 @@ struct SNP {
 struct DNA {
   std::unordered_map<ID, SNP> snps;
 
+  DNA(const size_t size) : snps(size)
+  {
+  }
+
   const Genotype operator[](const ID& id) const
   {
     return snps.at(id).genotype;

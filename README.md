@@ -11,6 +11,7 @@ Current status
 --------------
 
 Currently only text files from 23andme are supported.
+
 You can run it on a genome and it will report if this person has blue eyes
 and the person's gender. Not very interesting at the moment, but still this
 is enough code to be able to report on almost everything SNPedia has to
@@ -18,6 +19,11 @@ offer (medical conditions, traits, etc.).
 
 Other than that, the code is a bit messy, the parsing is extremely slow (as
 slow as the Python prototype), etc.
+
+UPDATE: The parsing is now very fast. An entire 23andme file is parsed 5-10x
+faster than the old code (which is on par with Python). It takes 0.5 secs
+and two context switches to parse the file. The code is in read.cpp, though,
+and not integrated into the main code yet.
 
 Usage
 -----

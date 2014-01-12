@@ -12,5 +12,16 @@ dna: src/dna.o dna.o src/parse_file.o src/summary.o
 
 all: $(TARGETS)
 
+.DUMMY:
+
+# just testing really fast parsing
+read: .DUMMY
+	g++ -std=c++11 -Wall \
+		-O3 \
+		-fomit-frame-pointer \
+		-march=corei7 -mtune=corei7 \
+		read.cpp -oread
+	/usr/bin/time -lp ./read genome.txt
+
 clean:
 	rm -f $(TARGETS)
