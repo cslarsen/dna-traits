@@ -14,16 +14,36 @@
  * Distributed under the GPL v3 or later.
  */
 
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h> /* mmap() is defined in this header */
+#include <sys/mman.h>
 #include <fcntl.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <inttypes.h>
+
+class File {
+  int fd;
+public:
+  File(const std::string& file, const int flags):
+    fd(open(file.c_str(), flags))
+  {
+    if ( fd < 0 )
+      std::runtime_error("Could not open file: " + file);
+  }
+
+  ~File() {
+    close(fd);
+  }
+
+  inline operator int() const {
+    return fd;
+  }
+};
 
 struct String {
   const char* ptr;
@@ -42,10 +62,7 @@ struct String {
 
 typedef uint32_t RSID;
 
-// typedef char Genotype[2]; does not work with std::map
-struct Genotype {
-  char a, b;
-};
+typedef std::pair<char, char> Genotype;
 
 struct SNP {
   RSID rsid;
@@ -69,27 +86,42 @@ static String readfield(const char*& s)
   return str;
 }
 
-int parse(const char* file, std::vector<SNP>& snps)
+static off_t filesize(const int file_descriptor)
 {
-  int fd = open(file, O_RDONLY);
-  if ( fd < 0 ) {
-    fprintf(stderr, "Could not open file: %s\n", file);
-    return 1;
+  struct stat stat;
+
+  if ( fstat(file_descriptor, &stat) < 0 )
+    throw std::runtime_error("Could not stat file");
+
+  return stat.st_size;
+}
+
+class MMap {
+  size_t _len;
+  void *_ptr;
+public:
+  MMap(void *addr, size_t len, int prot, int flags, int fd, off_t offset):
+    _len(len),
+    _ptr(mmap(addr, len, prot, flags, fd, offset))
+  {
+    if ( _ptr == reinterpret_cast<caddr_t>(-1) )
+      throw std::runtime_error("mmap error");
   }
 
-  struct stat statbuf;
-  if ( fstat(fd, &statbuf) < 0 ) {
-    fprintf(stderr, "Could not stat file: %s\n", file);
-    return 1;
+  ~MMap() {
+    munmap(_ptr, _len);
   }
 
-  const char *s = static_cast<const char*>(
-                    mmap(0, statbuf.st_size,
-                         PROT_READ, MAP_PRIVATE, fd, 0));
-  if ( s == reinterpret_cast<caddr_t>(-1) ) {
-    fprintf(stderr, "MMAP error\n");
-    return 1;
+  inline void* ptr() const {
+    return _ptr;
   }
+};
+
+int parse(const char* file, std::unordered_map<RSID, Genotype>& map)
+{
+  File fd(file, O_RDONLY);
+  MMap fdmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
+  const char *s = static_cast<const char*>(fdmap.ptr());
 
   // skip comments in header
   while ( *s == '#' ) {
@@ -99,26 +131,25 @@ int parse(const char* file, std::vector<SNP>& snps)
 
   // parse SNPs
   for ( ; *s; ++s ) {
-    SNP snp;
-
     // rsid: skip internal ids, etc
-    String id = readfield(s);
-    snp.rsid = id.ptr[0]=='r'? atoi(id.ptr+2) : 0;
+    auto id = readfield(s);
+    RSID rsid = id.ptr[0]=='r'? atoi(id.ptr+2) : 0;
 
     // skip chromosome, but note if mitochondrial dna
-    bool MT = (*s=='M');
+    auto MT = (*s=='M');
     skipfield(s);
 
     // skip offset
     skipfield(s);
 
-    String genotype = readfield(s);
-    snp.genotype.a = genotype.ptr[0];
-    snp.genotype.b = genotype.len>1? genotype.ptr[1] : ' ';
+    const String geno = readfield(s);
+    Genotype genotype(geno.ptr[0],
+                      geno.len>1? geno.ptr[1] : ' ');
 
     // skip internal ids, mitochondrial dna, etc.
-    if ( snp.rsid > 0 && !MT )
-      snps.push_back(snp);
+    if ( rsid > 0 && !MT ) {
+      map.insert({rsid, genotype});
+    }
   }
 
   return 0;
@@ -126,27 +157,13 @@ int parse(const char* file, std::vector<SNP>& snps)
 
 int main(int argc, char** argv)
 {
-  std::vector<SNP> snps;
-  parse(argv[1], snps);
-  printf("READ %lu SNPs\n", snps.size());
-  printf("TOP rs%u geno: %c%c\n",
-      snps[0].rsid,
-      snps[0].genotype.a,
-      snps[0].genotype.b);
-  printf("BOT rs%u geno: %c%c\n",
-      snps[snps.size()-1].rsid,
-      snps[snps.size()-1].genotype.a,
-      snps[snps.size()-1].genotype.b);
-
-  // put into map
-  std::unordered_map<RSID, Genotype> map(snps.size());
-  auto collisions = 0;
-  for ( auto snp : snps ) {
-    if ( map.find(snp.rsid) != map.end() )
-      ++collisions;
-    map.insert({snp.rsid, snp.genotype});
-  }
-
+  std::unordered_map<RSID, Genotype> map(1000000);
+  parse(argv[1], map);
   printf("DONE, hash table has %lu entries\n", map.size());
-  printf("%d collisions\n", collisions);
+
+  RSID id = (*map.begin()).first;
+  Genotype gt = (*map.begin()).second;
+
+  printf("Lowest-numbered SNP is rs%u with genotype %c%c\n",
+    id, gt.first, gt.second);
 }
