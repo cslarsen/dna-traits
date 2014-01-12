@@ -14,10 +14,8 @@ int main(int argc, char** argv)
       DNA dna(1000000);
       parse_file(file, dna);
 
-      cout << "done" << endl << endl;
-      cout.flush();
-
-      cout << "Read " << dna.snp.size() << " SNPs" << endl << endl;
+      cout << "done" << endl; cout.flush();
+      cout << "Read " << dna.snp.size() << " unique SNPs" << endl << endl;
 
 #ifdef DEBUG
       cout << "Size of Genotype: " << sizeof(Genotype) << endl
@@ -25,7 +23,7 @@ int main(int argc, char** argv)
            << endl;
 #endif
 
-      cout << "Example SNPs:" << endl
+      cout << "Example SNPs in this genome:" << endl << endl
            << "  " << format(dna, 7495174) << endl
            << "  " << format(dna, 1805007) << endl
            << "  " << format(dna, 1800401) << endl
@@ -35,7 +33,7 @@ int main(int argc, char** argv)
     }
 
     return 0;
-  }catch ( const exception& e) {
+  } catch ( const exception& e) {
     cout << endl << "Error: " << e.what() << endl;
     return 1;
   }

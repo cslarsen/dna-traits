@@ -17,15 +17,37 @@ static bool gs237(const DNA& dna)
       && dna[ 1800401] == ~CC;
 }
 
+static std::string skin_color_1426654(const DNA& dna)
+{
+  auto gt = dna[1426654];
+
+  if ( gt == AA )
+    return "Probably light-skinned, European ancestry";
+
+  if ( gt == GA || gt == AG )
+    return "Mixed African/European ancestry possible";
+
+  if ( gt == GG )
+    return "Probably darker-skinned, Asian or African ancestry";
+
+  return "Unknown";
+}
+
 void summary(const DNA& dna)
 {
   using namespace std;
 
   cout
-    << "Summary of findings:" << endl
-    << "  Gender (has Y-chromosome): "
-    << (dna.ychromo? "Male" : "Female") << endl
-    << "  Blue eyes (criteria gs237): "
-    << (gs237(dna)? "Yes" : "No") << endl
+    << "SUMMARY" << endl << endl
+
+    << "  Gender:     " << (dna.ychromo? "Male" : "Female")
+    << " (has Y-chromosome)" << endl
+
+    << "  Blue eyes?  " << (gs237(dna)? "Yes" : "No")
+    << " (based on criteria gs237)" << endl
+
+    << "  Skin color: " << skin_color_1426654(dna) 
+    << " (based on rs1426654)" << endl
+
     << endl;
 }
