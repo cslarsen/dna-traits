@@ -1,27 +1,21 @@
-CXXPATH = /usr/bin
-CXX = $(CXXPATH)/c++
-CC = $(CXXPATH)/c++
+CXX = g++
+CC = $(CXX)
 CXXFLAGS = -Iinclude --std=c++11 -Wall \
-					 -O4 -march=native -mtune=native \
+					 -O3 -march=native -mtune=native \
 					 -fomit-frame-pointer
-TARGETS = src/summary.o src/dna.o src/parse_file.o dna.o dna
+TARGETS = src/summary.o \
+					src/dna.o \
+					src/parse_file.o \
+					src/filesize.o \
+					dna.o \
+					dna
 
 run: dna
 	/usr/bin/time -lp ./dna genome.txt
 
-dna: src/dna.o dna.o src/parse_file.o src/summary.o
+dna: src/dna.o src/filesize.o src/parse_file.o src/summary.o dna.o
 
 all: $(TARGETS)
-
-# just testing really fast parsing
-read: src/filesize.cpp read.cpp
-	g++ -std=c++11 -Wall \
-		-O3 \
-		-fomit-frame-pointer \
-		-march=corei7 -mtune=corei7 \
-		$^ -o $@ \
-		-Iinclude
-	/usr/bin/time -lp ./read genome.txt
 
 clean:
 	rm -f $(TARGETS)

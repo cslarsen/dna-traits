@@ -17,13 +17,15 @@ and the person's gender. Not very interesting at the moment, but still this
 is enough code to be able to report on almost everything SNPedia has to
 offer (medical conditions, traits, etc.).
 
-Other than that, the code is a bit messy, the parsing is extremely slow (as
-slow as the Python prototype), etc.
+The code *is* quite messy, but at least the parsing is now extremely fast.
+I use memory mapping and C-style parsing with packed structs to get things
+going fast. On my computer, it takes half a second to parse a 23andme text
+file and store all SNPs in memory. It works out to about 50 MB/s, but I
+think it would actually be higher if the files were bigger (not tested).
 
-UPDATE: The parsing is now very fast. An entire 23andme file is parsed 5-10x
-faster than the old code (which is on par with Python). It takes 0.5 secs
-and two context switches to parse the file. The code is in read.cpp, though,
-and not integrated into the main code yet (`make read` to test it).
+Anyway, the old code used 4-5 secs to parse, and the Python version uses 2-3
+secs, so 0.5 secs and only two involuntary context switches should be quite
+good.
 
 Usage
 -----
@@ -74,13 +76,14 @@ blue eyes:
 
     static bool gs237(const DNA& dna)
     {
-      return dna["rs4778241"]  ==  CC
-          && dna["rs12913832"] ==  GG
-          && dna["rs7495174"]  ==  AA
-          && dna["rs8028689"]  ==  TT
-          && dna["rs7183877"]  ==  CC
-          && dna["rs1800401"]  == ~CC;
+      return dna[ 4778241] ==  CC
+          && dna[12913832] ==  GG
+          && dna[ 7495174] ==  AA
+          && dna[ 8028689] ==  TT
+          && dna[ 7183877] ==  CC
+          && dna[ 1800401] == ~CC;
     }
+
 
 If you look up the corresponding `gs237` criteria on SNPedia -- at
 http://snpedia.com/index.php/Gs237/criteria -- you can see that the code is
