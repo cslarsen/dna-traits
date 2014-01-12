@@ -30,6 +30,8 @@ good.
 Usage
 -----
 
+You need a C++11 compiler.
+
 Build the sources by using `make -j32 dna`, save your 23andme genome as
 `genome.txt` and run
 
@@ -38,27 +40,29 @@ Build the sources by using `make -j32 dna`, save your 23andme genome as
 and you should get some output like
 
     Reading genome.txt ... done
+    Read 949461 unique SNPs
 
-    Read 960613 SNPs
+    Example SNPs in this genome:
 
-    Example SNPs:
-      {rs7495174 genotype=AA chromosome=1 position=28344238}
-      {rs1805007 genotype=CC chromosome=1 position=89986117}
-      {rs1800401 genotype=GG chromosome=1 position=28260053}
+      rs7495174 AA
+      rs1805007 CC
+      rs1800401 GG
 
-    Summary of findings:
-      Gender (has Y-chromosome): Male
-      Blue eyes (criteria gs237): Yes
+    SUMMARY
 
-    real         4.70
-    user         4.57
-    sys          0.11
-      73789440  maximum resident set size
+      Gender:     Male (has Y-chromosome)
+      Blue eyes?  Yes (based on criteria gs237)
+      Skin color: Probably light-skinned, European ancestry (based on rs1426654)
+
+    real         0.57
+    user         0.52
+    sys          0.04
+      64167936  maximum resident set size
              0  average shared memory size
              0  average unshared data size
              0  average unshared stack size
-         18023  page reclaims
-             9  page faults
+         15677  page reclaims
+             7  page faults
              0  swaps
              0  block input operations
              0  block output operations
@@ -66,7 +70,7 @@ and you should get some output like
              0  messages received
              0  signals received
              1  voluntary context switches
-           546  involuntary context switches
+             8  involuntary context switches
 
 How to add your own rules
 -------------------------
