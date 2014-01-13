@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <unordered_map>
 #include <cstdint>
+#include <sparsehash/sparse_hash_map>
 
 enum Nucleotide {
   NONE, A, G, C, T
@@ -49,9 +49,10 @@ const Genotype GC (G, C);
 const Genotype GG (G, G);
 
 typedef std::uint32_t RSID;
+typedef google::sparse_hash_map<RSID, Genotype> SNPMap;
 
 struct DNA {
-  std::unordered_map<RSID, Genotype> snp;
+  SNPMap snp;
   bool ychromo;
 
   DNA(const size_t size):
@@ -62,7 +63,7 @@ struct DNA {
 
   const Genotype& operator[](const RSID& id) const
   {
-    return has(id)? snp.at(id) : NN;
+    return has(id)? const_cast<SNPMap&>(snp)[id] : NN;
   }
 
   bool has(const RSID& id) const

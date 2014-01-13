@@ -1,31 +1,36 @@
 dna-traits
 ==========
 
-dna-traits infers various traits from a human genome by using data available
+dna-traits infers various phenotypes from 23andme genome files by using data
 from SNPedia.
 
-This is very much a personal hobby-project to teach me more about DNA and
-bioinformatics.
+In other words, you can download your personal genome from 23andme and run
+it through this program, and it will attempt to tell things like your eye
+color, and so on.
+
+This is just a personal hobby project I've started to teach me more about
+DNA and bioinformatics.
 
 Current status
 --------------
 
-Currently only text files from 23andme are supported.
+* Only 23andme files are currently supported
 
-You can run it on a genome and it will report if this person has blue eyes
-and the person's gender. Not very interesting at the moment, but still this
-is enough code to be able to report on almost everything SNPedia has to
-offer (medical conditions, traits, etc.).
+* Parsing is extremely fast: It takes only 0.3 seconds (on *my* machine, at
+  least) to fully parse a 23andme text file and build up a hash table in
+  memory, or about 80 Mb/s.  In fact, it's fast enough that I won't bother
+  saving the hash table in a binary format, as originally intended.
 
-The code *is* quite messy, but at least the parsing is now extremely fast.
-I use memory mapping and C-style parsing with packed structs to get things
-going fast. On my computer, it takes half a second to parse a 23andme text
-file and store all SNPs in memory. It works out to about 50 MB/s, but I
-think it would actually be higher if the files were bigger (not tested).
+* Rules and phenotype criteria from SNPedia must be hard-coded in C++. Later
+  on, it would be nice to put these in some form of interpreted text file.
 
-Anyway, the old code used 4-5 secs to parse, and the Python version uses 2-3
-secs, so 0.5 secs and only two involuntary context switches should be quite
-good.
+Requirements
+------------
+
+* A C++11 compiler
+* Google sparse hash map
+* A 23andme genome. Many people have uploaded theirs on the net for free
+  use. See for example OpenSNP.
 
 Usage
 -----
@@ -39,38 +44,39 @@ Build the sources by using `make -j32 dna`, save your 23andme genome as
 
 and you should get some output like
 
-    Reading genome.txt ... done
-    Read 949461 unique SNPs
+  /usr/bin/time -lp ./dna genome.txt
+  Reading genome.txt ... done
+  Read 949461 unique SNPs
 
-    Example SNPs in this genome:
+  Example SNPs in this genome:
 
-      rs7495174 AA
-      rs1805007 CC
-      rs1800401 GG
+    rs7495174 AA
+    rs1805007 CC
+    rs1800401 GG
 
-    SUMMARY
+  SUMMARY
 
-      Gender:     Male (has Y-chromosome)
-      Blue eyes?  Yes (based on criteria gs237)
-      Skin color: Probably light-skinned, European ancestry (based on rs1426654)
+    Gender:     Male (has Y-chromosome)
+    Blue eyes?  Yes (gs237)
+    Skin color: Probably light-skinned, European ancestry (rs1426654)
 
-    real         0.57
-    user         0.52
-    sys          0.04
-      64167936  maximum resident set size
-             0  average shared memory size
-             0  average unshared data size
-             0  average unshared stack size
-         15677  page reclaims
-             7  page faults
-             0  swaps
-             0  block input operations
-             0  block output operations
-             0  messages sent
-             0  messages received
-             0  signals received
-             1  voluntary context switches
-             8  involuntary context switches
+  real         0.37
+  user         0.34
+  sys          0.02
+    34164736  maximum resident set size
+           0  average shared memory size
+           0  average unshared data size
+           0  average unshared stack size
+        8360  page reclaims
+           0  page faults
+           0  swaps
+           0  block input operations
+           0  block output operations
+           0  messages sent
+           0  messages received
+           0  signals received
+           0  voluntary context switches
+           1  involuntary context switches
 
 How to add your own rules
 -------------------------
