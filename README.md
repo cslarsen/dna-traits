@@ -42,38 +42,38 @@ Build the sources by using `make -j32 dna`, save your 23andme genome as
 
 and you should get some output like
 
-  Reading genome.txt ... done
-  Read 949461 unique SNPs
+    Reading genome.txt ... done
+    Read 949461 unique SNPs
 
-  Example SNPs in this genome:
+    Example SNPs in this genome:
 
-    rs7495174 AA
-    rs1805007 CC
-    rs1800401 GG
+      rs7495174 AA
+      rs1805007 CC
+      rs1800401 GG
 
-  SUMMARY
+    SUMMARY
 
-    Gender:     Male (has Y-chromosome)
-    Blue eyes?  Yes (gs237)
-    Skin color: Probably light-skinned, European ancestry (rs1426654)
+      Gender:     Male (has Y-chromosome)
+      Blue eyes?  Yes (gs237)
+      Skin color: Probably light-skinned, European ancestry (rs1426654)
 
-  real         0.37
-  user         0.34
-  sys          0.02
-    34164736  maximum resident set size
-           0  average shared memory size
-           0  average unshared data size
-           0  average unshared stack size
-        8360  page reclaims
-           0  page faults
-           0  swaps
-           0  block input operations
-           0  block output operations
-           0  messages sent
-           0  messages received
-           0  signals received
-           0  voluntary context switches
-           1  involuntary context switches
+    real         0.37
+    user         0.34
+    sys          0.02
+      34164736  maximum resident set size
+             0  average shared memory size
+             0  average unshared data size
+             0  average unshared stack size
+          8360  page reclaims
+             0  page faults
+             0  swaps
+             0  block input operations
+             0  block output operations
+             0  messages sent
+             0  messages received
+             0  signals received
+             0  voluntary context switches
+             1  involuntary context switches
 
 How to add your own rules
 -------------------------
