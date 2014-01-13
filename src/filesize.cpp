@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2014 Christian Stigen Larsen
+ * Distributed under the GPL v3 or later. See COPYING.
+ */
+
 #include <stdexcept>
 #include <sys/stat.h>
 #include "filesize.h"

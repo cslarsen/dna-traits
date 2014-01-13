@@ -35,8 +35,6 @@ Requirements
 Usage
 -----
 
-You need a C++11 compiler.
-
 Build the sources by using `make -j32 dna`, save your 23andme genome as
 `genome.txt` and run
 
@@ -113,15 +111,14 @@ orientation in the last check for the `rs1800401` SNP
 You can make your own rules like this. (Later on, I should put the rules in
 a text file.)
 
-License
--------
+Copyright and license
+---------------------
 
-GPL v3 or later.
+Copyright (C) 2014 Christian Stigen Larsen
+http://csl.name
 
-Author
-------
-
-Christian Stigen Larsen, http://csl.name
+Distributed under GPL v3 or later. See the file COPYING for the full
+license.
 
 Places of interest
 ------------------

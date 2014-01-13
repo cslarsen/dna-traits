@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2014 Christian Stigen Larsen
+ * Distributed under the GPL v3 or later. See COPYING.
+ */
+
 #include <exception>
 #include <stdlib.h>
 #include <sys/mman.h>

@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2014 Christian Stigen Larsen
+ * Distributed under the GPL v3 or later. See COPYING.
+ */
+
 #include "dna.h"
 
 std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
