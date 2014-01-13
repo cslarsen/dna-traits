@@ -1,8 +1,10 @@
 CXX = g++
 CC = $(CXX)
+
 CXXFLAGS = -Iinclude --std=c++11 -Wall \
-					 -O3 -march=native -mtune=native \
-					 -fomit-frame-pointer
+					 -Ofast -march=native -mtune=native \
+					 -flto
+
 TARGETS = src/summary.o \
 					src/dna.o \
 					src/parse_file.o \
