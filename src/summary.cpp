@@ -41,13 +41,13 @@ void summary(const DNA& dna)
     << "SUMMARY" << endl << endl
 
     << "  Gender:     " << (dna.ychromo? "Male" : "Female")
-    << " (has Y-chromosome)" << endl
+    << " (" << (dna.ychromo? "has" : "no") << " Y-chromosome)" << endl
 
     << "  Blue eyes?  " << (gs237(dna)? "Yes" : "No")
-    << " (based on criteria gs237)" << endl
+    << " (gs237)" << endl
 
     << "  Skin color: " << skin_color_1426654(dna) 
-    << " (based on rs1426654)" << endl
+    << " (rs1426654)" << endl
 
     << endl;
 }
