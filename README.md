@@ -40,11 +40,10 @@ You need a C++11 compiler.
 Build the sources by using `make -j32 dna`, save your 23andme genome as
 `genome.txt` and run
 
-    ./dna genome.txt
+    $ /usr/bin/time -lp ./dna genome.txt
 
 and you should get some output like
 
-  /usr/bin/time -lp ./dna genome.txt
   Reading genome.txt ... done
   Read 949461 unique SNPs
 
