@@ -24,7 +24,7 @@ static const char*& skipfield(const char*& s)
   return s;
 }
 
-static String readfield(const char*& s)
+static inline String readfield(const char*& s)
 {
   return String {s, skipfield(s)-s-1};
 }
@@ -40,6 +40,16 @@ Nucleotide to_nucleotide(const char ch)
   }
 }
 
+static inline void skipline(const char*& s)
+{
+  while ( *s != '\n' ) ++s;
+}
+
+static inline void skiptab(const char*& s)
+{
+  while ( *s++ != '\t' );
+}
+
 /**
  * Reads a 23andme-formatted genome file.  It currently uses reference human
  * assembly build 37 (annotation release 104).
@@ -50,29 +60,35 @@ void parse_file(const std::string& name, DNA& dna)
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
   auto s = static_cast<const char*>(fmap.ptr());
 
+  dna.ychromo = false;
   skip_comments(s);
 
-  for ( ; *s; ++s ) {
-    // Parse RSID
-    String str = readfield(s);
-    RSID rsid(str.ptr[0]=='r'? atoi(str.ptr+2) : 0);
+  for ( String str; *s; ++s ) {
+    // Skip anything other than an RSID (internal IDs, etc.)
+    if ( *s != 'r' ) {
+      skipline(s);
+      continue;
+    }
 
-    // Mitochondrial DNA?
-    const bool MT = (*s == 'M');
-
-    if ( *s == 'Y' )
-      dna.ychromo = true;
-
-    skipfield(s); // skip chromosome
-    skipfield(s); // skip offset
-
-    // Parse genotype
     str = readfield(s);
+    RSID rsid(atoi(str.ptr+2)); // "rs<number>"
+
+    // Skip mitochondrial DNA
+    if ( *s == 'M' ) { // "MT"
+      skipline(s);
+      continue;
+    }
+
+    // Store if genome has a Y-chromosome
+    dna.ychromo |= (*s=='Y');
+
+    skiptab(s); // skip chromosome [1-22|X|Y|MT]
+    skiptab(s); // skip position
+
+    str = readfield(s); // genotype
     Genotype genotype(to_nucleotide(str.ptr[0]),
                       to_nucleotide(str.ptr[1]));
 
-    // Only add RSIDs; skip internal IDs and MT
-    if ( rsid && !MT )
-      dna.snp.insert({rsid, genotype});
+    dna.snp.insert({rsid, genotype});
   }
 }
