@@ -12,6 +12,9 @@ TARGETS = src/summary.o \
 					dna.o \
 					dna
 
+PYCFLAGS = $(shell python-config --cflags)
+PYLDFLAGS = $(shell python-config --ldflags)
+
 run: dna
 	/usr/bin/time -lp ./dna genome.txt
 
@@ -19,5 +22,12 @@ dna: src/dna.o src/filesize.o src/parse_file.o src/summary.o dna.o
 
 all: $(TARGETS)
 
+python-api: $(TARGETS)
+	cd python; make dna_traits.so
+
+python-check: python-api
+	cd python; make check
+
 clean:
 	rm -f $(TARGETS)
+	cd python; make clean

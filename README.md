@@ -11,6 +11,7 @@ color, and so on.
 This is just a personal hobby project I've started to teach me more about
 DNA and bioinformatics.
 
+
 Current status
 --------------
 
@@ -24,6 +25,7 @@ Current status
 * Rules and phenotype criteria from SNPedia must be hard-coded in C++. Later
   on, it would be nice to put these in some form of interpreted text file.
 
+
 Requirements
 ------------
 
@@ -31,6 +33,8 @@ Requirements
 * Google sparse hash map
 * A 23andme genome. Many people have uploaded theirs on the net for free
   use. See for example OpenSNP.
+* Python development files, if you want to build the Python module.
+
 
 Usage
 -----
@@ -75,6 +79,7 @@ and you should get some output like
              0  voluntary context switches
              1  involuntary context switches
 
+
 How to add your own rules
 -------------------------
 
@@ -111,6 +116,20 @@ orientation in the last check for the `rs1800401` SNP
 You can make your own rules like this. (Later on, I should put the rules in
 a text file.)
 
+
+Python API
+----------
+
+There is also a Python API, available in the `python/` subdirectory. To
+build it, just type
+
+    make python-api
+
+and test it with a genome by typing
+
+    make python-check
+
+
 Copyright and license
 ---------------------
 
@@ -119,6 +138,7 @@ http://csl.name
 
 Distributed under GPL v3 or later. See the file COPYING for the full
 license.
+
 
 Places of interest
 ------------------
