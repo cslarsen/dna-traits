@@ -134,6 +134,26 @@ and test it with a genome by typing
 
     make python-check
 
+There is more information in the `python/` subdirectory. After building, you
+can parse 23andMe files and inspect them using Python:
+
+    $ python
+    >>> import dna_traits as dt
+    >>> dna = dt.parse("genome.txt")
+    >>> dna.ychromo()
+    True
+    >>> dna["rs1800401"]
+    'GG'
+    >>> len(dna)
+    949461
+
+Print some items:
+
+    >>> dna["rs7060463"]
+    'T-'
+    >>> dna["rs7254116"]
+    'AG'
+
 
 Copyright and license
 ---------------------
