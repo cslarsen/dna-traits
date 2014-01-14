@@ -21,5 +21,8 @@ dna_traits.so: dna_traits.o ../src/dna.o ../src/parse_file.o ../src/filesize.o
 check: dna_traits.so
 	python test_dna_traits.py -v
 
+bench: all
+	python bench.py
+
 clean:
 	rm -f $(TARGETS) *.pyc
