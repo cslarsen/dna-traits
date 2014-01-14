@@ -10,13 +10,9 @@ CXXFLAGS = -I../include --std=c++11 -Wall \
 PYCFLAGS = $(shell python-config --cflags)
 PYLDFLAGS = $(shell python-config --ldflags)
 
-all:
-	@echo
-	@echo "First build all the files in the parent directory, then you can build"
-	@echo "dna_traits.so and test it with \`make check\`"
-	@echo
+all: $(TARGETS)
 
-dna_traits.o: dna_traits.cpp
+dna_traits.o: dna_traits.cpp genome.h
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
 dna_traits.so: dna_traits.o ../src/dna.o ../src/parse_file.o ../src/filesize.o

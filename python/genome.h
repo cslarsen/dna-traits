@@ -1,0 +1,145 @@
+/*
+ * Copyright (C) 2014 Christian Stigen Larsen
+ * Distributed under the GPL v3 or later. See COPYING.
+ */
+
+#include "python.h"
+
+struct Genome{
+  PyObject_HEAD
+  DNA* dna;
+};
+
+static void Genome_dealloc(Genome* self)
+{
+  delete(self->dna);
+  self->ob_type->tp_free(reinterpret_cast<PyObject*>(self));
+}
+
+static PyObject* Genome_new(PyTypeObject* type,
+                            PyObject* args,
+                            PyObject *kw)
+{
+  auto p = reinterpret_cast<Genome*>(type->tp_alloc(type, 0));
+
+  if ( p != NULL )
+    p->dna = new DNA(1e6);
+
+  return reinterpret_cast<PyObject*>(p);
+}
+
+// Genome.__init__(self, *args, **kw)
+static int Genome_init(Genome*, PyObject*, PyObject*)
+{
+  return 0;
+}
+
+static PyObject* Genome_ychromo(Genome* self)
+{
+  return self->dna->ychromo? Py_True : Py_False;
+}
+
+static char from_nucleotide(const Nucleotide& n)
+{
+  switch ( n ) {
+    case A: return 'A';
+    case T: return 'T';
+    case C: return 'C';
+    case G: return 'G';
+    default: return '-';
+  }
+}
+
+static PyObject* Genome_getitem(Genome* self, PyObject *args, PyObject *kw)
+{
+  char *arg = NULL;
+
+  if ( !PyArg_ParseTuple(args, "s", &arg) )
+    return NULL;
+
+  // require "rs" prefix
+  if ( !(arg[0]=='r' && arg[1]=='s') ) {
+    PyErr_SetString(PyExc_KeyError, "Incorrectly formatted RSID.");
+    return NULL;
+  }
+
+  // require numerical suffix
+  for ( auto p = arg+2; *p; ++p )
+    if ( !isdigit(*p) ) {
+      PyErr_SetString(PyExc_KeyError, "Incorrectly formatted RSID.");
+      return NULL;
+    }
+
+  uint32_t rsid = atoi(arg+2);
+
+  if ( !self->dna->has(rsid) ) {
+    PyErr_SetString(PyExc_KeyError, "No such RSID in genome");
+    return NULL;
+  }
+
+  auto genotype = self->dna->operator[](rsid);
+  char buf[3] = {from_nucleotide(genotype.first),
+                 from_nucleotide(genotype.second), 0};
+
+  return Py_BuildValue("s", buf);
+}
+
+static PyMemberDef Genome_members[] = {
+  {NULL}
+};
+
+
+static PyMethodDef Genome_methods[] = {
+  {"ychromo", (PyCFunction)Genome_ychromo, METH_NOARGS,
+   "Returns True if genome contains a Y-chromosome."},
+
+  /*
+   * TODO: Support __getitem__ using tp_as_mapping.
+   * See http://docs.python.org/2/c-api/typeobj.html etc.
+   */
+  {"snp", (PyCFunction)Genome_getitem, METH_VARARGS,
+   "Return SNP with given RSID."},
+  {NULL}
+};
+
+static PyTypeObject GenomeType = {
+  PyObject_HEAD_INIT(NULL)
+  0, // obsize
+  "dna_traits.Genome", // tpname
+  sizeof(Genome), // basicsize
+  0, // itemsize
+  (destructor)Genome_dealloc, // dealloc
+  0, // print
+  0, // getattr
+  0, // setattr
+  0, // tpcompare
+  0, // tprepr
+  0, // tp as number
+  0, // tp as seq
+  0, // tp as map
+  0, // tp hash
+  0, // tp call
+  0, // tp str
+  0, // tp getattro
+  0, // tp setattro
+  0, // tp as buff
+  Py_TPFLAGS_DEFAULT, // tpflags
+  "A genome with SNPs, genotypes, etc.", // docs
+  0, // traverse
+  0, // clear
+  0, // rich compare
+  0, // weaklistoffset
+  0, // iter
+  0, // iternext
+  Genome_methods, // methods
+  Genome_members, // members
+  0, // getset
+  0, // base
+  0, // dict
+  0, // descr get
+  0, // descr set
+  0, // dictoffset
+  (initproc)Genome_init, // init
+  0, // alloc
+  Genome_new, // tp new
+};

@@ -4,50 +4,23 @@
  */
 
 #include <Python.h>
+#include <structmember.h>
 #include "dna.h"
-
-static char from_nucleotide(const Nucleotide& n)
-{
-  switch ( n ) {
-    case A: return 'A';
-    case T: return 'T';
-    case C: return 'C';
-    case G: return 'G';
-    default: return '-';
-  }
-}
+#include "genome.h"
 
 static PyObject* parse(PyObject* module, PyObject* args)
 {
-  char *file = NULL;
-
-  if ( !PyArg_ParseTuple(args, "s", &file) )
-    return NULL;
-
   try {
-    DNA dna(1e6);
-    parse_file(file, dna);
+    char *file = NULL;
 
-    // copy all items to a python dictionary
-    auto dict = PyDict_New();
+    if ( !PyArg_ParseTuple(args, "s", &file) )
+      return NULL;
 
-    for ( auto e : dna.snp ) {
-      const auto rsid = e.first;
-      const auto genotype = e.second;
-
-      // "AA"
-      const char value[3] = {from_nucleotide(genotype.first),
-                             from_nucleotide(genotype.second),
-                             '\0'};
-      // "rs<number>"
-      char key[16];
-      sprintf(key, "rs%d", rsid);
-
-      PyDict_SetItemString(dict, key, PyString_FromString(value));
-    }
-
-    return dict;
-  } catch ( const std::exception& e) {
+    auto genome = Genome_new(&GenomeType, NULL, NULL);
+    parse_file(file, *reinterpret_cast<Genome*>(genome)->dna);
+    return genome;
+  }
+  catch ( const std::exception& e) {
     PyErr_SetString(PyExc_RuntimeError, e.what());
     return NULL;
   }
@@ -62,6 +35,15 @@ static PyMethodDef methods[] = {
 extern "C"
 void initdna_traits()
 {
-  Py_InitModule3("dna_traits", methods,
-      "A fast parser for 23andMe genome files");
+  // Initialize custom python types
+  GenomeType.tp_new = PyType_GenericNew;
+  if ( PyType_Ready(&GenomeType) < 0 )
+    return;
+
+  auto module = Py_InitModule3("dna_traits", methods,
+                               "A fast parser for 23andMe genome files");
+
+  Py_INCREF(&GenomeType);
+  PyModule_AddObject(module, "Genome",
+                     reinterpret_cast<PyObject*>(&GenomeType));
 }
