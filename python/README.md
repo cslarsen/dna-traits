@@ -10,7 +10,8 @@ code.
 Current status
 --------------
 
-  * It's _very_ fast. It parses a 23andMe text file in only 0.3 seconds!
+  * It's _very_ fast. It parses a 23andMe text file in only 0.3 seconds! (on
+    _my_ machine)
 
   * Supports `__getitem__` so you can do `dna["rs123"]`.
 
@@ -69,6 +70,25 @@ which should result in
     Ran 3 tests in 2.424s
 
     OK
+
+
+Benchmarking speed
+------------------
+
+If you type `make bench` it will run a small benchmark to report on speed.
+It parses a file 70 times and prints the best result:
+
+    $ make bench
+    python bench.py
+    Measuring parsing speed (70 times)
+    [######################################################################]
+    The best speed was 0.388225078583
+
+    We report the best time only to mitigate OS preemption noise.
+
+As you can see the running time may vary a bit and is usually a bit lower
+than the pure C++ version, but not by much.
+
 
 Author and license
 ------------------
