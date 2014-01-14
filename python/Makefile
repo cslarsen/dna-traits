@@ -1,4 +1,4 @@
-TARGETS = dna_traits.o dna_traits.so
+TARGETS = dna_traits.o genome.o dna_traits.so
 
 CXX = g++
 CC = $(CXX)
@@ -15,7 +15,10 @@ all: $(TARGETS)
 dna_traits.o: dna_traits.cpp genome.h
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
-dna_traits.so: dna_traits.o ../src/dna.o ../src/parse_file.o ../src/filesize.o
+genome.o: genome.cpp genome.h
+	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
+
+dna_traits.so: dna_traits.o genome.o ../src/dna.o ../src/parse_file.o ../src/filesize.o
 	$(CXX) $(PYLDFLAGS) -shared -o $@ $^
 
 check: dna_traits.so

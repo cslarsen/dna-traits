@@ -18,5 +18,5 @@ best = min(timeit.Timer(
   setup = "import dna_traits as dt; import sys")
   .repeat(count, 1))
 
-print("\nThe best speed was {}\n".format(best))
+print("\nThe best speed was {}".format(best))
 print("We report the best time only to mitigate OS preemption noise.")

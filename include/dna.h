@@ -3,6 +3,9 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
+#ifndef INC_DNATRAITS_H
+#define INC_DNATRAITS_H
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -83,3 +86,5 @@ std::ostream& operator<<(std::ostream&, const Nucleotide&);
 std::string format(const DNA&, const RSID&);
 void parse_file(const std::string& filename, DNA&);
 void summary(const DNA&);
+
+#endif

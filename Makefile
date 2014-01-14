@@ -28,6 +28,9 @@ python-api: $(TARGETS)
 python-check: python-api
 	cd python; make check
 
+python-bench: python-api
+	cd python; make bench
+
 clean:
 	rm -f $(TARGETS)
 	cd python; make clean

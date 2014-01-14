@@ -4,7 +4,6 @@
  */
 
 #include <Python.h>
-#include <structmember.h>
 #include "dna.h"
 #include "genome.h"
 
