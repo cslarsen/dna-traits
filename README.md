@@ -1,10 +1,10 @@
 dna-traits
 ==========
 
-dna-traits infers various phenotypes from 23andme genome files by using data
+dna-traits infers various phenotypes from 23andMe genome files by using data
 from SNPedia.
 
-In other words, you can download your personal genome from 23andme and run
+In other words, you can download your personal genome from 23andMe and run
 it through this program, and it will attempt to tell things like your eye
 color, and so on.
 
@@ -15,10 +15,10 @@ DNA and bioinformatics.
 Current status
 --------------
 
-  * Only 23andme files are currently supported
+  * Only 23andMe files are currently supported
 
   * Parsing is extremely fast: It takes only 0.3 seconds (on *my* machine,
-    at least) to fully parse a 23andme text file and build up a hash table
+    at least) to fully parse a 23andMe text file and build up a hash table
     in memory, or about 80 Mb/s.  In fact, it's fast enough that I won't
     bother saving the hash table in a binary format, as originally intended.
 
@@ -35,7 +35,7 @@ Requirements
 
   * Google sparse hash map
 
-  * A 23andme genome. Many people have uploaded theirs on the net for free
+  * A 23andMe genome. Many people have uploaded theirs on the net for free
     use. See for example OpenSNP.
 
   * Python development files, if you want to build the Python module.
@@ -44,7 +44,7 @@ Requirements
 Usage
 -----
 
-Build the sources by using `make -j32 dna`, save your 23andme genome as
+Build the sources by using `make -j32 dna`, save your 23andMe genome as
 `genome.txt` and run
 
     $ /usr/bin/time -lp ./dna genome.txt
@@ -114,7 +114,7 @@ almost completely the same as they state:
       rs7183877(C;C),
       rs1800401(C;C))
 
-The only thing to note is each SNP's orientation. 23andme uses positive
+The only thing to note is each SNP's orientation. 23andMe uses positive
 orientation, while SNPedia has varying orientation. That's why we flip the
 orientation in the last check for the `rs1800401` SNP 
 

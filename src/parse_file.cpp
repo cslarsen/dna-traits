@@ -56,7 +56,7 @@ static inline void skiptab(const char*& s)
 }
 
 /**
- * Reads a 23andme-formatted genome file.  It currently uses reference human
+ * Reads a 23andMe-formatted genome file.  It currently uses reference human
  * assembly build 37 (annotation release 104).
  */
 void parse_file(const std::string& name, DNA& dna)
