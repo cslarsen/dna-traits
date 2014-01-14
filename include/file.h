@@ -14,7 +14,7 @@ public:
     fd(open(file.c_str(), flags))
   {
     if ( fd < 0 )
-      std::runtime_error("Could not open file: " + file);
+      throw std::runtime_error("Could not open file: " + file);
   }
 
   ~File() {
