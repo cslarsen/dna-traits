@@ -23,26 +23,23 @@ class TestDNA(unittest.TestCase):
   def test_parse_file(self):
     """Parse a 23andMe genome file."""
     import dna_traits
-    snp = dna_traits.parse(self.genome_file)
+    dna = dna_traits.parse(self.genome_file)
+    self.assertIsNotNone(dna)
+    self.assertGreater(len(dna), 0)
 
-    self.assertIsNotNone(snp)
-    self.assertGreater(len(snp), 0)
-
-    # RSID
-    rsid, genotype = snp.items()[0]
-    self.assertEqual(rsid[:2], "rs")
-    for digit in rsid[2:]:
-      self.assertIn(digit, list("0123456789"))
-
-    # GENOTYPE
+  def test_genotypes(self):
+    import dna_traits
+    dna = dna_traits.parse(self.genome_file)
+    genotype = dna["rs7495174"]
+    self.assertIsNotNone(genotype)
     self.assertEqual(len(genotype), 2)
     self.assertIn(genotype[0], list("ATCG-"))
     self.assertIn(genotype[1], list("ATCG-"))
 
     # NOTE: These SNPs may not be present in all genomes!
-    self.assertIn("rs7495174", snp)
-    self.assertIn("rs1805007", snp)
-    self.assertIn("rs1800401", snp)
+    self.assertIsNotNone(dna["rs7495174"])
+    self.assertIsNotNone(dna["rs1805007"])
+    self.assertIsNotNone(dna["rs1800401"])
 
 if __name__ == "__main__":
   unittest.main(failfast=True)

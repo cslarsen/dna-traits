@@ -1,17 +1,21 @@
 DNA-traits Python API
 =====================
 
-This directory contains a Python API for DNA-traits.
+This directory contains a Python API for DNA-traits.  It is a Python module
+for *extremely* fast parsing of 23andMe genome files.
 
-It is a Python module for extremely fast parsing of 23andMe genome files.
-See the main dna-traits page for more information.
+See the main dna-traits page for more information on the underlying C++
+code.
 
 Current status
 --------------
 
-While I use C++ for fast parsing, I copy the entire hash table into a Python
-dictionary.  This is both slow and unnecessary.  In a future version I'll
-return an object uses `__getitem__` to query the internal C++ hash table.
+  * It's _very_ fast. It parses a 23andMe text file in only 0.3 seconds!
+
+  * Supports `__getitem__` so you can do `dna["rs123"]`.
+
+  * Does not _yet_ support all expected dictionary methods. E.g, no
+    `items()`, `keys()`, `values()`, etc.
 
 Usage
 -----
@@ -27,18 +31,29 @@ Import the module and parse a 23andMe genome file.
     >>> len(snp)
     949461
 
+    $ python
+    Python 2.7.5 (default, Aug 25 2013, 00:04:04)
+    [GCC 4.2.1 Compatible Apple LLVM 5.0 (clang-500.0.68)] on darwin
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> import dna_traits as dt
+    >>> dna = dt.parse("../genome.txt")
+    >>> dna.ychromo()
+    True
+    >>> dna["rs1800401"]
+    'GG'
+    >>> len(dna)
+    949461
+
 Print some items:
 
-    >>> snp.items()[0]
-    ('rs7060463', 'T-')
-    >>> snp.items()[-1]
-    ('rs7254116', 'AG')
-    >>> snp["rs7254116"]
+    >>> dna["rs7060463"]
+    'T-'
+    >>> dna["rs7254116"]
     'AG'
 
-You can see that we only map to genotypes.  There's no information about
-which chromosome or position the SNP is in, because the C++ version doesn't
-care about anything other than genotypes.
+As you can see, you only get back the genotypes.  There's no information
+about which chromosome or position the SNP is in, because the C++ version
+doesn't care about anything other than genotypes.
 
 Building
 --------

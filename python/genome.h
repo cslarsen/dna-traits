@@ -50,55 +50,60 @@ static char from_nucleotide(const Nucleotide& n)
   }
 }
 
-static PyObject* Genome_getitem(Genome* self, PyObject *args, PyObject *kw)
-{
-  char *arg = NULL;
+static PyMemberDef Genome_members[] = {
+  {NULL}
+};
 
-  if ( !PyArg_ParseTuple(args, "s", &arg) )
-    return NULL;
+// Genome.__len__
+static Py_ssize_t Genome_length(PyObject* self)
+{
+  auto genome = reinterpret_cast<Genome*>(self);
+  return static_cast<Py_ssize_t>(genome->dna->snp.size());
+}
+
+static PyObject* Genome_getitem(PyObject* self, PyObject* pykey)
+{
+  char *key = PyString_AsString(pykey);
 
   // require "rs" prefix
-  if ( !(arg[0]=='r' && arg[1]=='s') ) {
+  if ( !(key[0]=='r' && key[1]=='s') ) {
     PyErr_SetString(PyExc_KeyError, "Incorrectly formatted RSID.");
     return NULL;
   }
 
   // require numerical suffix
-  for ( auto p = arg+2; *p; ++p )
+  for ( auto p = key+2; *p; ++p )
     if ( !isdigit(*p) ) {
       PyErr_SetString(PyExc_KeyError, "Incorrectly formatted RSID.");
       return NULL;
     }
 
-  uint32_t rsid = atoi(arg+2);
+  uint32_t rsid = atoi(key+2);
 
-  if ( !self->dna->has(rsid) ) {
+  auto genome = reinterpret_cast<Genome*>(self);
+
+  if ( !genome->dna->has(rsid) ) {
     PyErr_SetString(PyExc_KeyError, "No such RSID in genome");
     return NULL;
   }
 
-  auto genotype = self->dna->operator[](rsid);
+  auto genotype = genome->dna->operator[](rsid);
   char buf[3] = {from_nucleotide(genotype.first),
                  from_nucleotide(genotype.second), 0};
 
   return Py_BuildValue("s", buf);
 }
 
-static PyMemberDef Genome_members[] = {
-  {NULL}
+static PyMappingMethods Genome_map = {
+  Genome_length,
+  Genome_getitem,
+  NULL // setitem
 };
 
-
 static PyMethodDef Genome_methods[] = {
+  // TODO: make ychromo a property
   {"ychromo", (PyCFunction)Genome_ychromo, METH_NOARGS,
    "Returns True if genome contains a Y-chromosome."},
-
-  /*
-   * TODO: Support __getitem__ using tp_as_mapping.
-   * See http://docs.python.org/2/c-api/typeobj.html etc.
-   */
-  {"snp", (PyCFunction)Genome_getitem, METH_VARARGS,
-   "Return SNP with given RSID."},
   {NULL}
 };
 
@@ -116,7 +121,7 @@ static PyTypeObject GenomeType = {
   0, // tprepr
   0, // tp as number
   0, // tp as seq
-  0, // tp as map
+  &Genome_map, // tp as map
   0, // tp hash
   0, // tp call
   0, // tp str
@@ -124,7 +129,8 @@ static PyTypeObject GenomeType = {
   0, // tp setattro
   0, // tp as buff
   Py_TPFLAGS_DEFAULT, // tpflags
-  "A genome with SNPs, genotypes, etc.", // docs
+  "A genome with SNPs, genotypes, etc.\r\n\r\n"
+  "You can query for RSIDs by doing foo[\"rs123\"].", // docs
   0, // traverse
   0, // clear
   0, // rich compare
