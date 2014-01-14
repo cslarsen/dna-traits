@@ -15,25 +15,30 @@ DNA and bioinformatics.
 Current status
 --------------
 
-* Only 23andme files are currently supported
+  * Only 23andme files are currently supported
 
-* Parsing is extremely fast: It takes only 0.3 seconds (on *my* machine, at
-  least) to fully parse a 23andme text file and build up a hash table in
-  memory, or about 80 Mb/s.  In fact, it's fast enough that I won't bother
-  saving the hash table in a binary format, as originally intended.
+  * Parsing is extremely fast: It takes only 0.3 seconds (on *my* machine,
+    at least) to fully parse a 23andme text file and build up a hash table
+    in memory, or about 80 Mb/s.  In fact, it's fast enough that I won't
+    bother saving the hash table in a binary format, as originally intended.
 
-* Rules and phenotype criteria from SNPedia must be hard-coded in C++. Later
-  on, it would be nice to put these in some form of interpreted text file.
+  * Rules and phenotype criteria from SNPedia must be hard-coded in C++.
+    Later on, it would be nice to put these in some form of interpreted text
+    file.
 
+  * Has a Python API for fast parsing and quick experimentation.
 
 Requirements
 ------------
 
-* A C++11 compiler
-* Google sparse hash map
-* A 23andme genome. Many people have uploaded theirs on the net for free
-  use. See for example OpenSNP.
-* Python development files, if you want to build the Python module.
+  * A C++11 compiler
+
+  * Google sparse hash map
+
+  * A 23andme genome. Many people have uploaded theirs on the net for free
+    use. See for example OpenSNP.
+
+  * Python development files, if you want to build the Python module.
 
 
 Usage
