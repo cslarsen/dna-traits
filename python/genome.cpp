@@ -134,7 +134,9 @@ PyObject* Genome_getitem(PyObject* self, PyObject* pykey)
   auto genome = reinterpret_cast<Genome*>(self);
 
   if ( !genome->dna->has(rsid) ) {
-    PyErr_SetString(PyExc_KeyError, "No such RSID in genome");
+    char err[32];
+    sprintf(err, "No rs%u in genome", rsid);
+    PyErr_SetString(PyExc_KeyError, err);
     return NULL;
   }
 
