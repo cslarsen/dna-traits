@@ -90,6 +90,31 @@ As you can see the running time may vary a bit and is usually a bit lower
 than the pure C++ version, but not by much.
 
 
+Example application: Measuring bone strength
+--------------------------------------------
+
+You can use `bone-strength.py some-genome.txt` to get an indication of bone
+strength from a genome.  This code is based on the 23andMe example Go
+application, and is in itself based on a PLOS paper by Zheng, et al.
+
+To use it, simply run it on a 23andMe genome file:
+
+    $ ./bone-strength.py ../genome.txt
+    Bone-strength estimated from genome ../genome.txt
+    (Higher points is stronger bone)
+
+      Lower forearm risk:  4 of 6
+       Cortical strength:  3 of 4
+             Forearm BMD:  3 of 4
+             Total score: 10 of 14
+
+    NOTE: rs2908004 wasn't in this genome; scores may be a bit too high
+
+As you can see, we couldn't find the SNP rs2908004 in the genome, so
+calculations may in fact be a bit too high (I'm not sure if 23andMe usually
+reads this SNP or not).
+
+
 Author and license
 ------------------
 Copyright (C) 2014 Christian Stigen Larsen,
