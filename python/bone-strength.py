@@ -67,12 +67,15 @@ def main(files):
     print("Bone-strength estimated from genome %s" % file)
     print("(Higher points is stronger bone)\n")
 
+    # Add totals
+    max_total = sum(p for p,_ in scores.values())
+    total = sum(p for _,p in scores.values())
+    scores["Total score"] = (total, max_total)
+
     for title, (max_score, score) in scores.items():
       print("  %18s: %2d of %-2d" % (title, score, max_score))
 
-    max_total = sum(p for p,_ in scores.values())
-    total = sum(p for _,p in scores.values())
-    print("  %18s: %2d of %2d\n" % ("Total score", total, max_total))
+    print("")
 
     if not genome.has("rs2908004"):
       print("NOTE: rs2908004 wasn't in this genome; scores may be a bit too high")
