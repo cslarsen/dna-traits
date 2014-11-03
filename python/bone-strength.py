@@ -70,7 +70,7 @@ def main(files):
     # Add totals
     max_total = sum(p for p,_ in scores.values())
     total = sum(p for _,p in scores.values())
-    scores["Total score"] = (total, max_total)
+    scores["Total score"] = (max_total, total)
 
     for title, (max_score, score) in scores.items():
       print("  %18s: %2d of %-2d" % (title, score, max_score))
