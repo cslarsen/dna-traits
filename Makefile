@@ -23,7 +23,7 @@ dna: src/dna.o src/filesize.o src/parse_file.o src/summary.o dna.o
 all: $(TARGETS)
 
 python-api: $(TARGETS)
-	$(MAKE) -C python dna_traits.so
+	$(MAKE) -C python _dna_traits.so
 
 python-check: python-api
 	$(MAKE) -C python check

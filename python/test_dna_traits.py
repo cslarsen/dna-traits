@@ -33,8 +33,8 @@ class TestDNA(unittest.TestCase):
     genotype = dna["rs7495174"]
     self.assertIsNotNone(genotype)
     self.assertEqual(len(genotype), 2)
-    self.assertIn(genotype[0], list("ATCG-"))
-    self.assertIn(genotype[1], list("ATCG-"))
+    self.assertIn(str(genotype[0]), list("ATCG-"))
+    self.assertIn(str(genotype[1]), list("ATCG-"))
 
     # NOTE: These SNPs may not be present in all genomes!
     self.assertIsNotNone(dna["rs7495174"])

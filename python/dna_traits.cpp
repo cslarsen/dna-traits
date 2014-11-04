@@ -32,14 +32,14 @@ static PyMethodDef methods[] = {
 };
 
 extern "C"
-void initdna_traits()
+void init_dna_traits()
 {
   // Initialize custom python types
   GenomeType.tp_new = PyType_GenericNew;
   if ( PyType_Ready(&GenomeType) < 0 )
     return;
 
-  auto module = Py_InitModule3("dna_traits", methods,
+  auto module = Py_InitModule3("_dna_traits", methods,
                                "A fast parser for 23andMe genome files");
 
   Py_INCREF(&GenomeType);

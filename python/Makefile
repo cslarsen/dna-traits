@@ -1,4 +1,4 @@
-TARGETS := dna_traits.o genome.o dna_traits.so
+TARGETS := dna_traits.o genome.o _dna_traits.so
 CXX := g++
 CC := $(CXX)
 
@@ -17,10 +17,10 @@ dna_traits.o: dna_traits.cpp genome.h
 genome.o: genome.cpp genome.h
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
-dna_traits.so: dna_traits.o genome.o ../src/dna.o ../src/parse_file.o ../src/filesize.o
+_dna_traits.so: dna_traits.o genome.o ../src/dna.o ../src/parse_file.o ../src/filesize.o
 	$(CXX) $(PYLDFLAGS) -shared -o $@ $^
 
-check: dna_traits.so
+check: _dna_traits.so
 	python test_dna_traits.py -v
 
 bench: all

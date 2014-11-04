@@ -16,43 +16,15 @@ Distributed under the GPL v3 or later. See COPYING.
 import sys
 import dna_traits as dt
 
-class SNPs(object):
-  """Helper-class for looking up SNPs."""
-
-  def __init__(self, genome):
-    self.genome = genome
-
-  def __getattr__(self, name):
-    # Interpcet RSIDs
-    if name.startswith("rs"):
-      try:
-        return self.genome[name]
-      except KeyError:
-        return ""
-    else:
-      raise AttributeError("Invalid RSID %s" % name)
-
-  def male(self):
-    """Return True if genome belongs to a male."""
-    return self.genome.ychromo()
-
-  def has(self, rsid):
-    """Return True if RSID is found in genome."""
-    try:
-      self.genome[rsid]
-      return True
-    except KeyError:
-      return False
-
-def bone_strength(snp):
+def bone_strength(genome):
   """Returns bone strength indicators."""
-  return {"Cortical strength": (4, 4 - snp.rs9525638.count("T") 
-                                     - snp.rs2707466.count("C")),
-                "Forearm BMD": (4, 4 - snp.rs2908004.count("G")
-                                     - snp.rs2707466.count("C")),
-         "Lower forearm risk": (6, 6 - snp.rs7776725.count("C")
-                                     - snp.rs2908004.count("G")
-                                     - snp.rs2707466.count("C"))}
+  return {"Cortical strength": (4, 4 - genome.rs9525638.count("T") 
+                                     - genome.rs2707466.count("C")),
+                "Forearm BMD": (4, 4 - genome.rs2908004.count("G")
+                                     - genome.rs2707466.count("C")),
+         "Lower forearm risk": (6, 6 - genome.rs7776725.count("C")
+                                     - genome.rs2908004.count("G")
+                                     - genome.rs2707466.count("C"))}
 
 def main(files):
   if not files:
@@ -61,7 +33,7 @@ def main(files):
     return 1
 
   for file in files:
-    genome = SNPs(dt.parse(file))
+    genome = dt.parse(file)
     scores = bone_strength(genome)
 
     print("Bone-strength estimated from genome %s" % file)
@@ -78,7 +50,7 @@ def main(files):
     print("")
 
     for rsid in ["rs2707466", "rs2908004", "rs7776725", "rs9525638"]:
-        if not genome.has(rsid):
+        if rsid not in genome:
             print(("Note: %s wasn't in this genome; scores may be a bit " +
                   "too high") % rsid)
 

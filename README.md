@@ -147,21 +147,43 @@ can parse 23andMe files and inspect them using Python:
 
     $ python
     >>> import dna_traits as dt
-    >>> dna = dt.parse("genome.txt")
-    >>> dna.ychromo()
+    >>> genome = dt.parse("genome.txt")
+    >>> genome
+    Genome(ychromo=True, orientation=1)
+    >>> dna.male
     True
-    >>> dna["rs1800401"]
-    'GG'
-    >>> len(dna)
+    >>> dna.female
+    False
+
+You can query for SNPs in several ways:
+
+    >>> genome["rs1800401"]
+    SNP(rsid=rs1800401, genotype=GG, orientation=1)
+
+    >>> genome.rs1800401
+    SNP(rsid=rs1800401, genotype=GG, orientation=1)
+
+    >>> genome[1800401]
+    SNP(rsid=rs1800401, genotype=GG, orientation=1)
+
+    >>> len(genome)
     949461
 
-Print some items:
+For the SNP above,
 
-    >>> dna["rs7060463"]
-    'T-'
-    >>> dna["rs7254116"]
-    'AG'
+    >>> snp = genome.rs1800401
+    >>> snp.count("G")
+    2
 
+You can get the complement by doing any of
+
+    >>> snp.complement()
+    SNP(rsid=rs1800401, genotype=CC, orientation=1)
+
+    >> ~snp
+    SNP(rsid=rs1800401, genotype=CC, orientation=1)
+
+For more information, type `help(object or class)`.
 
 Copyright and license
 ---------------------

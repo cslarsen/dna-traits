@@ -19,4 +19,4 @@ best = min(timeit.Timer(
   .repeat(count, 1))
 
 print("\nThe best speed was {}".format(best))
-print("We report the best time only to mitigate OS preemption noise.")
+print("We report only the best time to mitigate OS preemption noise.")
