@@ -77,8 +77,10 @@ def main(files):
 
     print("")
 
-    if not genome.has("rs2908004"):
-      print("NOTE: rs2908004 wasn't in this genome; scores may be a bit too high")
+    for rsid in ["rs2707466", "rs2908004", "rs7776725", "rs9525638"]:
+        if not genome.has(rsid):
+            print(("Note: %s wasn't in this genome; scores may be a bit " +
+                  "too high") % rsid)
 
 if __name__ == "__main__":
   try:
