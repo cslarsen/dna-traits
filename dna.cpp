@@ -32,6 +32,7 @@ int main(int argc, char** argv)
            << "  " << format(dna, 7495174) << endl
            << "  " << format(dna, 1805007) << endl
            << "  " << format(dna, 1800401) << endl
+           << "  " << format(dna, 28357092) << endl
            << endl;
 
       summary(dna);
@@ -39,7 +40,8 @@ int main(int argc, char** argv)
 
     return 0;
   } catch ( const exception& e) {
-    cout << endl << "Error: " << e.what() << endl;
+    cout << endl
+         << "Error: " << e.what() << endl;
     return 1;
   }
 }

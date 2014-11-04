@@ -41,7 +41,16 @@ Nucleotide to_nucleotide(const char ch)
     case 'G': return G;
     case 'C': return C;
     case 'T': return T;
-     default: return NONE;
+    case 'D': return D;
+    case 'I': return I;
+    case '\r':
+    case '-': return NONE;
+    default: {
+      std::ostringstream s;
+      s << "Unknown nucleotide character w/value "
+        << static_cast<int>(ch);
+      throw std::runtime_error(s.str().c_str());
+    } break;
   }
 }
 

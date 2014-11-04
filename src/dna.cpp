@@ -9,10 +9,12 @@ std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
 {
   switch ( n ) {
     case A: return o << 'A';
-    case G: return o << 'G';
     case C: return o << 'C';
+    case D: return o << 'D';
+    case G: return o << 'G';
+    case I: return o << 'I';
+    case NONE: return o << '-';
     case T: return o << 'T';
-    default: return o << '-';
   }
 }
 
@@ -39,6 +41,8 @@ Nucleotide complement(const Nucleotide& n)
     case C: return G;
     case G: return C;
     case T: return A;
+    case D: return D;
+    case I: return I;
     case NONE: return NONE;
   }
 }

@@ -13,16 +13,16 @@
 #include <sparsehash/sparse_hash_map>
 
 enum Nucleotide {
-  NONE, A, G, C, T
+  NONE, A, G, C, T, D, I
 };
 
 Nucleotide complement(const Nucleotide& n);
 
 // We can get this down to a byte if we want to
 #pragma pack(1)
-struct Genotype { // should only occupy 5 bits, i.e. 1 byte
-  Nucleotide first : 4;
-  Nucleotide second : 4;
+struct Genotype { // should only occupy 10 bits, i.e. 2 bytes
+  Nucleotide first : 5;
+  Nucleotide second : 5;
 
   Genotype(const Nucleotide& a = NONE,
            const Nucleotide& b = NONE)

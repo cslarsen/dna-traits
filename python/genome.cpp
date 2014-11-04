@@ -101,7 +101,9 @@ static char from_nucleotide(const Nucleotide& n)
     case T: return 'T';
     case C: return 'C';
     case G: return 'G';
-    default: return '-';
+    case D: return 'D';
+    case I: return 'I';
+    case NONE: return '-';
   }
 }
 
