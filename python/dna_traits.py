@@ -142,8 +142,8 @@ class Genome:
             return False
 
     def __repr__(self):
-        return "Genome(ychromo=%s, orientation=%s)" % (
-                self.ychromo, self.orientation)
+        return "Genome(len=%d, ychromo=%s, orientation=%s)" % (
+                len(self), self.ychromo, self.orientation)
 
     def __getattr__(self, rsid):
         # Query with genome.rs28357092
