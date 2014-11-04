@@ -17,10 +17,11 @@ Current status
 
   * Only 23andMe files are currently supported
 
-  * Parsing is extremely fast: It takes only 0.3 seconds (on *my* machine,
-    at least) to fully parse a 23andMe text file and build up a hash table
-    in memory, or about 80 Mb/s.  In fact, it's fast enough that I won't
-    bother saving the hash table in a binary format, as originally intended.
+  * Parsing is extremely fast: It takes only 0.3 to 0.5 seconds (on *my*
+    machine, at least) to fully parse a 23andMe text file and build up a
+    hash table in memory, or about 80 Mb/s.  In fact, it's fast enough that
+    I won't bother saving the hash table in a binary format, as originally
+    intended.
 
   * Rules and phenotype criteria from SNPedia must be hard-coded in C++.
     Later on, it would be nice to put these in some form of interpreted text
@@ -40,6 +41,13 @@ Requirements
 
   * Python development files, if you want to build the Python module.
 
+Building
+--------
+
+If Google sparse hash map is located in `/usr/local/include`, build
+everything, including the Python API, with:
+
+    $ CXXFLAGS=-I/usr/local/include make -j all python-api
 
 Usage
 -----

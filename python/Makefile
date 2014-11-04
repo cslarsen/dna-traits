@@ -1,14 +1,13 @@
-TARGETS = dna_traits.o genome.o dna_traits.so
+TARGETS := dna_traits.o genome.o dna_traits.so
+CXX := g++
+CC := $(CXX)
 
-CXX = g++
-CC = $(CXX)
-
-CXXFLAGS = -I../include --std=c++11 -Wall \
+override CXXFLAGS += -I../include --std=c++11 -Wall \
 					 -Ofast -march=native -mtune=native \
 					 -flto
 
-PYCFLAGS = $(shell python-config --cflags)
-PYLDFLAGS = $(shell python-config --ldflags)
+PYCFLAGS := $(shell python-config --cflags)
+PYLDFLAGS := $(shell python-config --ldflags)
 
 all: $(TARGETS)
 
