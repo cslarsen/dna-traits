@@ -21,6 +21,9 @@ class Nucleotide:
         else:
             return 1
 
+    def __eq__(self, o):
+        return self._value == o._value
+
     def complement(self):
         compl = {"A": "T",
                  "C": "G",
@@ -68,6 +71,23 @@ class SNP:
         genotype = map(lambda n: n.complement(), self._genotype)
         return SNP(genotype, self._rsid, self._orientation)
 
+    def positive(self):
+        """Returns positively oriented SNP."""
+        if self.orientation < 0:
+            return self.complement()
+        else:
+            return self
+
+    def negative(self):
+        """Returns negatively oriented SNP."""
+        if self.orientation > 0:
+            return self.complement()
+        else:
+            return self
+
+    def __eq__(self, snp):
+        return str(self.positive()) == str(snp.positive())
+
     def __invert__(self):
         return self.complement()
 
@@ -91,13 +111,12 @@ class Genome:
         self._orientation = orientation
 
     def _rsid(self, rsid):
-        if isinstance(rsid, str):
-            return rsid
-
         if isinstance(rsid, int):
             return "rs%d" % rsid
-
-        raise ValueError("Invalid RSID: %s" % str(rsid))
+        elif isinstance(rsid, str) and rsid.startswith("rs"):
+            return rsid
+        else:
+            raise ValueError("Invalid RSID: %s" % rsid)
 
     @property
     def ychromo(self):
@@ -111,7 +130,7 @@ class Genome:
 
     @property
     def female(self):
-        """True if genome contains no Y-chromosome."""
+        """False if genome contains a Y-chromosome."""
         return not self.male
 
     @property
@@ -124,12 +143,11 @@ class Genome:
             geno = map(Nucleotide, self._genome[rsid])
             return SNP(geno, rsid, self._orientation)
         except KeyError:
-            return SNP([Nucleotide("-"), Nucleotide("-")],
-                       rsid, self._orientation)
+            return None
 
     def snp(self, rsid):
         """Returns SNP with given RSID."""
-        return self.__getitem(rsid)
+        return self.__getitem__(rsid)
 
     def __str__(self):
         return "Genome"
