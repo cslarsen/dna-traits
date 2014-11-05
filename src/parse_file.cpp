@@ -20,13 +20,12 @@ static void skip_comments(const char*& s)
       ; // loop
 }
 
-static const char*& skipfield(const char*& s)
+static inline const char*& skipfield(const char*& s)
 {
   while ( (*s != '\t') &&
           (*s != '\r') &&
           (*s != '\n') ) ++s;
-  ++s;
-  return s;
+  return ++s;
 }
 
 static inline String readfield(const char*& s)
@@ -34,24 +33,11 @@ static inline String readfield(const char*& s)
   return String {s, skipfield(s)-s-1};
 }
 
-Nucleotide to_nucleotide(const char ch)
+static Nucleotide nuclmap[256] = {NONE};
+
+static inline Nucleotide to_nucleotide(const char ch)
 {
-  switch ( ch ) {
-    case 'A': return A;
-    case 'G': return G;
-    case 'C': return C;
-    case 'T': return T;
-    case 'D': return D;
-    case 'I': return I;
-    case '\r':
-    case '-': return NONE;
-    default: {
-      std::ostringstream s;
-      s << "Unknown nucleotide character w/value "
-        << static_cast<int>(ch);
-      throw std::runtime_error(s.str().c_str());
-    } break;
-  }
+  return nuclmap[static_cast<const std::size_t>(ch)];
 }
 
 static inline void skipline(const char*& s)
@@ -70,6 +56,13 @@ static inline void skiptab(const char*& s)
  */
 void parse_file(const std::string& name, DNA& dna)
 {
+  nuclmap[static_cast<unsigned>('A')] = A;
+  nuclmap[static_cast<unsigned>('G')] = G;
+  nuclmap[static_cast<unsigned>('C')] = C;
+  nuclmap[static_cast<unsigned>('T')] = T;
+  nuclmap[static_cast<unsigned>('D')] = D;
+  nuclmap[static_cast<unsigned>('I')] = I;
+
   File fd(name, O_RDONLY);
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
   auto s = static_cast<const char*>(fmap.ptr());
@@ -100,9 +93,7 @@ void parse_file(const std::string& name, DNA& dna)
     skiptab(s); // skip position
 
     str = readfield(s); // genotype
-    Genotype genotype(to_nucleotide(str.ptr[0]),
-                      to_nucleotide(str.ptr[1]));
-
-    dna.snp.insert({rsid, genotype});
+    dna.snp.insert({rsid, Genotype(to_nucleotide(str.ptr[0]),
+                                   to_nucleotide(str.ptr[1]))});
   }
 }

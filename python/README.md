@@ -82,9 +82,8 @@ It parses a file 70 times and prints the best result:
     python bench.py
     Measuring parsing speed (70 times)
     [######################################################################]
-    The best speed was 0.388225078583
-
-    We report the best time only to mitigate OS preemption noise.
+    The best speed was 0.175804138184
+    We report only the best time to mitigate OS preemption noise.
 
 As you can see the running time may vary a bit and is usually a bit lower
 than the pure C++ version, but not by much.

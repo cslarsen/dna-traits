@@ -17,7 +17,7 @@ Current status
 
   * Only 23andMe files are currently supported
 
-  * Parsing is extremely fast: It takes only 19 ms (on *my* machine, at
+  * Parsing is extremely fast: It takes only 18 ms (on *my* machine, at
     least) to fully parse a 23andMe text file and build up a hash table in
     memory, or about 140 Mb/s which corresponds to 70% of max read speed on
     my system.  In fact, it's fast enough that I won't bother saving the
