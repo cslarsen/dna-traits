@@ -216,7 +216,7 @@ class Genome:
         Example:
             all(match(genome, [("rs4778241", "CC"), ("rs1291832", "GG")]))
         """
-        return (str(genome[rsid]) == pair for rsid, pair in criteria)
+        return (self[rsid]==genotype for rsid, genotype in criteria)
 
 
 def parse(filename, orientation=+1):
