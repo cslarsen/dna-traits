@@ -204,6 +204,16 @@ class Genome:
         """Returns number of SNPs in this genome."""
         return len(self._genome)
 
+    def match(self, criteria):
+        """Match list of (RSID, BasePair) with genome. BasePair should be a
+        string with positive orientation.
+
+        Example:
+            all(match(genome, [("rs4778241", "CC"), ("rs1291832", "GG")]))
+        """
+        return (str(genome[rsid]) == pair for rsid, pair in criteria)
+
+
 def parse(filename, orientation=+1):
     """Parses a 23andme file and returns a Genome."""
     return Genome(_dna_traits.parse(filename), orientation)

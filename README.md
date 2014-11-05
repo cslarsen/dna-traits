@@ -1,15 +1,11 @@
 dna-traits
 ==========
 
-dna-traits infers various phenotypes from 23andMe genome files by using data
-from SNPedia.
+Consists of a very fast 23andme genome text file parser written in C++ and a
+Python API for querying it.
 
-In other words, you can download your personal genome from 23andMe and run
-it through this program, and it will attempt to tell things like your eye
-color, and so on.
-
-This is just a personal hobby project I've started to teach me more about
-DNA and bioinformatics.
+Has some example applications for inferring various phenotypes from a genome
+using rule sets from SNPedia.
 
 
 Current status
@@ -17,17 +13,18 @@ Current status
 
   * Only 23andMe files are currently supported
 
-  * Parsing is extremely fast: It takes only 18 ms (on *my* machine, at
-    least) to fully parse a 23andMe text file and build up a hash table in
-    memory, or about 140 Mb/s which corresponds to 70% of max read speed on
-    my system.  In fact, it's fast enough that I won't bother saving the
-    hash table in a binary format, as originally intended.
+  * Parsing is extremely fast: On *my* machine, it only takes 0.18 seconds
+    to fully parse a 23andMe genome text file and build up a hash table in
+    memory.  That's around 140 Mb/s out of 200 Mb/s possible on my drive.
 
-  * Rules and phenotype criteria from SNPedia must be hard-coded in C++.
-    Later on, it would be nice to put these in some form of interpreted text
-    file.
+    In fact, it's fast enough that I won't bother saving the hash table in a
+    binary format, as originally intended.
 
-  * Has a Python API for fast parsing and quick experimentation.
+  * Rules and phenotype criteria from SNPedia can be written using the
+    Python API.
+
+  * The parser is so fast that I'm planning on extracting it as a separate
+    project and make it available through PyPi.
 
 Requirements
 ------------
@@ -36,7 +33,7 @@ Requirements
 
   * Google sparse hash map
 
-  * A 23andMe genome. Many people have uploaded theirs on the net for free
+  * A 23andMe genome file. Many people have uploaded theirs on the net for free
     use. See for example OpenSNP.
 
   * Python development files, if you want to build the Python module.
@@ -47,7 +44,7 @@ Building
 If Google sparse hash map is located in `/usr/local/include`, build
 everything, including the Python API, with:
 
-    $ CXXFLAGS=-I/usr/local/include make -j all python-api
+    $ CXXFLAGS=-I/usr/local/include make -j python-api
 
 Usage
 -----
@@ -96,8 +93,18 @@ and you should get some output like
 How to add your own rules
 -------------------------
 
-Here is how we determine/guess/approximate if the person in question has
-blue eyes:
+SNPedia contains the `gs237` criteria for determining whether a person has
+blue eyes. At http://snpedia.com/index.php/Gs237/criteria the rule set says:
+
+    and(
+      rs4778241(C;C),
+      rs12913832(G;G),
+      rs7495174(A;A),
+      rs8028689(T;T),
+      rs7183877(C;C),
+      rs1800401(C;C))
+
+In C++ this would be:
 
     static bool gs237(const DNA& dna)
     {
@@ -109,25 +116,19 @@ blue eyes:
           && dna[ 1800401] == ~CC;
     }
 
-
-If you look up the corresponding `gs237` criteria on SNPedia -- at
-http://snpedia.com/index.php/Gs237/criteria -- you can see that the code is
-almost completely the same as they state:
-
-    and(
-      rs4778241(C;C),
-      rs12913832(G;G),
-      rs7495174(A;A),
-      rs8028689(T;T),
-      rs7183877(C;C),
-      rs1800401(C;C))
-
 The only thing to note is each SNP's orientation. 23andMe uses positive
 orientation, while SNPedia has varying orientation. That's why we flip the
 orientation in the last check for the `rs1800401` SNP 
 
-You can make your own rules like this. (Later on, I should put the rules in
-a text file.)
+In Python, this can be done in any number of ways, but one way is to use the
+``Genome.match`` function:
+
+    all(genome.match((("rs4778241",  "CC"),
+                      ("rs12913832", "GG"),
+                      ("rs7495174",  "AA"),
+                      ("rs8028689",  "TT"),
+                      ("rs7183877",  "CC"),
+                      ("rs1800401",  "GG"))))
 
 
 Python API
