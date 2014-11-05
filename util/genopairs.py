@@ -50,6 +50,8 @@ Update: 23andme also has D (delete) and I (insert).
         We thus need 28 bits to represent all of them uniquely.
 """
 
+import math
+
 nucleotides = "AGCT-DI"
 
 pairs = set()
@@ -65,3 +67,6 @@ print(" 0  0b0    <Not in genome>")
 
 for no, pair in enumerate(sorted(pairs), 1):
   print("%2d  %-6s %s" % (no, str(bin(no)), pair))
+
+bits = int(math.ceil(math.log(len(pairs))/math.log(2)))
+print("\nResult: Can represent two base-pairs using %d bits" % bits)
