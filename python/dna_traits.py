@@ -107,6 +107,24 @@ class SNP:
                     self._rsid, self._genostr(), self._orientation)
 
 
+class GenomeIterator:
+    def __init__(self, genome):
+        self._genome = genome
+        self._rsid = 0
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        while self._rsid not in self._genome:
+            self._rsid += 1
+            if self._rsid >= len(self._genome):
+                raise StopIteration()
+
+        rsid = self._rsid
+        self._rsid += 1
+        return self._genome[rsid]
+
 class Genome:
     """A genome consisting of SNPs."""
 
@@ -121,6 +139,9 @@ class Genome:
             return rsid
         else:
             raise ValueError("Invalid RSID: %s" % rsid)
+
+    def __iter__(self):
+        return GenomeIterator(self)
 
     @property
     def ychromo(self):

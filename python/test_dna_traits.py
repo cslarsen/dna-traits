@@ -12,6 +12,18 @@ class TestGenome(unittest.TestCase):
     def test_len(self):
         self.assertGreater(len(self.genome), 0)
 
+    def test_iterator_increases(self):
+        rsids = []
+        for snp in self.genome:
+            rsids.append(int(snp.rsid[2:]))
+            if len(rsids)>10:
+                break
+        self.assertEqual(sorted(rsids), rsids)
+
+    @unittest.skip("Unimplemented")
+    def test_slice(self):
+        self.assertEqual(len(self.genome[0:10]), 10)
+
     def test_ychromo(self):
         self.assertIsInstance(self.genome.ychromo, bool)
         self.assertIsInstance(self.genome.female, bool)
