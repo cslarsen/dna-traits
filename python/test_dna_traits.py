@@ -33,6 +33,8 @@ class TestGenome(unittest.TestCase):
             if rsid not in self.genome:
                 continue
 
+            NN = dt.SNP([], rsid, 1)
+
             # Various ways of accessing SNPs
             self.assertIn(rsid, self.genome)
             self.assertIn(int(rsid[2:]), self.genome)
@@ -43,8 +45,8 @@ class TestGenome(unittest.TestCase):
             self.assertIsNotNone(self.genome.snp(rsid))
             self.assertIsNotNone(self.genome.snp(int(rsid[2:])))
             #
-            self.assertIsNone(self.genome[rsid*2])
-            self.assertIsNone(self.genome[int(rsid[2:])*10])
+            self.assertEqual(self.genome[rsid*2], NN)
+            self.assertEqual(self.genome[int(rsid[2:])*10], NN)
 
             snp = self.genome[rsid]
             self.assertIsNotNone(snp)

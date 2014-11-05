@@ -143,7 +143,7 @@ class Genome:
             geno = map(Nucleotide, self._genome[rsid])
             return SNP(geno, rsid, self._orientation)
         except KeyError:
-            return None
+            return SNP([], rsid, self._orientation)
 
     def snp(self, rsid):
         """Returns SNP with given RSID."""
