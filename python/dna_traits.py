@@ -118,6 +118,8 @@ class GenomeIterator:
     def next(self):
         while self._rsid not in self._genome:
             self._rsid += 1
+            # NOTE: This is *wrong*, we need to check if self._rsid >= max
+            # rsid in genome
             if self._rsid >= len(self._genome):
                 raise StopIteration()
 
