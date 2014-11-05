@@ -45,7 +45,7 @@ def main(files):
     scores["Total score"] = (max_total, total)
 
     for title, (max_score, score) in scores.items():
-      print("  %18s: %2d of %-2d" % (title, score, max_score))
+      print("  %18s: %2d of %2d" % (title, score, max_score))
 
     print("")
 
