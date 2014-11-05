@@ -1,12 +1,8 @@
 dna-traits
 ==========
 
-Consists of a very fast 23andme genome text file parser written in C++ and a
-Python API for querying it.
-
-Has some example applications for inferring various phenotypes from a genome
-using rule sets from SNPedia.
-
+Contains a *very* fast 23andMe file parser (written in C++) exposed through
+a Python API for querying the genome.
 
 Current status
 --------------
@@ -25,6 +21,9 @@ Current status
 
   * The parser is so fast that I'm planning on extracting it as a separate
     project and make it available through PyPi.
+
+  * The Python API is currenty somewhat limited and inconsistent, but still
+    very usable!
 
 Requirements
 ------------
@@ -46,52 +45,9 @@ everything, including the Python API, with:
 
     $ CXXFLAGS=-I/usr/local/include make -j python-api
 
-Usage
------
 
-Build the sources by using `make -j32 dna`, save your 23andMe genome as
-`genome.txt` and run
-
-    $ /usr/bin/time -lp ./dna genome.txt
-
-and you should get some output like
-
-    Reading genome.txt ... done
-    Read 949461 unique SNPs
-
-    Example SNPs in this genome:
-
-      rs7495174 AA
-      rs1805007 CC
-      rs1800401 GG
-
-    SUMMARY
-
-      Gender:     Male (has Y-chromosome)
-      Blue eyes?  Yes (gs237)
-      Skin color: Probably light-skinned, European ancestry (rs1426654)
-
-    real         0.37
-    user         0.34
-    sys          0.02
-      34164736  maximum resident set size
-             0  average shared memory size
-             0  average unshared data size
-             0  average unshared stack size
-          8360  page reclaims
-             0  page faults
-             0  swaps
-             0  block input operations
-             0  block output operations
-             0  messages sent
-             0  messages received
-             0  signals received
-             0  voluntary context switches
-             1  involuntary context switches
-
-
-How to add your own rules
--------------------------
+Example of inferring phenotypes
+-------------------------------
 
 SNPedia contains the `gs237` criteria for determining whether a person has
 blue eyes. At http://snpedia.com/index.php/Gs237/criteria the rule set says:
