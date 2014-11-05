@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+"""
+Parses 23andMe genome into variable `genome` and starts a Python REPL.
+
+Use this for quickly querying a genome by hand.
+"""
+
+import code
+import sys
+
+import dna_traits as dt
+
+def repl(file):
+    code.interact("Type `genome` to see Genome parsed from %s" % file,
+        local={"genome": dt.parse(file)})
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: repl genome.txt")
+        print("Starts a Python REPL with the variable `genome` initialized")
+        print("from the 23andMe genome data in the file.")
+        sys.exit(1)
+
+    repl(sys.argv[1])
