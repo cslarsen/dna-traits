@@ -12,8 +12,6 @@ int main(int argc, char** argv)
 
   try {
     for ( auto n=1; n<argc; ++n ) {
-      cout << "Size of Genotype: " << sizeof(Genotype) << endl;
-
       auto file = argv[n];
       cout << "Reading " << file << " ... ";
       cout.flush();
@@ -38,6 +36,11 @@ int main(int argc, char** argv)
            << endl;
 
       summary(dna);
+
+      cout << "Developer info:" << endl
+           << "  sizeof(Genotype) = " << sizeof(Genotype) << endl
+           << "  sizeof(RSID) = " << sizeof(RSID) << endl
+           << "  load factor = " << dna.snp.load_factor() << endl;
     }
 
     return 0;

@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 #include <cstdint>
-#include <sparsehash/sparse_hash_map>
+#include <sparsehash/dense_hash_map>
 
 enum Nucleotide {
   NONE, A, G, C, T, D, I
@@ -57,7 +57,7 @@ const Genotype GC (G, C);
 const Genotype GG (G, G);
 
 typedef std::uint32_t RSID;
-typedef google::sparse_hash_map<RSID, Genotype> SNPMap;
+typedef google::dense_hash_map<RSID, Genotype> SNPMap;
 
 struct DNA {
   SNPMap snp;
@@ -67,6 +67,7 @@ struct DNA {
     snp(size),
     ychromo(false)
   {
+    snp.set_empty_key(0);
   }
 
   const Genotype& operator[](const RSID& id) const
