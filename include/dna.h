@@ -57,7 +57,22 @@ const Genotype GC (G, C);
 const Genotype GG (G, G);
 
 typedef std::uint32_t RSID;
-typedef google::dense_hash_map<RSID, Genotype> SNPMap;
+
+struct RSIDHash {
+  inline std::size_t operator() (const RSID& rsid) const
+  {
+    return static_cast<std::size_t>(rsid);
+  }
+};
+
+struct RSIDEq {
+  inline bool operator()(const RSID& a, const RSID& b) const
+  {
+    return a == b;
+  }
+};
+
+typedef google::dense_hash_map<RSID, Genotype, RSIDHash, RSIDEq> SNPMap;
 
 struct DNA {
   SNPMap snp;
