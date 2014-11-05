@@ -1,5 +1,8 @@
 """
 A library for parsing and querying 23andme genomes.
+
+Copyright (C) 2014 Christian Stigen Larsen
+Distributed under the GPL v3 or later. See COPYING.
 """
 
 import _dna_traits
