@@ -25,6 +25,7 @@ class Nucleotide:
         return self._value == o._value
 
     def complement(self):
+        """Returns the complement of this nucleotide."""
         compl = {"A": "T",
                  "C": "G",
                  "G": "C",
@@ -61,6 +62,7 @@ class SNP:
 
     @property
     def rsid(self):
+        """Returns this SNP's RSID."""
         return self._rsid
 
     def count(self, nucleotide):
@@ -68,18 +70,19 @@ class SNP:
         return self._genostr().count(nucleotide.upper())
 
     def complement(self):
+        """Returns this SNP's complement."""
         genotype = map(lambda n: n.complement(), self._genotype)
         return SNP(genotype, self._rsid, self._orientation)
 
     def positive(self):
-        """Returns positively oriented SNP."""
+        """Returns SNP with positive orientation."""
         if self.orientation < 0:
             return self.complement()
         else:
             return self
 
     def negative(self):
-        """Returns negatively oriented SNP."""
+        """Returns SNP with negative orientation."""
         if self.orientation > 0:
             return self.complement()
         else:
@@ -93,6 +96,7 @@ class SNP:
 
     @property
     def genotype(self):
+        """Returns a list of zero, one or two Nucleotides."""
         return self._genotype
 
     def __str__(self):
@@ -135,9 +139,13 @@ class Genome:
 
     @property
     def orientation(self):
+        """Returns this Genome's orientation as an integer of either -1 or
+        +1."""
         return self._orientation
 
     def __getitem__(self, rsid):
+        """Returns SNP with given RSID.  If RSID is not present, return an
+        empty SNP."""
         try:
             rsid = self._rsid(rsid)
             geno = map(Nucleotide, self._genome[rsid])
@@ -170,7 +178,9 @@ class Genome:
         raise AttributeError("Unknown attribute %s" % rsid)
 
     def __len__(self):
+        """Returns number of SNPs in this genome."""
         return len(self._genome)
 
-def parse(filename):
-    return Genome(_dna_traits.parse(filename), +1)
+def parse(filename, orientation=+1):
+    """Parses a 23andme file and returns a Genome."""
+    return Genome(_dna_traits.parse(filename), orientation)
