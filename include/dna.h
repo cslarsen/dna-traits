@@ -20,9 +20,9 @@ Nucleotide complement(const Nucleotide& n);
 
 // We can get this down to a byte if we want to
 #pragma pack(1)
-struct Genotype { // should only occupy 10 bits, i.e. 2 bytes
-  Nucleotide first : 5;
-  Nucleotide second : 5;
+struct Genotype {
+  Nucleotide first : 3;
+  Nucleotide second : 3;
 
   Genotype(const Nucleotide& a = NONE,
            const Nucleotide& b = NONE)

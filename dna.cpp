@@ -12,6 +12,8 @@ int main(int argc, char** argv)
 
   try {
     for ( auto n=1; n<argc; ++n ) {
+      cout << "Size of Genotype: " << sizeof(Genotype) << endl;
+
       auto file = argv[n];
       cout << "Reading " << file << " ... ";
       cout.flush();
