@@ -88,8 +88,13 @@ class SNP:
         else:
             return self
 
-    def __eq__(self, snp):
-        return str(self.positive()) == str(snp.positive())
+    def __eq__(self, obj):
+        if isinstance(obj, SNP):
+            return str(self.positive()) == str(obj.positive())
+        elif isinstance(obj, str):
+            return self.positive()._genostr() == obj
+        else:
+            return NotImplemented
 
     def __invert__(self):
         return self.complement()
