@@ -14,7 +14,8 @@ Current status
     memory.  That's around 140 Mb/s out of 200 Mb/s possible on my drive.
 
     In fact, it's fast enough that I won't bother saving the hash table in a
-    binary format, as originally intended.
+    binary format, as originally intended (Update: I tried it, and reading a
+    binary file is only *9 ms* faster than parsing the text file).
 
   * Rules and phenotype criteria from SNPedia can be written using the
     Python API.
