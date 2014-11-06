@@ -10,10 +10,11 @@ code.
 Current status
 --------------
 
-  * It's _very_ fast. It parses a 23andMe text file in only 0.3 seconds! (on
+  * It's _very_ fast. It parses a 23andMe text file in only 0.18 seconds! (on
     _my_ machine)
 
-  * Supports `__getitem__` so you can do `dna["rs123"]`.
+  * Supports `__getitem__` so you can do `genome["rs123"]` or `genome[123]` or
+    even `genome.rs123`.
 
   * Does not _yet_ support all expected dictionary methods. E.g, no
     `items()`, `keys()`, `values()`, etc.
@@ -25,52 +26,56 @@ Import the module and parse a 23andMe genome file.
 
     $ python
     >>> import dna_traits as dt
-    >>> dna = dt.parse("../genome.txt")
-    >>> dna.ychromo()
+    >>> genome = dt.parse("../genome.txt")
+    >>> genome.male
     True
-    >>> dna["rs1800401"]
+    >>> genome["rs1800401"]
     'GG'
-    >>> len(dna)
+    >>> len(genome)
     949461
 
-Print some items:
+Print some SNPs:
 
-    >>> dna["rs7060463"]
+    >>> genome["rs7060463"]
+    SNP(genotype=[Nucleotide('T'), Nucleotide('-')], rsid='rs7060463',
+    orientation=1)
+    >>> str(genome["rs7060463"])
     'T-'
-    >>> dna["rs7254116"]
-    'AG'
+    >>> genome.rs7254116.complement()
+    SNP(genotype=[Nucleotide('T'), Nucleotide('C')], rsid='rs7254116',
+    orientation=1)
 
-As you can see, you only get back the genotypes.  There's no information
-about which chromosome or position the SNP is in, because the C++ version
-doesn't care about anything other than genotypes.
+Note that you don't get back which chromosome it's on or its position (yet).
 
 Building
 --------
 
 You should first compile the main project, then type
 
-    make -j dna_traits.so
+    $ cd python
+    $ make -j all
 
 and test it with
 
-    make check
+    $ make check
 
 which should result in
 
-    make check
+    $ make check
     python test_dna_traits.py -v
-    test_import_module (__main__.TestDNA)
-    Import module dna_traits. ... ok
-    test_open_nonexisting_file (__main__.TestDNA)
-    Open non-existant genome file. ... ok
-    test_parse_file (__main__.TestDNA)
-    Parse a 23andMe genome file. ... ok
+    test_genotypes (__main__.TestGenome) ... ok
+    test_iterator_increases (__main__.TestGenome) ... ok
+    test_len (__main__.TestGenome) ... ok
+    test_orientation (__main__.TestGenome) ... ok
+    test_repr (__main__.TestGenome) ... ok
+    test_slice (__main__.TestGenome) ... skipped 'Unimplemented'
+    test_snp (__main__.TestGenome) ... ok
+    test_ychromo (__main__.TestGenome) ... ok
 
     ----------------------------------------------------------------------
-    Ran 3 tests in 2.424s
+    Ran 8 tests in 0.189s
 
-    OK
-
+    OK (skipped=1)
 
 Benchmarking speed
 ------------------
@@ -102,9 +107,9 @@ To use it, simply run it on a 23andMe genome file:
     Bone-strength estimated from genome ../genome.txt
     (Higher points is stronger bone)
 
-      Lower forearm risk:  4 of 6
-       Cortical strength:  3 of 4
-             Forearm BMD:  3 of 4
+      Lower forearm risk:  4 of  6
+       Cortical strength:  3 of  4
+             Forearm BMD:  3 of  4
              Total score: 10 of 14
 
     NOTE: rs2908004 wasn't in this genome; scores may be a bit too high
@@ -113,6 +118,26 @@ As you can see, we couldn't find the SNP rs2908004 in the genome, so
 calculations may in fact be a bit too high (I'm not sure if 23andMe usually
 reads this SNP or not).
 
+The main routine is implemented as
+
+    def bone_strength(genome):
+      """Returns bone strength indicators."""
+      return {"Cortical strength": (4, 4 - genome.rs9525638.count("T")
+                                         - genome.rs2707466.count("C")),
+                    "Forearm BMD": (4, 4 - genome.rs2908004.count("G")
+                                         - genome.rs2707466.count("C")),
+             "Lower forearm risk": (6, 6 - genome.rs7776725.count("C")
+                                         - genome.rs2908004.count("G")
+                                         - genome.rs2707466.count("C"))}
+
+Example application: Show some results
+--------------------------------------
+
+    $ python profile.py ../genome.txt
+    ../genome.txt
+    Gender:            Male
+    Blue eyes:         Likely, if European
+    Skin color:        Likely light-skinned of European descent
 
 Author and license
 ------------------
