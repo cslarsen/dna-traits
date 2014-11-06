@@ -3,6 +3,9 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
+#ifndef DNA_FILE_H
+#define DNA_FILE_H
+
 #include <unistd.h>
 #include <string>
 #include <fcntl.h>
@@ -26,3 +29,4 @@ public:
   }
 };
 
+#endif

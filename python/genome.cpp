@@ -20,7 +20,11 @@ PyMethodDef Genome_methods[] = {
   {"ychromo", (PyCFunction)Genome_ychromo, METH_NOARGS,
    "Returns True if genome contains a Y-chromosome."},
   {"load_factor", (PyCFunction)Genome_load_factor, METH_NOARGS,
-    "Returns the hash map's load factor"},
+    "Returns the hash map's load factor."},
+  {"save", (PyCFunction)Genome_save, METH_VARARGS,
+    "Saves genome to binary format."},
+  {"load", (PyCFunction)Genome_load, METH_VARARGS,
+    "Loads genome from binary format."},
   {NULL}
 };
 
@@ -74,8 +78,8 @@ void Genome_dealloc(Genome* self)
 }
 
 PyObject* Genome_new(PyTypeObject* type,
-                            PyObject* args,
-                            PyObject *kw)
+                     PyObject* args,
+                     PyObject *kw)
 {
   auto p = reinterpret_cast<Genome*>(type->tp_alloc(type, 0));
 
@@ -99,6 +103,26 @@ PyObject* Genome_ychromo(Genome* self)
 PyObject* Genome_load_factor(Genome* self)
 {
   return Py_BuildValue("d", self->dna->snp.load_factor());
+}
+
+PyObject* Genome_load(Genome* self, PyObject* args)
+{
+  PyObject *fname;
+  if ( !PyArg_UnpackTuple(args, "name", 1, 1, &fname) )
+    return NULL;
+
+  const char *name = PyString_AsString(fname);
+  return self->dna->load(name) ? Py_True : Py_False;
+}
+
+PyObject* Genome_save(Genome* self, PyObject* args)
+{
+  PyObject *fname;
+  if ( !PyArg_UnpackTuple(args, "name", 1, 1, &fname) )
+    return NULL;
+
+  const char *name = PyString_AsString(fname);
+  return self->dna->save(name) ? Py_True : Py_False;
 }
 
 static char from_nucleotide(const Nucleotide& n)

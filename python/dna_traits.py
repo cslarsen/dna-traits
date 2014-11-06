@@ -224,7 +224,18 @@ class Genome:
         """
         return (self[rsid]==genotype for rsid, genotype in criteria)
 
+    def save(self, filename):
+        """Saves a binary image of genome."""
+        return self._genome.save(filename)
+
 
 def parse(filename, orientation=+1):
     """Parses a 23andme file and returns a Genome."""
     return Genome(_dna_traits.parse(filename), orientation)
+
+def load(filename):
+    """Reads a binary format genome."""
+    _genome = _dna_traits.new_genome()
+    if not _genome.load(filename):
+        raise RuntimeError("Could not save to file %s" % filename)
+    return Genome(_genome, orientation=+1)

@@ -2,3 +2,4 @@ dna
 *.o
 genome.txt
 read
+*.bin

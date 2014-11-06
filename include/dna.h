@@ -11,6 +11,7 @@
 #include <string>
 #include <cstdint>
 #include <sparsehash/dense_hash_map>
+#include "fileptr.h"
 
 enum Nucleotide {
   NONE, A, G, C, T, D, I
@@ -74,6 +75,43 @@ struct RSIDEq {
 
 typedef google::dense_hash_map<RSID, Genotype, RSIDHash, RSIDEq> SNPMap;
 
+struct SNPMapSerializer {
+  // Write
+  bool operator()(
+      FILE *f,
+      const std::pair<const RSID, Genotype>& v) const
+  {
+    // Write RSID.
+    // TODO: Save in a specific endianness
+    if ( fwrite(&v.first, sizeof(v.first), 1, f) != 1 )
+      return false;
+
+    // Write Genotype
+    if ( fwrite(&v.second, sizeof(v.second), 1, f) != 1 )
+      return false;
+
+    return true;
+  }
+
+  // Read
+  bool operator()(
+      FILE *f,
+      std::pair<const RSID, Genotype>* v) const
+  {
+    // Read RSID
+    // TODO: Convert to native endianness
+    if ( fread(const_cast<RSID*>(&v->first), sizeof(v->first), 1, f) != 1 )
+      return false;
+
+    // Read Genotype
+    if ( fread(const_cast<Genotype*>(&v->second),
+               sizeof(v->second), 1, f) != 1 )
+      return false;
+
+    return true;
+  }
+};
+
 struct DNA {
   SNPMap snp;
   bool ychromo;
@@ -93,6 +131,16 @@ struct DNA {
   bool has(const RSID& id) const
   {
     return snp.find(id) != snp.end();
+  }
+
+  bool save(const char* filename) {
+    FilePtr f(filename, "wb");
+    return snp.serialize(SNPMapSerializer(), f.ptr());
+  }
+
+  bool load(const char* filename) {
+    FilePtr f(filename, "rb");
+    return snp.unserialize(SNPMapSerializer(), f.ptr());
   }
 };
 

@@ -13,8 +13,10 @@ struct Genome {
 };
 
 PyObject* Genome_getitem(PyObject*, PyObject*);
+PyObject* Genome_load(Genome*, PyObject*);
 PyObject* Genome_load_factor(Genome*);
 PyObject* Genome_new(PyTypeObject*, PyObject*, PyObject*);
+PyObject* Genome_save(Genome*, PyObject*);
 PyObject* Genome_ychromo(Genome*);
 Py_ssize_t Genome_length(PyObject*);
 int Genome_init(Genome*, PyObject*, PyObject*);

@@ -25,9 +25,16 @@ static PyObject* parse(PyObject* module, PyObject* args)
   }
 }
 
+static PyObject* new_empty(PyObject* module, PyObject* args)
+{
+  return Genome_new(&GenomeType, NULL, NULL);
+}
+
 static PyMethodDef methods[] = {
   {"parse", parse, METH_VARARGS,
    "Parses a 23andMe genome text file and returns a dict of RSID->GENOTYPE."},
+  {"new_genome", new_empty, METH_VARARGS,
+    "Returns a new, empty Genome."},
   {NULL, NULL}
 };
 
