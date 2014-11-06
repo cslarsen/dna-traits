@@ -19,6 +19,8 @@ PyMethodDef Genome_methods[] = {
   // TODO: make ychromo a property
   {"ychromo", (PyCFunction)Genome_ychromo, METH_NOARGS,
    "Returns True if genome contains a Y-chromosome."},
+  {"load_factor", (PyCFunction)Genome_load_factor, METH_NOARGS,
+    "Returns the hash map's load factor"},
   {NULL}
 };
 
@@ -92,6 +94,11 @@ int Genome_init(Genome*, PyObject*, PyObject*)
 PyObject* Genome_ychromo(Genome* self)
 {
   return self->dna->ychromo? Py_True : Py_False;
+}
+
+PyObject* Genome_load_factor(Genome* self)
+{
+  return Py_BuildValue("d", self->dna->snp.load_factor());
 }
 
 static char from_nucleotide(const Nucleotide& n)
