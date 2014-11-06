@@ -16,7 +16,7 @@ class Nucleotide:
         return self._value
 
     def __repr__(self):
-        return "Nucleotide(%s)" % self._value
+        return "Nucleotide(%s)" % repr(self._value)
 
     def __len__(self):
         if self._value in ["-"]:
@@ -111,8 +111,8 @@ class SNP:
         return self._genostr()
 
     def __repr__(self):
-        return "SNP(rsid=%s, genotype=%s, orientation=%s)" % (
-                    self._rsid, self._genostr(), self._orientation)
+        return "SNP(genotype=%s, rsid='%s', orientation=%s)" % (
+                    repr(self._genotype), self._rsid, self._orientation)
 
 
 class GenomeIterator:
@@ -199,7 +199,7 @@ class Genome:
             return False
 
     def __repr__(self):
-        return "Genome(len=%d, ychromo=%s, orientation=%s)" % (
+        return "<Genome: SNPs=%d, ychromo=%s, orientation=%s>" % (
                 len(self), self.ychromo, self.orientation)
 
     def __getattr__(self, rsid):
