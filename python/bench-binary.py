@@ -3,24 +3,31 @@
 import sys
 import timeit
 
-count = 70
-print("Measuring parsing speed for binary image (%d times) " % count)
+# create binary image
+import dna_traits as dt
+name = "../genome.txt"
+out = "../genome.bin"
+#
+sys.stdout.write("Parsing %s\n" % name)
+sys.stdout.flush()
+g = dt.parse(name)
+#
+sys.stdout.write("Saving %s\n" % out)
+sys.stdout.flush()
+g.save(out)
+
+count = 20 # FIXME: Bugs out on 70, because of a bug!
+print("Measuring reading speed for binary image (%d times) " % count)
 
 sys.stdout.write("[%s]\r[" % ("."*count))
 sys.stdout.flush()
 
-# create binary image
-import dna_traits as dt
-g = dt.parse("../genome.txt")
-g.save("genome.bin")
-del g
-
 best = min(timeit.Timer(
   """
-  dt.load('genome.bin')
+  dt.load('%s')
   sys.stdout.write("#");
   sys.stdout.flush()
-  """,
+  """ % out,
   setup = "import dna_traits as dt; import sys")
   .repeat(count, 1))
 
