@@ -15,6 +15,7 @@ class TestGenome(unittest.TestCase):
     def test_iterator_increases(self):
         rsids = []
         for snp in self.genome:
+            self.assertIsInstance(snp.rsid, str)
             rsids.append(int(snp.rsid[2:]))
             if len(rsids)>10:
                 break
@@ -38,27 +39,27 @@ class TestGenome(unittest.TestCase):
     def test_repr(self):
         self.assertIsInstance(str(self.genome), str)
         self.assertIsInstance(repr(self.genome), str)
-        self.assertTrue(repr(self.genome).startswith("Genome("))
+        self.assertTrue(repr(self.genome).startswith("<Genome"))
 
     def test_snp(self):
-        for rsid in ["rs7495174", "rs1805007", "rs1800401"]:
+        for rsid in [7495174, 1805007, 1800401]:
             if rsid not in self.genome:
                 continue
 
             NN = dt.SNP([], rsid, 1)
 
             # Various ways of accessing SNPs
+            self.assertIn("rs%d" % rsid, self.genome)
             self.assertIn(rsid, self.genome)
-            self.assertIn(int(rsid[2:]), self.genome)
             #
-            self.assertIsNotNone(self.genome.__getattr__(rsid))
+            self.assertIsNotNone(self.genome.__getattr__("rs%d" % rsid))
+            self.assertIsNotNone(self.genome["rs%d" % rsid])
             self.assertIsNotNone(self.genome[rsid])
-            self.assertIsNotNone(self.genome[int(rsid[2:])])
+            self.assertIsNotNone(self.genome.snp("rs%d" % rsid))
             self.assertIsNotNone(self.genome.snp(rsid))
-            self.assertIsNotNone(self.genome.snp(int(rsid[2:])))
             #
-            self.assertEqual(self.genome[rsid*2], NN)
-            self.assertEqual(self.genome[int(rsid[2:])*10], NN)
+            self.assertEqual(self.genome["rs%d" % (rsid*2)], NN)
+            self.assertEqual(self.genome[rsid*100], NN)
 
             snp = self.genome[rsid]
             self.assertIsNotNone(snp)
@@ -73,7 +74,7 @@ class TestGenome(unittest.TestCase):
             for n in list("AGCTDI-"):
                 self.assertEqual(snp.count(n), str(snp).count(n))
 
-            self.assertEqual(snp.rsid, rsid)
+            self.assertEqual(snp.rsid, "rs%d" % rsid)
             self.assertEqual(map(dt.Nucleotide, list(str(snp))),
                              snp.genotype)
 

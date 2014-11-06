@@ -116,9 +116,9 @@ class SNP:
 
 
 class GenomeIterator:
-    def __init__(self, genome):
+    def __init__(self, genome, start=0):
         self._genome = genome
-        self._rsid = 0
+        self._rsid = start
 
     def __iter__(self):
         return self
@@ -144,9 +144,12 @@ class Genome:
 
     def _rsid(self, rsid):
         if isinstance(rsid, int):
-            return "rs%d" % rsid
-        elif isinstance(rsid, str) and rsid.startswith("rs"):
             return rsid
+        elif isinstance(rsid, str) and rsid.startswith("rs"):
+            try:
+                return int(rsid[2:])
+            except ValueError:
+                raise ValueError("Invalid RSID: %s" % rsid)
         else:
             raise ValueError("Invalid RSID: %s" % rsid)
 
@@ -177,12 +180,12 @@ class Genome:
     def __getitem__(self, rsid):
         """Returns SNP with given RSID.  If RSID is not present, return an
         empty SNP."""
+        rsid = self._rsid(rsid)
         try:
-            rsid = self._rsid(rsid)
             geno = map(Nucleotide, self._genome[rsid])
-            return SNP(geno, rsid, self._orientation)
+            return SNP(geno, "rs%d" % rsid, self._orientation)
         except KeyError:
-            return SNP([], rsid, self._orientation)
+            return SNP([], "rs%d" % rsid, self._orientation)
 
     def snp(self, rsid):
         """Returns SNP with given RSID."""

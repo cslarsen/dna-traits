@@ -114,24 +114,20 @@ Py_ssize_t Genome_length(PyObject* self)
   return static_cast<Py_ssize_t>(genome->dna->snp.size());
 }
 
-PyObject* Genome_getitem(PyObject* self, PyObject* pykey)
+PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
 {
-  char *key = PyString_AsString(pykey);
-
-  // require "rs" prefix
-  if ( !(key[0]=='r' && key[1]=='s') ) {
-    PyErr_SetString(PyExc_KeyError, "Incorrectly formatted RSID.");
+  if ( !PyInt_Check(rsid_) ) {
+    PyErr_SetString(PyExc_ValueError, "RSIDs not a number.");
     return NULL;
   }
 
-  // require numerical suffix
-  for ( auto p = key+2; *p; ++p )
-    if ( !isdigit(*p) ) {
-      PyErr_SetString(PyExc_KeyError, "Incorrectly formatted RSID.");
-      return NULL;
-    }
+  const size_t rsid_sizet = PyInt_AsSsize_t(rsid_);
+  const uint32_t rsid = static_cast<uint32_t>(rsid_sizet);
 
-  uint32_t rsid = atoi(key+2);
+  if ( rsid_sizet > rsid ) {
+    PyErr_SetString(PyExc_KeyError, "RSID out of range.");
+    return NULL;
+  }
 
   auto genome = reinterpret_cast<Genome*>(self);
 
