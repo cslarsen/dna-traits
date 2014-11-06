@@ -31,6 +31,9 @@ python-check: python-api
 python-bench: python-api
 	$(MAKE) -C python bench
 
+repl: python-api
+	python/repl genome.txt
+
 clean:
 	rm -f $(TARGETS)
 	cd python; make clean
