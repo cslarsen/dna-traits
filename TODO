@@ -9,3 +9,5 @@
 - Use a bloom filter in front of DNA::has to speed up membership tests
 - Google's dense hashmap is unordered, but by using bloom filter above we
   can create an iterator (with some overhead) that can iterate in-order.
+- Store min/max rsid for use with iterator
+- Fix Python iterator
