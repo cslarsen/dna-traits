@@ -28,17 +28,17 @@ The Python API
 Here's an example of the Python API, which parses the file, displays `rs123`
 and then prints its complement.
 
-  >>> import dna_traits as dt
-  >>> genome = dt.parse("genome.txt")
-  >>> genome
-  <Genome: SNPs=949904, ychromo=True, orientation=1>
-  >>> genome["rs123"]
-  SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123',
-  orientation=1, chromosome=7, position=24966446)
-  >>> str(genome.rs123)
-  'AA'
-  >>> str(~genome.rs123)
-  'TT'
+    >>> import dna_traits as dt
+    >>> genome = dt.parse("genome.txt")
+    >>> genome
+    <Genome: SNPs=949904, ychromo=True, orientation=1>
+    >>> genome["rs123"]
+    SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123',
+    orientation=1, chromosome=7, position=24966446)
+    >>> str(genome.rs123)
+    'AA'
+    >>> str(~genome.rs123)
+    'TT'
 
 Current status
 --------------
