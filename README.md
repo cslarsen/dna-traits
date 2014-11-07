@@ -1,9 +1,9 @@
 dna-traits
 ==========
 
-This is a *very* fast 23andMe text file parser whose internals are written
-in C++.  The genome itself can then be queried using Python; other language
-bindings may follow.
+This is a *very* fast 23andMe genome text file parser whose internals are
+written in C++.  The genome itself can then be queried using Python; other
+language bindings may follow.
 
 The need for speed
 ------------------
