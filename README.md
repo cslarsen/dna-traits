@@ -9,8 +9,8 @@ The need for speed
 ------------------
 
 Regarding speed, a naive parser I wrote in pure Python takes around 2.5
-seconds to read a million SNPs --- I've also seen parser take up to 8
-seconds. 
+seconds to read a million SNPs --- I've also seen some parsers take up to 8
+seconds.
 
 *This one* consistently lands on a mere 0.16 seconds on my (old) machine.
 The reason it's so fast is because it memory maps the file and always scans
