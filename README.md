@@ -1,18 +1,41 @@
 dna-traits
 ==========
 
-Contains a *very* fast 23andMe file parser (written in C++) exposed through
-a Python API for querying the genome.
+A *very* fast 23andMe text file parser whose internals are written in C++.
+The genome itself can then be queried using Python.
+
+A naive parser written in Python takes around 2.5 seconds to parse a genome
+text file with 1M SNPs.  I've seen other parsers take up to 7 seconds.
+
+This one consistently lands on a mere 0.16 seconds on my old machine. The
+reason this parser is fast is because it memory maps the file and always
+scans in one direction --- every byte in the file is only ever touched once.
+To top it off, I'm using the Google dense hash map for storing SNPs by RSID,
+which is extremely fast.
+
+Here's an example of the Python API, which parses the file, displays `rs123`
+and then prints its complement.
+
+  >>> import dna_traits as dt
+  >>> genome = dt.parse("genome.txt")
+  >>> genome
+  <Genome: SNPs=949904, ychromo=True, orientation=1>
+  >>> genome["rs123"]
+  SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123', orientation=1,
+  chromosome=7, position=24966446)
+  >>> str(genome.rs123)
+  'AA'
+  >>> str(~genome.rs123)
+  'TT'
 
 Current status
 --------------
 
   * Only 23andMe files are currently supported
 
-  * Parsing is extremely fast: On *my* machine, it only takes 0.14 seconds
+  * Parsing is extremely fast: On *my* machine, it only takes 0.16 seconds
     to fully parse a 23andMe genome text file and build up a hash table in
-    memory.  That's around 177 Mb/s out of 200 Mb/s possible on my drive, or
-    an overhead of merely 11%.
+    memory.  That's around 155 Mb/s out of 200 Mb/s possible on my drive.
 
     In fact, it's fast enough that I won't bother saving the hash table in a
     binary format, as originally intended (Update: I tried it, and reading a
@@ -21,8 +44,8 @@ Current status
   * Rules and phenotype criteria from SNPedia can be written using the
     Python API.
 
-  * The parser is so fast that I'm planning on extracting it as a separate
-    project and make it available through PyPi.
+  * In time, I will extract this repo into a Python PyPi 23andMe parser
+    library.
 
   * The Python API is currenty somewhat limited and inconsistent, but still
     very usable!
@@ -92,57 +115,7 @@ In Python, this can be done in any number of ways, but one way is to use the
 Python API
 ----------
 
-There is also a Python API, available in the `python/` subdirectory. To
-build it, just type
-
-    make python-api
-
-and test it with a genome by typing
-
-    make python-check
-
-There is more information in the `python/` subdirectory. After building, you
-can parse 23andMe files and inspect them using Python:
-
-    $ python
-    >>> import dna_traits as dt
-    >>> genome = dt.parse("genome.txt")
-    >>> genome
-    Genome(ychromo=True, orientation=1)
-    >>> dna.male
-    True
-    >>> dna.female
-    False
-
-You can query for SNPs in several ways:
-
-    >>> genome["rs1800401"]
-    SNP(rsid=rs1800401, genotype=GG, orientation=1)
-
-    >>> genome.rs1800401
-    SNP(rsid=rs1800401, genotype=GG, orientation=1)
-
-    >>> genome[1800401]
-    SNP(rsid=rs1800401, genotype=GG, orientation=1)
-
-    >>> len(genome)
-    949461
-
-For the SNP above,
-
-    >>> snp = genome.rs1800401
-    >>> snp.count("G")
-    2
-
-You can get the complement by doing any of
-
-    >>> snp.complement()
-    SNP(rsid=rs1800401, genotype=CC, orientation=1)
-
-    >> ~snp
-    SNP(rsid=rs1800401, genotype=CC, orientation=1)
-
-For more information, type `help(object or class)`.
+See the `python/README.md` file for more information on the Python API.
 
 Copyright and license
 ---------------------

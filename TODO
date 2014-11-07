@@ -1,5 +1,4 @@
 - Rename struct DNA to Genome
-- Merge full-parser branch
 - Clean up dna.h in general
 - Handle endianness in serializer
 - The Python .rs123 attrs should return a function taking a param, so we can
@@ -9,6 +8,5 @@
 - Use a bloom filter in front of DNA::has to speed up membership tests
 - Google's dense hashmap is unordered, but by using bloom filter above we
   can create an iterator (with some overhead) that can iterate in-order.
-- Store min/max rsid for use with iterator
 - Add all fields in serializer (ychromo, first, last), i.e. serialize on
   struct DNA.

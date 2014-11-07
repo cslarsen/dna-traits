@@ -1,23 +1,22 @@
 DNA-traits Python API
 =====================
 
-This directory contains a Python API for DNA-traits.  It is a Python module
-for *extremely* fast parsing of 23andMe genome files.
-
-See the main dna-traits page for more information on the underlying C++
-code.
+This directory contains a Python API for parsing and querying 23andMe genome
+text files.  As the main page says, the main selling point of this project
+is *speed*.
 
 Current status
 --------------
 
-  * It's _very_ fast. It parses a 23andMe text file in only 0.14 seconds! (on
-    _my_ machine)
-
-  * Supports `__getitem__` so you can do `genome["rs123"]` or `genome[123]` or
-    even `genome.rs123`.
-
   * Does not _yet_ support all expected dictionary methods. E.g, no
     `items()`, `keys()`, `values()`, etc.
+
+  * Iterators are currently flaky and extremely slow. I have a solution for
+    this that will make it into the Python API later.
+
+  * The .rs<number> accessor will change later and return a function so you
+    can do `genome.rs123("AA")` and get a boolean value.  You'll still have
+    the other accessors such as `genome["rs123"]` and `genome[123]`.
 
 Usage
 -----
@@ -26,56 +25,63 @@ Import the module and parse a 23andMe genome file.
 
     $ python
     >>> import dna_traits as dt
-    >>> genome = dt.parse("../genome.txt")
+    >>> genome = dt.parse("genome.txt")
     >>> genome.male
     True
     >>> genome["rs1800401"]
+    SNP(genotype=[Nucleotide('G'), Nucleotide('G')], rsid='rs1800401',
+    orientation=1, chromosome=15, position=28260053)
+    >> str(genome.rs1800401)
     'GG'
     >>> len(genome)
     949461
 
-Print some SNPs:
+To find the complement:
 
-    >>> genome["rs7060463"]
-    SNP(genotype=[Nucleotide('T'), Nucleotide('-')], rsid='rs7060463',
-    orientation=1)
-    >>> str(genome["rs7060463"])
-    'T-'
-    >>> genome.rs7254116.complement()
-    SNP(genotype=[Nucleotide('T'), Nucleotide('C')], rsid='rs7254116',
-    orientation=1)
+    >>> snp = genome["rs1800401"]
+    >>> ~snp
+    SNP(genotype=[Nucleotide('C'), Nucleotide('C')], rsid='rs1800401',
+    orientation=1, chromosome=15, position=28260053)
 
-Note that you don't get back which chromosome it's on or its position (yet).
+Properties:
+
+    >>> snp.chromosome
+    15
+    >>> str(snp)
+    'GG'
+    >>> snp.count("G")
+    2
+    >>> snp.position
+    28260053A
+    >> ~snp == "CC"
+    True
 
 Building
 --------
 
-You should first compile the main project, then type
+From the main directory, just type `make -j python-api`.
 
-    $ cd python
-    $ make -j all
-
-and test it with
+To run tests:
 
     $ make check
 
 which should result in
 
-    $ make check
-    python test_dna_traits.py -v
+    ~/devel/dna-traits/python csl$ python test_dna_traits.py
     test_genotypes (__main__.TestGenome) ... ok
     test_iterator_increases (__main__.TestGenome) ... ok
     test_len (__main__.TestGenome) ... ok
     test_orientation (__main__.TestGenome) ... ok
     test_repr (__main__.TestGenome) ... ok
-    test_slice (__main__.TestGenome) ... skipped 'Unimplemented'
+    test_slice (__main__.TestGenome) ... ok
     test_snp (__main__.TestGenome) ... ok
     test_ychromo (__main__.TestGenome) ... ok
 
     ----------------------------------------------------------------------
-    Ran 8 tests in 0.189s
+    Ran 8 tests in 0.168s
 
-    OK (skipped=1)
+    OK
+
 
 Benchmarking speed
 ------------------
@@ -83,11 +89,11 @@ Benchmarking speed
 If you type `make bench` it will run a small benchmark to report on speed.
 It parses a file 70 times and prints the best result:
 
-    $ make bench
+    $ m bench
     python bench.py
     Measuring parsing speed (70 times)
     [######################################################################]
-    The best speed was 0.175804138184
+    The best speed was 0.162211179733
     We report only the best time to mitigate OS preemption noise.
 
 As you can see the running time may vary a bit and is usually a bit lower
