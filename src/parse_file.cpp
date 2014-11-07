@@ -25,21 +25,6 @@ static inline const char*& skipwhite(const char*& s)
   return s;
 }
 
-static inline const char*& skiptab(const char*& s)
-{
-  while ( (*s != '\t') &&
-          (*s != '\r') &&
-          (*s != '\n') ) ++s;
-  return s;
-}
-
-static inline const char*& skipnext(const char*& s)
-{
-  skiptab(s);
-  skipwhite(s);
-  return s;
-}
-
 static inline uint32_t parse_uint32(const char*& s)
 {
   uint32_t n = 0;
@@ -53,6 +38,19 @@ static inline uint32_t parse_uint32(const char*& s)
 static inline Nucleotide parse_nucleotide(const char*& s)
 {
   return CharToNucleotide[static_cast<const std::size_t>(*s++)];
+}
+
+static inline Chromosome parse_chromo(const char*& s)
+{
+  if ( isdigit(*s) )
+      return static_cast<Chromosome>(parse_uint32(s));
+
+  switch ( *s++ ) {
+    case 'M': return CHR_MT;
+    case 'X': return CHR_X;
+    case 'Y': return CHR_Y;
+    default: return NO_CHR;
+  }
 }
 
 static inline Genotype parse_genotype(const char*& s)
@@ -94,11 +92,12 @@ void parse_file(const std::string& name, DNA& dna)
     }
 
     RSID rsid(parse_uint32(s+=2)); // rs[0-9]+
-
     dna.first = rsid < dna.first? rsid : dna.first;
     dna.last = rsid > dna.last? rsid : dna.last;
     dna.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
 
-    dna.snp.insert({rsid, parse_genotype(skipnext(skipnext(s)))});
+    dna.snp.insert({rsid, SNP(parse_chromo(s),
+                              parse_uint32(skipwhite(s)),
+                              parse_genotype(skipwhite(s)))});
   }
 }

@@ -5,6 +5,8 @@
 
 #include "dna.h"
 
+const SNP NONE_SNP(NO_CHR, 0, NN);
+
 std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
 {
   switch ( n ) {
@@ -22,6 +24,25 @@ std::ostream& operator<<(std::ostream& o, const Genotype& bp)
 {
   return o << bp.first << bp.second;
 }
+
+std::ostream& operator<<(std::ostream& o, const Chromosome& chr) {
+  if ( chr >= NO_CHR && chr < CHR_MT )
+    return o << static_cast<int>(chr);
+
+  switch ( chr ) {
+    default: return o;
+    case CHR_MT: return o << "MT";
+    case CHR_X: return o << "X";
+    case CHR_Y: return o << "Y";
+  }
+}
+
+std::ostream& operator<<(std::ostream& o, const SNP& snp)
+{
+  return o << snp.genotype << " " << snp.chromosome
+    << " " << snp.position;
+}
+
 
 /**
  * Compare genotypes of same orientation.

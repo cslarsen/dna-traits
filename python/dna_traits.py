@@ -5,7 +5,12 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
+import copy
 import _dna_traits
+
+def _to_snp(rsid, orientation, value):
+    genotype, chromo, position = value
+    return SNP(list(genotype), rsid, orientation, chromo, position)
 
 class Nucleotide:
     """A single nucleotide."""
@@ -44,13 +49,25 @@ class Nucleotide:
 class SNP:
     """A single-nucleotide polymorphism."""
 
-    def __init__(self, genotype, rsid, orientation):
+    def __init__(self, genotype, rsid, orientation, chromosome, position):
         self._genotype = genotype
         self._rsid = rsid
         self._orientation = orientation
+        self._chromosome = chromosome
+        self._position = position
 
     def _genostr(self):
         return "".join(map(str, self._genotype))
+
+    @property
+    def chromosome(self):
+        """Returns SNP's chromosome."""
+        return self._chromosome
+
+    @property
+    def position(self):
+        """Returns SNP's position in the chromosome."""
+        return self._position
 
     @property
     def orientation(self):
@@ -74,8 +91,9 @@ class SNP:
 
     def complement(self):
         """Returns this SNP's complement."""
-        genotype = map(lambda n: n.complement(), self._genotype)
-        return SNP(genotype, self._rsid, self._orientation)
+        snp = copy.copy(self)
+        snp._genotype = map(lambda n: n.complement(), self._genotype)
+        return snp
 
     def positive(self):
         """Returns SNP with positive orientation."""
@@ -111,8 +129,11 @@ class SNP:
         return self._genostr()
 
     def __repr__(self):
-        return "SNP(genotype=%s, rsid='%s', orientation=%s)" % (
-                    repr(self._genotype), self._rsid, self._orientation)
+        s = "SNP(genotype=%s, rsid='%s', orientation=%s, " % (
+                repr(self._genotype), self._rsid, self._orientation)
+        s += "chromosome=%s, position=%s)" % (self._chromosome,
+                self._position)
+        return s
 
 
 class GenomeIterator:
@@ -193,10 +214,12 @@ class Genome:
         elif isinstance(key, str) or isinstance(key, int):
             rsid = self._rsid(key)
             try:
-                geno = map(Nucleotide, self._genome[rsid])
-                return SNP(geno, "rs%d" % rsid, self._orientation)
+                genotype, chromo, position = self._genome[rsid]
+                geno = map(Nucleotide, genotype)
+                return _to_snp("rs%d" % rsid, self._orientation, (geno, chromo,
+                    position))
             except KeyError:
-                return SNP([], "rs%d" % rsid, self._orientation)
+                return SNP([], "rs%d" % rsid, self._orientation, 0, 0)
         else:
             raise ValueError("Unknown key type %s" % type(key))
 

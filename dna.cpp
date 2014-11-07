@@ -33,13 +33,18 @@ int main(int argc, char** argv)
            << "  " << format(dna, 1805007) << endl
            << "  " << format(dna, 1800401) << endl
            << "  " << format(dna, 28357092) << endl
+           << "  " << format(dna, 12087250) << endl
            << endl;
 
       summary(dna);
 
       cout << "Developer info:" << endl
+           << "  sizeof(Chromosome) = " << sizeof(Chromosome) << endl
            << "  sizeof(Genotype) = " << sizeof(Genotype) << endl
+           << "  sizeof(Nucleotide) = " << sizeof(Nucleotide) << endl
+           << "  sizeof(Position) = " << sizeof(Position) << endl
            << "  sizeof(RSID) = " << sizeof(RSID) << endl
+           << "  sizeof(SNP) = " << sizeof(SNP) << endl
            << "  load factor = " << dna.snp.load_factor() << endl;
     }
 

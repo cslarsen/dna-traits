@@ -45,7 +45,7 @@ class TestGenome(unittest.TestCase):
             if rsid not in self.genome:
                 continue
 
-            NN = dt.SNP([], rsid, 1)
+            NN = dt.SNP([], rsid, 1, 0, 0)
 
             # Various ways of accessing SNPs
             self.assertIn("rs%d" % rsid, self.genome)
@@ -72,6 +72,9 @@ class TestGenome(unittest.TestCase):
 
             for n in list("AGCTDI-"):
                 self.assertEqual(snp.count(n), str(snp).count(n))
+
+            # Complement
+            self.assertNotEqual(snp.genotype, (~snp).genotype)
 
             self.assertEqual(snp.rsid, "rs%d" % rsid)
             self.assertEqual(map(dt.Nucleotide, list(str(snp))),

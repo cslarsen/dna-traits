@@ -3,6 +3,7 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
+#include <stdio.h>
 #include "genome.h"
 
 PyMemberDef Genome_members[] = {
@@ -183,9 +184,25 @@ PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
     return NULL;
   }
 
-  auto genotype = genome->dna->operator[](rsid);
-  char buf[3] = {from_nucleotide(genotype.first),
-                 from_nucleotide(genotype.second), 0};
+  auto snp = genome->dna->operator[](rsid);
+  char genotype[3] = {from_nucleotide(snp.genotype.first),
+                 from_nucleotide(snp.genotype.second), 0};
 
-  return Py_BuildValue("s", buf);
+  PyObject* pchromo = NULL;
+  if ( snp.chromosome >= NO_CHR && snp.chromosome < CHR_MT ) {
+    pchromo = Py_BuildValue("I", snp.chromosome);
+  } else {
+    switch ( snp.chromosome ) {
+      case CHR_MT: pchromo = Py_BuildValue("s", "MT"); break;
+      case CHR_X: pchromo = Py_BuildValue("s", "X"); break;
+      case CHR_Y: pchromo = Py_BuildValue("s", "Y"); break;
+      default: break;
+    }
+  }
+
+  auto tuple = PyTuple_New(3);
+  PyTuple_SetItem(tuple, 0, Py_BuildValue("s", genotype));
+  PyTuple_SetItem(tuple, 1, pchromo);
+  PyTuple_SetItem(tuple, 2, Py_BuildValue("I", snp.position));
+  return tuple;
 }
