@@ -21,7 +21,6 @@ class TestGenome(unittest.TestCase):
                 break
         self.assertEqual(sorted(rsids), rsids)
 
-    @unittest.skip("Unimplemented")
     def test_slice(self):
         self.assertEqual(len(self.genome[0:10]), 10)
 

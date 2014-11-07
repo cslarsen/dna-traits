@@ -185,15 +185,20 @@ class Genome:
         +1."""
         return self._orientation
 
-    def __getitem__(self, rsid):
+    def __getitem__(self, key):
         """Returns SNP with given RSID.  If RSID is not present, return an
         empty SNP."""
-        rsid = self._rsid(rsid)
-        try:
-            geno = map(Nucleotide, self._genome[rsid])
-            return SNP(geno, "rs%d" % rsid, self._orientation)
-        except KeyError:
-            return SNP([], "rs%d" % rsid, self._orientation)
+        if isinstance(key, slice):
+            return [self[i] for i in xrange(*key.indices(len(self)))]
+        elif isinstance(key, str) or isinstance(key, int):
+            rsid = self._rsid(key)
+            try:
+                geno = map(Nucleotide, self._genome[rsid])
+                return SNP(geno, "rs%d" % rsid, self._orientation)
+            except KeyError:
+                return SNP([], "rs%d" % rsid, self._orientation)
+        else:
+            raise ValueError("Unknown key type %s" % type(key))
 
     def snp(self, rsid):
         """Returns SNP with given RSID."""
