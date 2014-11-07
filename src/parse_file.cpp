@@ -8,7 +8,7 @@
 #include "filesize.h"
 #include "mmap.h"
 
-static Nucleotide NucleotideMap[256] = {NONE};
+static Nucleotide CharToNucleotide[256] = {NONE};
 
 static inline void skip_comments(const char*& s)
 {
@@ -37,7 +37,7 @@ static inline uint32_t parse_uint32(const char*& s)
 
 static inline Nucleotide parse_nucleotide(const char*& s)
 {
-  return NucleotideMap[static_cast<const std::size_t>(*s++)];
+  return CharToNucleotide[static_cast<const std::size_t>(*s++)];
 }
 
 static inline Chromosome parse_chromo(const char*& s)
@@ -70,12 +70,12 @@ static inline void skipline(const char*& s)
  */
 void parse_file(const std::string& name, DNA& dna)
 {
-  NucleotideMap[static_cast<unsigned>('A')] = A;
-  NucleotideMap[static_cast<unsigned>('G')] = G;
-  NucleotideMap[static_cast<unsigned>('C')] = C;
-  NucleotideMap[static_cast<unsigned>('T')] = T;
-  NucleotideMap[static_cast<unsigned>('D')] = D;
-  NucleotideMap[static_cast<unsigned>('I')] = I;
+  CharToNucleotide[static_cast<unsigned>('A')] = A;
+  CharToNucleotide[static_cast<unsigned>('G')] = G;
+  CharToNucleotide[static_cast<unsigned>('C')] = C;
+  CharToNucleotide[static_cast<unsigned>('T')] = T;
+  CharToNucleotide[static_cast<unsigned>('D')] = D;
+  CharToNucleotide[static_cast<unsigned>('I')] = I;
 
   File fd(name, O_RDONLY);
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
@@ -91,25 +91,11 @@ void parse_file(const std::string& name, DNA& dna)
       continue;
     }
 
-    // "rs[0-9]+"
-    RSID rsid(parse_uint32(s+=2));
-    skipwhite(s);
+    RSID rsid(parse_uint32(s+=2)); // rs[0-9]+
+    dna.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
 
-    // Store if genome has a Y-chromosome
-    dna.ychromo |= (*s=='Y');
-
-    SNP snp;
-
-    // Chromosome [1-22|X|Y|MT]
-    snp.chromosome = parse_chromo(s);
-    skipwhite(s);
-
-    // Position
-    snp.position = parse_uint32(s);
-    skipwhite(s);
-
-    // Genotype
-    snp.genotype = parse_genotype(s);
-    dna.snp.insert({rsid, snp});
+    dna.snp.insert({rsid, SNP(parse_chromo(s),
+                              parse_uint32(skipwhite(s)),
+                              parse_genotype(skipwhite(s)))});
   }
 }

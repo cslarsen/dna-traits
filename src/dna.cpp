@@ -5,7 +5,7 @@
 
 #include "dna.h"
 
-const SNP NONE_SNP(NN, NO_CHR, 0);
+const SNP NONE_SNP(NO_CHR, 0, NN);
 
 std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
 {

@@ -95,23 +95,23 @@ typedef std::uint32_t Position;
 
 #pragma pack(1)
 struct SNP {
-  Genotype genotype;
   Chromosome chromosome : 5;
   Position position;
+  Genotype genotype;
 
-  SNP(const Genotype& gt = NN,
-      const Chromosome& chr = NO_CHR,
-      const Position& pos = 0) :
-    genotype(gt),
+  SNP(const Chromosome& chr = NO_CHR,
+      const Position& pos = 0,
+      const Genotype& gt = NN) :
     chromosome(chr),
-    position(pos)
+    position(pos),
+    genotype(gt)
   {
   }
 
   SNP(const SNP& snp) :
-    genotype(snp.genotype),
     chromosome(snp.chromosome),
-    position(snp.position)
+    position(snp.position),
+    genotype(snp.genotype)
   {
   }
 
