@@ -33,6 +33,7 @@ int main(int argc, char** argv)
            << "  " << format(dna, 1805007) << endl
            << "  " << format(dna, 1800401) << endl
            << "  " << format(dna, 28357092) << endl
+           << "  " << format(dna, 12087250) << endl
            << endl;
 
       summary(dna);

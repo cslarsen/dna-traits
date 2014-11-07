@@ -8,44 +8,44 @@
 #include "filesize.h"
 #include "mmap.h"
 
-struct String {
-  const char* ptr;
-  off_t len;
-};
+static Nucleotide NucleotideMap[256] = {NONE};
 
-static void skip_comments(const char*& s)
+static inline void skip_comments(const char*& s)
 {
   while ( *s == '#' )
     while ( *s++ != '\n' )
       ; // loop
 }
 
-static inline const char*& skipfield(const char*& s)
+static inline const char*& skipwhite(const char*& s)
 {
-  while ( (*s != '\t') &&
-          (*s != '\r') &&
-          (*s != '\n') ) ++s;
-  return ++s;
+  while ( (*s == '\t') ||
+          (*s == '\r') ||
+          (*s == '\n') ) ++s;
+  return s;
 }
 
-static inline String readfield(const char*& s)
+static inline uint32_t parse_uint32(const char*& s)
 {
-  return String {s, skipfield(s)-s-1};
+  uint32_t n = 0;
+
+  while ( isdigit(*s) )
+    n = n*10 + *s++ - '0';
+
+  return n;
 }
 
-static Nucleotide nuclmap[256] = {NONE};
-
-static inline Nucleotide to_nucleotide(const char ch)
+static inline Nucleotide parse_nucleotide(const char*& s)
 {
-  return nuclmap[static_cast<const std::size_t>(ch)];
+  return NucleotideMap[static_cast<const std::size_t>(*s++)];
 }
 
-static Chromosome parse_chromo(const char* s)
+static inline Chromosome parse_chromo(const char*& s)
 {
-  switch (*s) {
-    case '0': case '1': case '2': case '3': case '4': case '5':
-    case '6': case '7': case '8': case '9':
-      return static_cast<Chromosome>(atoi(s));
+  if ( isdigit(*s) )
+      return static_cast<Chromosome>(parse_uint32(s));
+
+  switch ( *s++ ) {
     case 'M': return CHR_MT;
     case 'X': return CHR_X;
     case 'Y': return CHR_Y;
@@ -53,14 +53,15 @@ static Chromosome parse_chromo(const char* s)
   }
 }
 
+static inline Genotype parse_genotype(const char*& s)
+{
+  return Genotype(parse_nucleotide(s),
+                  parse_nucleotide(s));
+}
+
 static inline void skipline(const char*& s)
 {
   while ( *s != '\n' ) ++s;
-}
-
-static inline void skiptab(const char*& s)
-{
-  while ( *s++ != '\t' );
 }
 
 /**
@@ -69,12 +70,12 @@ static inline void skiptab(const char*& s)
  */
 void parse_file(const std::string& name, DNA& dna)
 {
-  nuclmap[static_cast<unsigned>('A')] = A;
-  nuclmap[static_cast<unsigned>('G')] = G;
-  nuclmap[static_cast<unsigned>('C')] = C;
-  nuclmap[static_cast<unsigned>('T')] = T;
-  nuclmap[static_cast<unsigned>('D')] = D;
-  nuclmap[static_cast<unsigned>('I')] = I;
+  NucleotideMap[static_cast<unsigned>('A')] = A;
+  NucleotideMap[static_cast<unsigned>('G')] = G;
+  NucleotideMap[static_cast<unsigned>('C')] = C;
+  NucleotideMap[static_cast<unsigned>('T')] = T;
+  NucleotideMap[static_cast<unsigned>('D')] = D;
+  NucleotideMap[static_cast<unsigned>('I')] = I;
 
   File fd(name, O_RDONLY);
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
@@ -83,29 +84,32 @@ void parse_file(const std::string& name, DNA& dna)
   dna.ychromo = false;
   skip_comments(s);
 
-  for ( String str; *s; ++s ) {
+  for ( ; *s; ++s ) {
     // Skip anything other than an RSID (internal IDs, etc.)
     if ( *s != 'r' ) {
       skipline(s);
       continue;
     }
 
-    RSID rsid(atoi(readfield(s).ptr+2)); // "rs<number>"
+    // "rs[0-9]+"
+    RSID rsid(parse_uint32(s+=2));
+    skipwhite(s);
 
     // Store if genome has a Y-chromosome
     dna.ychromo |= (*s=='Y');
 
+    SNP snp;
+
     // Chromosome [1-22|X|Y|MT]
-    Chromosome chr(parse_chromo(s));
+    snp.chromosome = parse_chromo(s);
+    skipwhite(s);
 
     // Position
-    skipfield(s);
-    Position pos(atoi(readfield(s).ptr));
+    snp.position = parse_uint32(s);
+    skipwhite(s);
 
     // Genotype
-    Genotype gen(to_nucleotide(s[0]),
-                 to_nucleotide(s[1]));
-    dna.snp.insert({rsid, SNP(gen, chr, pos)});
+    snp.genotype = parse_genotype(s);
+    dna.snp.insert({rsid, snp});
   }
 }
-
