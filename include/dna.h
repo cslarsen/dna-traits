@@ -146,6 +146,16 @@ struct DNA {
     FilePtr f(filename, "rb");
     return snp.unserialize(SNPMapSerializer(), f.ptr());
   }
+
+  std::vector<RSID> intersect(const DNA& dna) const {
+    std::vector<RSID> r;
+
+    for ( const auto it : snp )
+      if ( dna.snp.has(it.first) )
+        r.push_back(it.first);
+
+    return r;
+  }
 };
 
 bool operator==(const Genotype& lhs, const Genotype& rhs);
