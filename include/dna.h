@@ -36,6 +36,10 @@ struct Genotype {
     return Genotype(complement(g.first),
                     complement(g.second));
   }
+
+  bool operator==(const Genotype& g) const {
+    return first == g.first && second == g.second;
+  }
 };
 
 // Some shorthand constants
@@ -57,6 +61,74 @@ const Genotype GT (G, T);
 const Genotype GC (G, C);
 const Genotype GG (G, G);
 
+
+enum Chromosome {
+  NO_CHR=0,
+  CHR1,
+  CHR2,
+  CHR3,
+  CHR4,
+  CHR5,
+  CHR6,
+  CHR7,
+  CHR8,
+  CHR9,
+  CHR10,
+  CHR11,
+  CHR12,
+  CHR13,
+  CHR14,
+  CHR15,
+  CHR16,
+  CHR17,
+  CHR18,
+  CHR19,
+  CHR20,
+  CHR21,
+  CHR22,
+  CHR_MT,
+  CHR_X,
+  CHR_Y
+};
+
+typedef std::uint32_t Position;
+
+#pragma pack(1)
+struct SNP {
+  Genotype genotype;
+  Chromosome chromosome : 5;
+  Position position;
+
+  SNP(const Genotype& gt = NN,
+      const Chromosome& chr = NO_CHR,
+      const Position& pos = 0) :
+    genotype(gt),
+    chromosome(chr),
+    position(pos)
+  {
+  }
+
+  SNP(const SNP& snp) :
+    genotype(snp.genotype),
+    chromosome(snp.chromosome),
+    position(snp.position)
+  {
+  }
+
+  SNP& operator=(const SNP& snp) {
+    if ( this != &snp ) {
+      genotype = snp.genotype;
+      chromosome = snp.chromosome;
+      position = snp.position;
+    }
+    return *this;
+  }
+
+  bool operator==(const Genotype& g) const {
+    return genotype == g;
+  }
+};
+
 typedef std::uint32_t RSID;
 
 struct RSIDHash {
@@ -73,13 +145,13 @@ struct RSIDEq {
   }
 };
 
-typedef google::dense_hash_map<RSID, Genotype, RSIDHash, RSIDEq> SNPMap;
+typedef google::dense_hash_map<RSID, SNP, RSIDHash, RSIDEq> SNPMap;
 
 struct SNPMapSerializer {
   // Write
   bool operator()(
       FILE *f,
-      const std::pair<const RSID, Genotype>& v) const
+      const std::pair<const RSID, SNP>& v) const
   {
     // Write RSID.
     // TODO: Save in a specific endianness
@@ -96,7 +168,7 @@ struct SNPMapSerializer {
   // Read
   bool operator()(
       FILE *f,
-      std::pair<const RSID, Genotype>* v) const
+      std::pair<const RSID, SNP>* v) const
   {
     // Read RSID
     // TODO: Convert to native endianness
@@ -104,13 +176,15 @@ struct SNPMapSerializer {
       return false;
 
     // Read Genotype
-    if ( fread(const_cast<Genotype*>(&v->second),
+    if ( fread(const_cast<SNP*>(&v->second),
                sizeof(v->second), 1, f) != 1 )
       return false;
 
     return true;
   }
 };
+
+extern const SNP NONE_SNP;
 
 struct DNA {
   SNPMap snp;
@@ -123,9 +197,9 @@ struct DNA {
     snp.set_empty_key(0);
   }
 
-  const Genotype& operator[](const RSID& id) const
+  const SNP& operator[](const RSID& id) const
   {
-    return has(id)? const_cast<SNPMap&>(snp)[id] : NN;
+    return has(id)? const_cast<SNPMap&>(snp)[id] : NONE_SNP;
   }
 
   bool has(const RSID& id) const
@@ -145,8 +219,10 @@ struct DNA {
 };
 
 bool operator==(const Genotype& lhs, const Genotype& rhs);
+std::ostream& operator<<(std::ostream&, const Chromosome&);
 std::ostream& operator<<(std::ostream&, const Genotype&);
 std::ostream& operator<<(std::ostream&, const Nucleotide&);
+std::ostream& operator<<(std::ostream&, const SNP&);
 std::string format(const DNA&, const RSID&);
 void parse_file(const std::string& filename, DNA&);
 void summary(const DNA&);

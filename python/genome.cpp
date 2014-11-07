@@ -169,9 +169,9 @@ PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
     return NULL;
   }
 
-  auto genotype = genome->dna->operator[](rsid);
-  char buf[3] = {from_nucleotide(genotype.first),
-                 from_nucleotide(genotype.second), 0};
+  auto snp = genome->dna->operator[](rsid);
+  char buf[3] = {from_nucleotide(snp.genotype.first),
+                 from_nucleotide(snp.genotype.second), 0};
 
   return Py_BuildValue("s", buf);
 }

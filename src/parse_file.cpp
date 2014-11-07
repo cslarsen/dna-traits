@@ -40,6 +40,19 @@ static inline Nucleotide to_nucleotide(const char ch)
   return nuclmap[static_cast<const std::size_t>(ch)];
 }
 
+static Chromosome parse_chromo(const char* s)
+{
+  switch (*s) {
+    case '0': case '1': case '2': case '3': case '4': case '5':
+    case '6': case '7': case '8': case '9':
+      return static_cast<Chromosome>(atoi(s));
+    case 'M': return CHR_MT;
+    case 'X': return CHR_X;
+    case 'Y': return CHR_Y;
+    default: return NO_CHR;
+  }
+}
+
 static inline void skipline(const char*& s)
 {
   while ( *s != '\n' ) ++s;
@@ -77,23 +90,22 @@ void parse_file(const std::string& name, DNA& dna)
       continue;
     }
 
-    str = readfield(s);
-    RSID rsid(atoi(str.ptr+2)); // "rs<number>"
-
-    // Skip mitochondrial DNA
-    if ( *s == 'M' ) { // "MT"
-      skipline(s);
-      continue;
-    }
+    RSID rsid(atoi(readfield(s).ptr+2)); // "rs<number>"
 
     // Store if genome has a Y-chromosome
     dna.ychromo |= (*s=='Y');
 
-    skiptab(s); // skip chromosome [1-22|X|Y|MT]
-    skiptab(s); // skip position
+    // Chromosome [1-22|X|Y|MT]
+    Chromosome chr(parse_chromo(s));
 
-    str = readfield(s); // genotype
-    dna.snp.insert({rsid, Genotype(to_nucleotide(str.ptr[0]),
-                                   to_nucleotide(str.ptr[1]))});
+    // Position
+    skipfield(s);
+    Position pos(atoi(readfield(s).ptr));
+
+    // Genotype
+    Genotype gen(to_nucleotide(s[0]),
+                 to_nucleotide(s[1]));
+    dna.snp.insert({rsid, SNP(gen, chr, pos)});
   }
 }
+
