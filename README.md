@@ -2,16 +2,28 @@ dna-traits
 ==========
 
 A *very* fast 23andMe text file parser whose internals are written in C++.
-The genome itself can then be queried using Python.
+The genome itself can then be queried using Python; other language bindings
+may follow.
 
-A naive parser written in Python takes around 2.5 seconds to parse a genome
-text file with 1M SNPs.  I've seen other parsers take up to 7 seconds.
+The need for speed
+------------------
 
-This one consistently lands on a mere 0.16 seconds on my old machine. The
-reason this parser is fast is because it memory maps the file and always
-scans in one direction --- every byte in the file is only ever touched once.
-To top it off, I'm using the Google dense hash map for storing SNPs by RSID,
-which is extremely fast.
+Regarding speed, a naive parser I wrote in pure Python takes around 2.5
+seconds reading around 1 million SNPs --- I've also seen parser take up to 8
+seconds. 
+
+*This one* consistently lands on a mere 0.16 seconds on my (old) machine.
+The reason it's so fast is because it memory maps the file and always scans
+forward --- every byte in the file is only ever touched once.  To top it
+off, I'm using the Google dense hash map for storing SNPs by RSID, which is
+extremely fast.
+
+While slow parsing is not a big concern for serious users, the existence of
+a fast open source parser may benefit other projects as well It's also a lot
+of fun trying to push the envelope!
+
+The Python API
+--------------
 
 Here's an example of the Python API, which parses the file, displays `rs123`
 and then prints its complement.
@@ -21,8 +33,8 @@ and then prints its complement.
   >>> genome
   <Genome: SNPs=949904, ychromo=True, orientation=1>
   >>> genome["rs123"]
-  SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123', orientation=1,
-  chromosome=7, position=24966446)
+  SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123',
+  orientation=1, chromosome=7, position=24966446)
   >>> str(genome.rs123)
   'AA'
   >>> str(~genome.rs123)
@@ -57,8 +69,8 @@ Requirements
 
   * Google sparse hash map
 
-  * A 23andMe genome file. Many people have uploaded theirs on the net for free
-    use. See for example OpenSNP.
+  * A 23andMe genome file. Many people have uploaded theirs on the net for
+    free use. See for example OpenSNP.
 
   * Python development files, if you want to build the Python module.
 
