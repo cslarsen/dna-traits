@@ -5,3 +5,4 @@
 - The Python .rs123 attrs should return a function taking a param, so we can
   write genome.rs123("AT") -> True/False. __getitem__ and friends should work
   like they do now (returning the full SNP).
+- Add .intersection for two genomes
