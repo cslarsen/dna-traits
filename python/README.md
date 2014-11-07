@@ -10,7 +10,7 @@ code.
 Current status
 --------------
 
-  * It's _very_ fast. It parses a 23andMe text file in only 0.18 seconds! (on
+  * It's _very_ fast. It parses a 23andMe text file in only 0.14 seconds! (on
     _my_ machine)
 
   * Supports `__getitem__` so you can do `genome["rs123"]` or `genome[123]` or

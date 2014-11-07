@@ -9,9 +9,10 @@ Current status
 
   * Only 23andMe files are currently supported
 
-  * Parsing is extremely fast: On *my* machine, it only takes 0.18 seconds
+  * Parsing is extremely fast: On *my* machine, it only takes 0.14 seconds
     to fully parse a 23andMe genome text file and build up a hash table in
-    memory.  That's around 140 Mb/s out of 200 Mb/s possible on my drive.
+    memory.  That's around 177 Mb/s out of 200 Mb/s possible on my drive, or
+    an overhead of merely 11%.
 
     In fact, it's fast enough that I won't bother saving the hash table in a
     binary format, as originally intended (Update: I tried it, and reading a
