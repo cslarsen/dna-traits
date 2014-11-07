@@ -116,9 +116,9 @@ class SNP:
 
 
 class GenomeIterator:
-    def __init__(self, genome, start=0):
+    def __init__(self, genome, start=-1):
         self._genome = genome
-        self._rsid = start
+        self._rsid = genome.first if start==-1 else start
 
     def __iter__(self):
         return self
@@ -126,9 +126,7 @@ class GenomeIterator:
     def next(self):
         while self._rsid not in self._genome:
             self._rsid += 1
-            # NOTE: This is *wrong*, we need to check if self._rsid >= max
-            # rsid in genome
-            if self._rsid >= len(self._genome):
+            if self._rsid >= self._genome.last:
                 raise StopIteration()
 
         rsid = self._rsid
@@ -155,6 +153,16 @@ class Genome:
 
     def __iter__(self):
         return GenomeIterator(self)
+
+    @property
+    def first(self):
+        """Returns lowest RSID in genome."""
+        return self._genome.first()
+
+    @property
+    def last(self):
+        """Returns highest RSID in genome."""
+        return self._genome.last()
 
     @property
     def ychromo(self):

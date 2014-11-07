@@ -12,7 +12,9 @@ struct Genome {
   DNA *dna;
 };
 
+PyObject* Genome_first(Genome*);
 PyObject* Genome_getitem(PyObject*, PyObject*);
+PyObject* Genome_last(Genome*);
 PyObject* Genome_load(Genome*, PyObject*);
 PyObject* Genome_load_factor(Genome*);
 PyObject* Genome_new(PyTypeObject*, PyObject*, PyObject*);

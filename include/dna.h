@@ -115,10 +115,14 @@ struct SNPMapSerializer {
 struct DNA {
   SNPMap snp;
   bool ychromo;
+  RSID first;
+  RSID last;
 
   DNA(const size_t size):
     snp(size),
-    ychromo(false)
+    ychromo(false),
+    first(0xffffffff),
+    last(0)
   {
     snp.set_empty_key(0);
   }

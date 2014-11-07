@@ -10,6 +10,5 @@
 - Google's dense hashmap is unordered, but by using bloom filter above we
   can create an iterator (with some overhead) that can iterate in-order.
 - Store min/max rsid for use with iterator
-- Fix Python iterator
 - Add all fields in serializer (ychromo, first, last), i.e. serialize on
   struct DNA.

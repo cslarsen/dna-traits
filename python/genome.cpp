@@ -25,6 +25,10 @@ PyMethodDef Genome_methods[] = {
     "Saves genome to binary format."},
   {"load", (PyCFunction)Genome_load, METH_VARARGS,
     "Loads genome from binary format."},
+  {"first", (PyCFunction)Genome_first, METH_NOARGS,
+    "Returns first RSID."},
+  {"last", (PyCFunction)Genome_last, METH_NOARGS,
+    "Returns last RSID."},
   {NULL}
 };
 
@@ -98,6 +102,16 @@ int Genome_init(Genome*, PyObject*, PyObject*)
 PyObject* Genome_ychromo(Genome* self)
 {
   return self->dna->ychromo? Py_True : Py_False;
+}
+
+PyObject* Genome_first(Genome* self)
+{
+  return Py_BuildValue("I", self->dna->first);
+}
+
+PyObject* Genome_last(Genome* self)
+{
+  return Py_BuildValue("I", self->dna->last);
 }
 
 PyObject* Genome_load_factor(Genome* self)

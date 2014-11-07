@@ -94,6 +94,9 @@ void parse_file(const std::string& name, DNA& dna)
     }
 
     RSID rsid(parse_uint32(s+=2)); // rs[0-9]+
+
+    dna.first = rsid < dna.first? rsid : dna.first;
+    dna.last = rsid > dna.last? rsid : dna.last;
     dna.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
 
     dna.snp.insert({rsid, parse_genotype(skipnext(skipnext(s)))});
