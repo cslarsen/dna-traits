@@ -68,7 +68,7 @@ static inline void skipline(const char*& s)
  * Reads a 23andMe-formatted genome file.  It currently uses reference human
  * assembly build 37 (annotation release 104).
  */
-void parse_file(const std::string& name, DNA& dna)
+void parse_file(const std::string& name, Genome& genome)
 {
   CharToNucleotide[static_cast<unsigned>('A')] = A;
   CharToNucleotide[static_cast<unsigned>('G')] = G;
@@ -81,7 +81,7 @@ void parse_file(const std::string& name, DNA& dna)
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
   auto s = static_cast<const char*>(fmap.ptr());
 
-  dna.ychromo = false;
+  genome.ychromo = false;
   skip_comments(s);
 
   for ( ; *s; ++s ) {
@@ -92,12 +92,12 @@ void parse_file(const std::string& name, DNA& dna)
     }
 
     RSID rsid(parse_uint32(s+=2)); // rs[0-9]+
-    dna.first = rsid < dna.first? rsid : dna.first;
-    dna.last = rsid > dna.last? rsid : dna.last;
-    dna.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
+    genome.first = rsid < genome.first? rsid : genome.first;
+    genome.last = rsid > genome.last? rsid : genome.last;
+    genome.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
 
-    dna.snp.insert({rsid, SNP(parse_chromo(s),
-                              parse_uint32(skipwhite(s)),
-                              parse_genotype(skipwhite(s)))});
+    genome.snp.insert({rsid, SNP(parse_chromo(s),
+                                 parse_uint32(skipwhite(s)),
+                                 parse_genotype(skipwhite(s)))});
   }
 }

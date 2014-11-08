@@ -103,14 +103,14 @@ blue eyes. At http://snpedia.com/index.php/Gs237/criteria the rule set says:
 
 In C++ this would be:
 
-    static bool gs237(const DNA& dna)
+    static bool gs237(const Genome& genome)
     {
-      return dna[ 4778241] ==  CC
-          && dna[12913832] ==  GG
-          && dna[ 7495174] ==  AA
-          && dna[ 8028689] ==  TT
-          && dna[ 7183877] ==  CC
-          && dna[ 1800401] == ~CC;
+      return genome[ 4778241] ==  CC
+          && genome[12913832] ==  GG
+          && genome[ 7495174] ==  AA
+          && genome[ 8028689] ==  TT
+          && genome[ 7183877] ==  CC
+          && genome[ 1800401] == ~CC;
     }
 
 The only thing to note is each SNP's orientation. 23andMe uses positive

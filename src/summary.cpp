@@ -12,19 +12,19 @@ using namespace std;
  * Has blue eye color? gs237 criteria http://snpedia.com/index.php/Gs237/criteria
  * For more info, see http://snpedia.com/index.php/Eye_color
  */
-static bool gs237(const DNA& dna)
+static bool gs237(const Genome& genome)
 {
-  return dna[ 4778241] ==  CC
-      && dna[12913832] ==  GG
-      && dna[ 7495174] ==  AA
-      && dna[ 8028689] ==  TT
-      && dna[ 7183877] ==  CC
-      && dna[ 1800401] == ~CC;
+  return genome[ 4778241] ==  CC
+      && genome[12913832] ==  GG
+      && genome[ 7495174] ==  AA
+      && genome[ 8028689] ==  TT
+      && genome[ 7183877] ==  CC
+      && genome[ 1800401] == ~CC;
 }
 
-static std::string skin_color_1426654(const DNA& dna)
+static std::string skin_color_1426654(const Genome& genome)
 {
-  auto gt = dna[1426654];
+  auto gt = genome[1426654];
 
   if ( gt == AA )
     return "Probably light-skinned, European ancestry";
@@ -38,20 +38,20 @@ static std::string skin_color_1426654(const DNA& dna)
   return "Unknown";
 }
 
-void summary(const DNA& dna)
+void summary(const Genome& genome)
 {
   using namespace std;
 
   cout
     << "SUMMARY" << endl << endl
 
-    << "  Gender:     " << (dna.ychromo? "Male" : "Female")
-    << " (" << (dna.ychromo? "has" : "no") << " Y-chromosome)" << endl
+    << "  Gender:     " << (genome.ychromo? "Male" : "Female")
+    << " (" << (genome.ychromo? "has" : "no") << " Y-chromosome)" << endl
 
-    << "  Blue eyes?  " << (gs237(dna)? "Yes" : "No")
+    << "  Blue eyes?  " << (gs237(genome)? "Yes" : "No")
     << " (gs237)" << endl
 
-    << "  Skin color: " << skin_color_1426654(dna) 
+    << "  Skin color: " << skin_color_1426654(genome)
     << " (rs1426654)" << endl
 
     << endl;

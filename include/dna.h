@@ -187,13 +187,13 @@ struct SNPMapSerializer {
 
 extern const SNP NONE_SNP;
 
-struct DNA {
+struct Genome {
   SNPMap snp;
   bool ychromo;
   RSID first;
   RSID last;
 
-  DNA(const size_t size):
+  Genome(const size_t size):
     snp(size),
     ychromo(false),
     first(0xffffffff),
@@ -222,11 +222,11 @@ struct DNA {
     return snp.unserialize(SNPMapSerializer(), f.ptr());
   }
 
-  std::vector<RSID> intersect(const DNA& dna) const {
+  std::vector<RSID> intersect(const Genome& genome) const {
     std::vector<RSID> r;
 
     for ( const auto it : snp )
-      if ( dna.has(it.first) )
+      if ( genome.has(it.first) )
         r.push_back(it.first);
 
     return r;
@@ -238,8 +238,8 @@ std::ostream& operator<<(std::ostream&, const Chromosome&);
 std::ostream& operator<<(std::ostream&, const Genotype&);
 std::ostream& operator<<(std::ostream&, const Nucleotide&);
 std::ostream& operator<<(std::ostream&, const SNP&);
-std::string format(const DNA&, const RSID&);
-void parse_file(const std::string& filename, DNA&);
-void summary(const DNA&);
+std::string format(const Genome&, const RSID&);
+void parse_file(const std::string& filename, Genome&);
+void summary(const Genome&);
 
 #endif

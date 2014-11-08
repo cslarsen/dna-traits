@@ -37,7 +37,7 @@ PyTypeObject GenomeType = {
   PyObject_HEAD_INIT(NULL)
   0, // obsize
   "dna_traits.Genome", // tpname
-  sizeof(Genome), // basicsize
+  sizeof(PyGenome), // basicsize
   0, // itemsize
   (destructor)Genome_dealloc, // dealloc
   0, // print
@@ -76,9 +76,9 @@ PyTypeObject GenomeType = {
   Genome_new, // tp new
 };
 
-void Genome_dealloc(Genome* self)
+void Genome_dealloc(PyGenome* self)
 {
-  delete(self->dna);
+  delete(self->genome);
   self->ob_type->tp_free(reinterpret_cast<PyObject*>(self));
 }
 
@@ -86,58 +86,58 @@ PyObject* Genome_new(PyTypeObject* type,
                      PyObject* args,
                      PyObject *kw)
 {
-  auto p = reinterpret_cast<Genome*>(type->tp_alloc(type, 0));
+  auto p = reinterpret_cast<PyGenome*>(type->tp_alloc(type, 0));
 
   if ( p != NULL )
-    p->dna = new DNA(1e6);
+    p->genome = new Genome(1e6);
 
   return reinterpret_cast<PyObject*>(p);
 }
 
 // Genome.__init__(self, *args, **kw)
-int Genome_init(Genome*, PyObject*, PyObject*)
+int Genome_init(PyGenome*, PyObject*, PyObject*)
 {
   return 0;
 }
 
-PyObject* Genome_ychromo(Genome* self)
+PyObject* Genome_ychromo(PyGenome* self)
 {
-  return self->dna->ychromo? Py_True : Py_False;
+  return self->genome->ychromo? Py_True : Py_False;
 }
 
-PyObject* Genome_first(Genome* self)
+PyObject* Genome_first(PyGenome* self)
 {
-  return Py_BuildValue("I", self->dna->first);
+  return Py_BuildValue("I", self->genome->first);
 }
 
-PyObject* Genome_last(Genome* self)
+PyObject* Genome_last(PyGenome* self)
 {
-  return Py_BuildValue("I", self->dna->last);
+  return Py_BuildValue("I", self->genome->last);
 }
 
-PyObject* Genome_load_factor(Genome* self)
+PyObject* Genome_load_factor(PyGenome* self)
 {
-  return Py_BuildValue("d", self->dna->snp.load_factor());
+  return Py_BuildValue("d", self->genome->snp.load_factor());
 }
 
-PyObject* Genome_load(Genome* self, PyObject* args)
+PyObject* Genome_load(PyGenome* self, PyObject* args)
 {
   PyObject *fname;
   if ( !PyArg_UnpackTuple(args, "name", 1, 1, &fname) )
     return NULL;
 
   const char *name = PyString_AsString(fname);
-  return self->dna->load(name) ? Py_True : Py_False;
+  return self->genome->load(name) ? Py_True : Py_False;
 }
 
-PyObject* Genome_save(Genome* self, PyObject* args)
+PyObject* Genome_save(PyGenome* self, PyObject* args)
 {
   PyObject *fname;
   if ( !PyArg_UnpackTuple(args, "name", 1, 1, &fname) )
     return NULL;
 
   const char *name = PyString_AsString(fname);
-  return self->dna->save(name) ? Py_True : Py_False;
+  return self->genome->save(name) ? Py_True : Py_False;
 }
 
 static char from_nucleotide(const Nucleotide& n)
@@ -156,8 +156,8 @@ static char from_nucleotide(const Nucleotide& n)
 // Genome.__len__
 Py_ssize_t Genome_length(PyObject* self)
 {
-  auto genome = reinterpret_cast<Genome*>(self);
-  return static_cast<Py_ssize_t>(genome->dna->snp.size());
+  auto genome = reinterpret_cast<PyGenome*>(self);
+  return static_cast<Py_ssize_t>(genome->genome->snp.size());
 }
 
 PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
@@ -175,16 +175,16 @@ PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
     return NULL;
   }
 
-  auto genome = reinterpret_cast<Genome*>(self);
+  auto genome = reinterpret_cast<PyGenome*>(self);
 
-  if ( !genome->dna->has(rsid) ) {
+  if ( !genome->genome->has(rsid) ) {
     char err[32];
     sprintf(err, "No rs%u in genome", rsid);
     PyErr_SetString(PyExc_KeyError, err);
     return NULL;
   }
 
-  auto snp = genome->dna->operator[](rsid);
+  auto snp = genome->genome->operator[](rsid);
   char genotype[3] = {from_nucleotide(snp.genotype.first),
                  from_nucleotide(snp.genotype.second), 0};
 

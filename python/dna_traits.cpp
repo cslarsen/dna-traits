@@ -11,13 +11,12 @@ static PyObject* parse(PyObject* module, PyObject* args)
 {
   try {
     char *file = NULL;
-
     if ( !PyArg_ParseTuple(args, "s", &file) )
       return NULL;
 
-    auto genome = Genome_new(&GenomeType, NULL, NULL);
-    parse_file(file, *reinterpret_cast<Genome*>(genome)->dna);
-    return genome;
+    auto pygenome = Genome_new(&GenomeType, NULL, NULL);
+    parse_file(file, *reinterpret_cast<PyGenome*>(pygenome)->genome);
+    return pygenome;
   }
   catch ( const std::exception& e) {
     PyErr_SetString(PyExc_RuntimeError, e.what());

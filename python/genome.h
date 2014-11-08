@@ -7,22 +7,22 @@
 #include <structmember.h>
 #include "dna.h"
 
-struct Genome {
+struct PyGenome {
   PyObject_HEAD
-  DNA *dna;
+  Genome *genome;
 };
 
-PyObject* Genome_first(Genome*);
+PyObject* Genome_first(PyGenome*);
 PyObject* Genome_getitem(PyObject*, PyObject*);
-PyObject* Genome_last(Genome*);
-PyObject* Genome_load(Genome*, PyObject*);
-PyObject* Genome_load_factor(Genome*);
+PyObject* Genome_last(PyGenome*);
+PyObject* Genome_load(PyGenome*, PyObject*);
+PyObject* Genome_load_factor(PyGenome*);
 PyObject* Genome_new(PyTypeObject*, PyObject*, PyObject*);
-PyObject* Genome_save(Genome*, PyObject*);
-PyObject* Genome_ychromo(Genome*);
+PyObject* Genome_save(PyGenome*, PyObject*);
+PyObject* Genome_ychromo(PyGenome*);
 Py_ssize_t Genome_length(PyObject*);
-int Genome_init(Genome*, PyObject*, PyObject*);
-void Genome_dealloc(Genome* self);
+int Genome_init(PyGenome*, PyObject*, PyObject*);
+void Genome_dealloc(PyGenome* self);
 
 extern PyMappingMethods Genome_map;
 extern PyMemberDef Genome_members[];

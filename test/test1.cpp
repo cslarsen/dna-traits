@@ -16,11 +16,11 @@ int main(int argc, char** argv)
       cout << "Reading " << file << " ... ";
       cout.flush();
 
-      DNA dna(1000000);
-      parse_file(file, dna);
+      Genome genome(1000000);
+      parse_file(file, genome);
 
       cout << "done" << endl; cout.flush();
-      cout << "Read " << dna.snp.size() << " unique SNPs" << endl << endl;
+      cout << "Read " << genome.snp.size() << " unique SNPs" << endl << endl;
 
 #ifdef DEBUG
       cout << "Size of Genotype: " << sizeof(Genotype) << endl
@@ -29,14 +29,14 @@ int main(int argc, char** argv)
 #endif
 
       cout << "Example SNPs in this genome:" << endl << endl
-           << "  " << format(dna, 7495174) << endl
-           << "  " << format(dna, 1805007) << endl
-           << "  " << format(dna, 1800401) << endl
-           << "  " << format(dna, 28357092) << endl
-           << "  " << format(dna, 12087250) << endl
+           << "  " << format(genome, 7495174) << endl
+           << "  " << format(genome, 1805007) << endl
+           << "  " << format(genome, 1800401) << endl
+           << "  " << format(genome, 28357092) << endl
+           << "  " << format(genome, 12087250) << endl
            << endl;
 
-      summary(dna);
+      summary(genome);
 
       cout << "Developer info:" << endl
            << "  sizeof(Chromosome) = " << sizeof(Chromosome) << endl
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
            << "  sizeof(Position) = " << sizeof(Position) << endl
            << "  sizeof(RSID) = " << sizeof(RSID) << endl
            << "  sizeof(SNP) = " << sizeof(SNP) << endl
-           << "  load factor = " << dna.snp.load_factor() << endl;
+           << "  load factor = " << genome.snp.load_factor() << endl;
     }
 
     return 0;

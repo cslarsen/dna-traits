@@ -68,9 +68,9 @@ Nucleotide complement(const Nucleotide& n)
   }
 }
 
-std::string format(const DNA& dna, const RSID& id)
+std::string format(const Genome& genome, const RSID& id)
 {
   std::stringstream s;
-  s << "rs" << id << " " << dna[id];
+  s << "rs" << id << " " << genome[id];
   return s.str();
 }
