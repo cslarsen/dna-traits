@@ -4,7 +4,7 @@
  */
 
 #include <iostream>
-#include "dna.h"
+#include "dnatraits.h"
 
 using namespace std;
 

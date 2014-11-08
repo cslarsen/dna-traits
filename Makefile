@@ -6,7 +6,7 @@ override CXXFLAGS += -Iinclude --std=c++11 -Wall \
 					 -flto
 
 TARGETS := src/summary.o \
-					src/dna.o \
+					src/dnatraits.o \
 					src/parse_file.o \
 					src/filesize.o \
 					test/test1.o \
@@ -18,7 +18,7 @@ PYLDFLAGS := $(shell python-config --ldflags)
 run: test/test1
 	/usr/bin/time -lp test/test1 genome.txt
 
-test/test1: src/dna.o src/filesize.o src/parse_file.o src/summary.o test/test1.o
+test/test1: src/dnatraits.o src/filesize.o src/parse_file.o src/summary.o test/test1.o
 
 all: $(TARGETS)
 

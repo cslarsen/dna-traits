@@ -17,7 +17,7 @@ dna_traits.o: dna_traits.cpp genome.h
 genome.o: genome.cpp genome.h
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
-_dna_traits.so: dna_traits.o genome.o ../src/dna.o ../src/parse_file.o ../src/filesize.o
+_dna_traits.so: dna_traits.o genome.o ../src/dnatraits.o ../src/parse_file.o ../src/filesize.o
 	$(CXX) $(PYLDFLAGS) -shared -o $@ $^
 
 check: _dna_traits.so

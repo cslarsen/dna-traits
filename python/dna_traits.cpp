@@ -4,7 +4,7 @@
  */
 
 #include <Python.h>
-#include "dna.h"
+#include "dnatraits.h"
 #include "genome.h"
 
 static PyObject* parse(PyObject* module, PyObject* args)

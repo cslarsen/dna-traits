@@ -4,7 +4,7 @@
  */
 
 #include <unistd.h>
-#include "dna.h"
+#include "dnatraits.h"
 
 int main(int argc, char** argv)
 {

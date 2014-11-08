@@ -3,7 +3,7 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
-#include "dna.h"
+#include "dnatraits.h"
 #include "file.h"
 #include "filesize.h"
 #include "mmap.h"
