@@ -9,3 +9,6 @@
   can create an iterator (with some overhead) that can iterate in-order.
 - Add all fields in serializer (ychromo, first, last), i.e. serialize on
   struct Genome.
+- Can now do snp.rs123 == "CT" but:
+  - this should also consider the reverse "TC"
+  - should be able to write "~CT" as well to compare complement
