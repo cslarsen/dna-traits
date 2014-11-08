@@ -164,7 +164,7 @@ class Genome:
     def _rsid(self, rsid):
         if isinstance(rsid, int):
             return rsid
-        elif isinstance(rsid, str) and rsid.startswith("rs"):
+        elif isinstance(rsid, str) and rsid.lower().startswith("rs"):
             try:
                 return int(rsid[2:])
             except ValueError:
