@@ -12,6 +12,7 @@ OBJFILES := \
 	test/test1.o
 
 TARGETS := $(OBJFILES) \
+	libdnatraits.so \
 	test/test1
 
 PYCFLAGS := $(shell python-config --cflags)
@@ -20,11 +21,15 @@ PYLDFLAGS := $(shell python-config --ldflags)
 run: test/test1
 	/usr/bin/time -lp test/test1 genome.txt
 
-test/test1: $(OBJFILES)
+test/test1: libdnatraits.so
+	$(CXX) $(CXXFLAGS) -o $@ -L. -ldnatraits
+
+libdnatraits.so: $(OBJFILES)
+	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
 all: $(TARGETS)
 
-python-api: $(TARGETS)
+python-api: libdnatraits.so
 	$(MAKE) -C python _dna_traits.so
 
 python-check: python-api

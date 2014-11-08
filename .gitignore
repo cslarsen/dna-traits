@@ -1,5 +1,6 @@
-dna
+*.bin
 *.o
+*.so
+dna
 genome.txt
 read
-*.bin

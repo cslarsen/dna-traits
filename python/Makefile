@@ -1,4 +1,6 @@
-TARGETS := dna_traits.o genome.o _dna_traits.so
+# You need to build the main libdnatraits.so first
+
+TARGETS := dna_traits.o genome.o _dna_traits.so libdnatraits.so
 CXX := g++
 CC := $(CXX)
 
@@ -14,11 +16,14 @@ all: $(TARGETS)
 dna_traits.o: dna_traits.cpp genome.h
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
+libdnatraits.so: ../libdnatraits.so
+	cp $^ $@
+
 genome.o: genome.cpp genome.h
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
-_dna_traits.so: dna_traits.o genome.o ../src/dnatraits.o ../src/parse_file.o ../src/filesize.o
-	$(CXX) $(PYLDFLAGS) -shared -o $@ $^
+_dna_traits.so: libdnatraits.so dna_traits.o genome.o
+	$(CXX) $(PYLDFLAGS) -L. -ldnatraits -shared -o $@ dna_traits.o genome.o
 
 check: _dna_traits.so
 	python test_dna_traits.py -v
