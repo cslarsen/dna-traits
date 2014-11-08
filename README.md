@@ -40,6 +40,8 @@ and then prints its complement.
     >>> str(~genome.rs123)
     'TT'
 
+More information can be found in `python/README.md`
+
 Current status
 --------------
 
@@ -125,11 +127,6 @@ In Python, this can be done in any number of ways, but one way is to use the
                       ("rs7183877",  "CC"),
                       ("rs1800401",  "GG"))))
 
-
-Python API
-----------
-
-See the `python/README.md` file for more information on the Python API.
 
 Copyright and license
 ---------------------
