@@ -46,7 +46,7 @@ static inline Chromosome parse_chromo(const char*& s)
       return static_cast<Chromosome>(parse_uint32(s));
 
   switch ( *s++ ) {
-    case 'M': return CHR_MT;
+    case 'M': ++s; return CHR_MT;
     case 'X': return CHR_X;
     case 'Y': return CHR_Y;
     default: return NO_CHR;
