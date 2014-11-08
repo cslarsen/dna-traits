@@ -19,8 +19,8 @@ off, I'm using the Google dense hash map for storing SNPs by RSID, which is
 extremely fast.
 
 While slow parsing is not a big concern for serious users, the existence of
-a fast open source parser may benefit other projects as well It's also a lot
-of fun trying to push the envelope!
+a fast open source parser may also benefit other projects. And, admittedly,
+it's a lot of fun trying to push the envelope!
 
 The Python API
 --------------
