@@ -62,6 +62,8 @@ Current status
   * The Python API is currenty somewhat limited and inconsistent, but still
     very usable!
 
+  * Doesn't parse internal IDs yet.
+
 Requirements
 ------------
 
