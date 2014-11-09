@@ -5,6 +5,23 @@
 
 #include "dnatraits.hpp"
 
+const Genotype AA (A, A);
+const Genotype AC (A, C);
+const Genotype AG (A, G);
+const Genotype AT (A, T);
+const Genotype CA (C, A);
+const Genotype CC (C, C);
+const Genotype CG (C, G);
+const Genotype CT (C, T);
+const Genotype GA (G, A);
+const Genotype GC (G, C);
+const Genotype GG (G, G);
+const Genotype GT (G, T);
+const Genotype NN (NONE, NONE);
+const Genotype TA (T, A);
+const Genotype TC (T, C);
+const Genotype TG (T, G);
+const Genotype TT (T, T);
 const SNP NONE_SNP(NO_CHR, 0, NN);
 
 std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
@@ -43,15 +60,6 @@ std::ostream& operator<<(std::ostream& o, const SNP& snp)
     << " " << snp.position;
 }
 
-
-/**
- * Compare genotypes of same orientation.
- */
-bool operator==(const Genotype& lhs, const Genotype& rhs)
-{
-  return lhs.first == rhs.first && lhs.second == rhs.second;
-}
-
 /**
  * Returns the complement nucleotide.
  */
@@ -73,4 +81,124 @@ std::string format(const Genome& genome, const RSID& id)
   std::stringstream s;
   s << "rs" << id << " " << genome[id];
   return s.str();
+}
+
+Genotype::Genotype(const Nucleotide& a, const Nucleotide& b)
+  : first(a), second(b)
+{
+}
+
+Genotype operator~(const Genotype& g)
+{
+  return Genotype(complement(g.first),
+                  complement(g.second));
+}
+
+bool Genotype::operator==(const Genotype& g) const {
+  return first == g.first && second == g.second;
+}
+
+SNP::SNP(const Chromosome& chr,
+    const Position& pos,
+    const Genotype& gt) :
+  chromosome(chr),
+  position(pos),
+  genotype(gt)
+{
+}
+
+SNP::SNP(const SNP& snp) :
+  chromosome(snp.chromosome),
+  position(snp.position),
+  genotype(snp.genotype)
+{
+}
+
+SNP& SNP::operator=(const SNP& snp) {
+  if ( this != &snp ) {
+    genotype = snp.genotype;
+    chromosome = snp.chromosome;
+    position = snp.position;
+  }
+  return *this;
+}
+
+bool SNP::operator==(const Genotype& g) const {
+  return genotype == g;
+}
+
+Genome::Genome(const size_t size):
+  snp(size),
+  ychromo(false),
+  first(0xffffffff),
+  last(0)
+{
+  snp.set_empty_key(0);
+}
+
+const SNP& Genome::operator[](const RSID& id) const
+{
+  return has(id)? const_cast<SNPMap&>(snp)[id] : NONE_SNP;
+}
+
+bool Genome::has(const RSID& id) const
+{
+  return snp.find(id) != snp.end();
+}
+
+struct SNPMapSerializer {
+  // Write
+  bool operator()(
+      FILE *f,
+      const std::pair<const RSID, SNP>& v) const
+  {
+    // Write RSID.
+    // TODO: Save in a specific endianness
+    if ( fwrite(&v.first, sizeof(v.first), 1, f) != 1 )
+      return false;
+
+    // Write Genotype
+    if ( fwrite(&v.second, sizeof(v.second), 1, f) != 1 )
+      return false;
+
+    return true;
+  }
+
+  // Read
+  bool operator()(
+      FILE *f,
+      std::pair<const RSID, SNP>* v) const
+  {
+    // Read RSID
+    // TODO: Convert to native endianness
+    if ( fread(const_cast<RSID*>(&v->first), sizeof(v->first), 1, f) != 1 )
+      return false;
+
+    // Read Genotype
+    if ( fread(const_cast<SNP*>(&v->second),
+               sizeof(v->second), 1, f) != 1 )
+      return false;
+
+    return true;
+  }
+};
+
+bool Genome::save(const char* filename) {
+  FilePtr f(filename, "wb");
+  return snp.serialize(SNPMapSerializer(), f.ptr());
+}
+
+bool Genome::load(const char* filename) {
+  FilePtr f(filename, "rb");
+  return snp.unserialize(SNPMapSerializer(), f.ptr());
+}
+
+std::vector<RSID> Genome::intersect(const Genome& genome) const {
+  std::vector<RSID> r;
+
+  for ( const auto it : snp )
+    if ( genome.has(it.first) )
+      r.push_back(it.first);
+
+  return r;
 }
