@@ -75,7 +75,7 @@ which should result in
     test_repr (__main__.TestGenome) ... ok
     test_slice (__main__.TestGenome) ... ok
     test_snp (__main__.TestGenome) ... ok
-    test_ychromo (__main__.TestGenome) ... ok
+    test_y_chromosome (__main__.TestGenome) ... ok
 
     ----------------------------------------------------------------------
     Ran 8 tests in 0.168s

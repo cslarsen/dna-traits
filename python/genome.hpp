@@ -19,7 +19,7 @@ PyObject* Genome_load(PyGenome*, PyObject*);
 PyObject* Genome_load_factor(PyGenome*);
 PyObject* Genome_new(PyTypeObject*, PyObject*, PyObject*);
 PyObject* Genome_save(PyGenome*, PyObject*);
-PyObject* Genome_ychromo(PyGenome*);
+PyObject* Genome_y_chromosome(PyGenome*);
 Py_ssize_t Genome_length(PyObject*);
 int Genome_init(PyGenome*, PyObject*, PyObject*);
 void Genome_dealloc(PyGenome* self);

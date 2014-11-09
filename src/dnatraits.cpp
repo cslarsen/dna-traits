@@ -224,7 +224,7 @@ struct DLL_LOCAL Genome::GenomeImpl {
 
 
 Genome::Genome(const size_t size):
-  ychromo(false),
+  y_chromosome(false),
   first(0xffffffff),
   last(0),
   pimpl(new GenomeImpl(size))
@@ -232,7 +232,7 @@ Genome::Genome(const size_t size):
 }
 
 Genome::Genome(const Genome& g) :
-  ychromo(g.ychromo),
+  y_chromosome(g.y_chromosome),
   first(g.first),
   last(g.last),
   pimpl(new GenomeImpl(*g.pimpl))
@@ -243,7 +243,7 @@ Genome& Genome::operator=(const Genome& g)
 {
   if ( this != &g ) {
     *pimpl = *g.pimpl;
-    ychromo = g.ychromo;
+    y_chromosome = g.y_chromosome;
     first = g.first;
     last = g.last;
   }

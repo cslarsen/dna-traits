@@ -44,8 +44,8 @@ void summary(const Genome& genome)
   cout
     << "SUMMARY" << endl << endl
 
-    << "  Gender:     " << (genome.ychromo? "Male" : "Female")
-    << " (" << (genome.ychromo? "has" : "no") << " Y-chromosome)" << endl
+    << "  Gender:     " << (genome.y_chromosome? "Male" : "Female")
+    << " (" << (genome.y_chromosome? "has" : "no") << " Y-chromosome)" << endl
 
     << "  Blue eyes?  " << (gs237(genome)? "Yes" : "No")
     << " (gs237)" << endl

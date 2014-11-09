@@ -186,14 +186,14 @@ class Genome:
         return self._genome.last()
 
     @property
-    def ychromo(self):
+    def y_chromosome(self):
         """True if genome contains a Y-chromosome."""
-        return self._genome.ychromo()
+        return self._genome.y_chromosome()
 
     @property
     def male(self):
         """True if genome contains a Y-chromosome."""
-        return self.ychromo
+        return self.y_chromosome
 
     @property
     def female(self):
@@ -238,8 +238,8 @@ class Genome:
             return False
 
     def __repr__(self):
-        return "<Genome: SNPs=%d, ychromo=%s, orientation=%s>" % (
-                len(self), self.ychromo, self.orientation)
+        return "<Genome: SNPs=%d, y_chromosome=%s, orientation=%s>" % (
+                len(self), self.y_chromosome, self.orientation)
 
     def __getattr__(self, rsid):
         # Query with genome.rs28357092

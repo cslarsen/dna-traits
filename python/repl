@@ -10,7 +10,7 @@ Exmaple:
     $ repl genome.txt
     Type `genome` to see Genome parsed from genome.txt
     >>> genome
-    <Genome: SNPs=949461, ychromo=True, orientation=1>
+    <Genome: SNPs=949461, y_chromosome=True, orientation=1>
     >>> genome.rs123
     SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123',
             orientation=1)

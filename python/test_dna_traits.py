@@ -24,12 +24,12 @@ class TestGenome(unittest.TestCase):
     def test_slice(self):
         self.assertEqual(len(self.genome[0:10]), 10)
 
-    def test_ychromo(self):
-        self.assertIsInstance(self.genome.ychromo, bool)
+    def test_y_chromosome(self):
+        self.assertIsInstance(self.genome.y_chromosome, bool)
         self.assertIsInstance(self.genome.female, bool)
         self.assertIsInstance(self.genome.male, bool)
         self.assertNotEqual(self.genome.male, self.genome.female)
-        self.assertEqual(self.genome.male, self.genome.ychromo)
+        self.assertEqual(self.genome.male, self.genome.y_chromosome)
 
     def test_orientation(self):
         self.assertIsInstance(self.genome.orientation, int)

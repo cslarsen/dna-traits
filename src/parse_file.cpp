@@ -81,7 +81,7 @@ void parse_file(const std::string& name, Genome& genome)
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
   auto s = static_cast<const char*>(fmap.ptr());
 
-  genome.ychromo = false;
+  genome.y_chromosome = false;
   skip_comments(s);
 
   for ( ; *s; ++s ) {
@@ -94,7 +94,7 @@ void parse_file(const std::string& name, Genome& genome)
     RSID rsid(parse_uint32(s+=2)); // rs[0-9]+
     genome.first = rsid < genome.first? rsid : genome.first;
     genome.last = rsid > genome.last? rsid : genome.last;
-    genome.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
+    genome.y_chromosome |= (*skipwhite(s)=='Y'); // is Y chromosome?
 
     genome.insert(rsid, SNP(parse_chromo(s),
                             parse_uint32(skipwhite(s)),

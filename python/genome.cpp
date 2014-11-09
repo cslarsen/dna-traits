@@ -17,8 +17,8 @@ PyMappingMethods Genome_map = {
 };
 
 PyMethodDef Genome_methods[] = {
-  // TODO: make ychromo a property
-  {"ychromo", (PyCFunction)Genome_ychromo, METH_NOARGS,
+  // TODO: make y_chromosome a property
+  {"y_chromosome", (PyCFunction)Genome_y_chromosome, METH_NOARGS,
    "Returns True if genome contains a Y-chromosome."},
   {"load_factor", (PyCFunction)Genome_load_factor, METH_NOARGS,
     "Returns the hash map's load factor."},
@@ -100,9 +100,9 @@ int Genome_init(PyGenome*, PyObject*, PyObject*)
   return 0;
 }
 
-PyObject* Genome_ychromo(PyGenome* self)
+PyObject* Genome_y_chromosome(PyGenome* self)
 {
-  return self->genome->ychromo? Py_True : Py_False;
+  return self->genome->y_chromosome? Py_True : Py_False;
 }
 
 PyObject* Genome_first(PyGenome* self)

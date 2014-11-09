@@ -78,7 +78,7 @@ struct DLL_PUBLIC SNP {
 extern DLL_PUBLIC const SNP NONE_SNP;
 
 struct DLL_PUBLIC Genome {
-  bool ychromo;
+  bool y_chromosome;
   RSID first;
   RSID last;
 
