@@ -96,8 +96,8 @@ void parse_file(const std::string& name, Genome& genome)
     genome.last = rsid > genome.last? rsid : genome.last;
     genome.ychromo |= (*skipwhite(s)=='Y'); // has Y chromosome?
 
-    genome.snp.insert({rsid, SNP(parse_chromo(s),
-                                 parse_uint32(skipwhite(s)),
-                                 parse_genotype(skipwhite(s)))});
+    genome.insert(rsid, SNP(parse_chromo(s),
+                            parse_uint32(skipwhite(s)),
+                            parse_genotype(skipwhite(s))));
   }
 }

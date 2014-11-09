@@ -70,7 +70,7 @@ int main(int argc, char** argv)
       parse_file(file, genome);
 
       cout << "done" << endl; cout.flush();
-      cout << "Read " << genome.snp.size() << " unique SNPs" << endl << endl;
+      cout << "Read " << genome.size() << " unique SNPs" << endl << endl;
 
 #ifdef DEBUG
       cout << "Size of Genotype: " << sizeof(Genotype) << endl
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
            << "  sizeof(Position) = " << sizeof(Position) << endl
            << "  sizeof(RSID) = " << sizeof(RSID) << endl
            << "  sizeof(SNP) = " << sizeof(SNP) << endl
-           << "  load factor = " << genome.snp.load_factor() << endl;
+           << "  load factor = " << genome.load_factor() << endl;
     }
 
     return 0;

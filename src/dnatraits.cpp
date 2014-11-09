@@ -3,7 +3,25 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
+#include <sstream>
+#include <sparsehash/dense_hash_map>
 #include "dnatraits.hpp"
+
+struct RSIDHash {
+  inline std::size_t operator() (const RSID& rsid) const
+  {
+    return static_cast<std::size_t>(rsid);
+  }
+};
+
+struct RSIDEq {
+  inline bool operator()(const RSID& a, const RSID& b) const
+  {
+    return a == b;
+  }
+};
+
+typedef google::dense_hash_map<RSID, SNP, RSIDHash, RSIDEq> SNPMap;
 
 const Genotype AA (A, A);
 const Genotype AC (A, C);
@@ -127,25 +145,6 @@ bool SNP::operator==(const Genotype& g) const {
   return genotype == g;
 }
 
-Genome::Genome(const size_t size):
-  snp(size),
-  ychromo(false),
-  first(0xffffffff),
-  last(0)
-{
-  snp.set_empty_key(0);
-}
-
-const SNP& Genome::operator[](const RSID& id) const
-{
-  return has(id)? const_cast<SNPMap&>(snp)[id] : NONE_SNP;
-}
-
-bool Genome::has(const RSID& id) const
-{
-  return snp.find(id) != snp.end();
-}
-
 struct SNPMapSerializer {
   // Write
   bool operator()(
@@ -183,20 +182,118 @@ struct SNPMapSerializer {
   }
 };
 
+struct Genome::GenomeImpl {
+  SNPMap snps;
+
+  GenomeImpl(const size_t size) :
+    snps(size)
+  {
+    snps.set_empty_key(0);
+  }
+
+  GenomeImpl(const GenomeImpl& g) :
+    snps(g.snps)
+  {
+    snps.set_empty_key(0);
+  }
+
+  GenomeImpl& operator=(const GenomeImpl& g)
+  {
+    if ( this != &g )
+      snps = g.snps;
+
+    return *this;
+  }
+
+  bool contains(const RSID& rsid) const {
+    return snps.find(rsid) != snps.end();
+  }
+
+  const SNP& operator[](const RSID& rsid) const {
+    return !contains(rsid)? NONE_SNP : const_cast<SNPMap&>(snps)[rsid];
+  }
+
+  bool save(FILE* f) {
+    return snps.serialize(SNPMapSerializer(), f);
+  }
+
+  bool load(FILE* f) {
+    return snps.unserialize(SNPMapSerializer(), f);
+  }
+};
+
+
+Genome::Genome(const size_t size):
+  ychromo(false),
+  first(0xffffffff),
+  last(0),
+  pimpl(new GenomeImpl(size))
+{
+}
+
+Genome::Genome(const Genome& g) :
+  ychromo(g.ychromo),
+  first(g.first),
+  last(g.last),
+  pimpl(new GenomeImpl(*g.pimpl))
+{
+}
+
+Genome& Genome::operator=(const Genome& g)
+{
+  if ( this != &g ) {
+    *pimpl = *g.pimpl;
+    ychromo = g.ychromo;
+    first = g.first;
+    last = g.last;
+  }
+  return *this;
+}
+
+Genome::~Genome()
+{
+  delete pimpl;
+}
+
+const SNP& Genome::operator[](const RSID& rsid) const
+{
+  return (*pimpl)[rsid];
+}
+
+bool Genome::has(const RSID& rsid) const
+{
+  return pimpl->contains(rsid);
+}
+
+size_t Genome::size() const
+{
+  return pimpl->snps.size();
+}
+
+double Genome::load_factor() const
+{
+  return pimpl->snps.load_factor();
+}
+
+void Genome::insert(const RSID& rsid, const SNP& snp)
+{
+  pimpl->snps.insert({rsid, snp});
+}
+
 bool Genome::save(const char* filename) {
   FilePtr f(filename, "wb");
-  return snp.serialize(SNPMapSerializer(), f.ptr());
+  return pimpl->save(f);
 }
 
 bool Genome::load(const char* filename) {
   FilePtr f(filename, "rb");
-  return snp.unserialize(SNPMapSerializer(), f.ptr());
+  return pimpl->load(f);
 }
 
 std::vector<RSID> Genome::intersect(const Genome& genome) const {
   std::vector<RSID> r;
 
-  for ( const auto it : snp )
+  for ( const auto it : pimpl->snps )
     if ( genome.has(it.first) )
       r.push_back(it.first);
 

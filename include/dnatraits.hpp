@@ -7,11 +7,9 @@
 #define INC_DNATRAITS_H
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <cstdint>
 #include <vector>
-#include <sparsehash/dense_hash_map>
 #include "fileptr.hpp"
 
 typedef std::uint32_t Position;
@@ -76,34 +74,28 @@ struct SNP {
   bool operator==(const Genotype& g) const;
 };
 
-struct RSIDHash {
-  inline std::size_t operator() (const RSID& rsid) const
-  {
-    return static_cast<std::size_t>(rsid);
-  }
-};
-
-struct RSIDEq {
-  inline bool operator()(const RSID& a, const RSID& b) const
-  {
-    return a == b;
-  }
-};
-
-typedef google::dense_hash_map<RSID, SNP, RSIDHash, RSIDEq> SNPMap;
-
 struct Genome {
-  SNPMap snp;
   bool ychromo;
   RSID first;
   RSID last;
 
   Genome(const size_t size);
+  Genome(const Genome&);
+  Genome& operator=(const Genome&);
+  ~Genome();
+
   const SNP& operator[](const RSID& id) const;
   bool has(const RSID& id) const;
+  void insert(const RSID& rsid, const SNP& snp);
+  double load_factor() const;
+  size_t size() const;
   bool save(const char* filename);
   bool load(const char* filename);
   std::vector<RSID> intersect(const Genome& genome) const;
+
+private:
+  struct GenomeImpl;
+  GenomeImpl* pimpl;
 };
 
 Nucleotide complement(const Nucleotide& n);

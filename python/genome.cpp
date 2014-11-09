@@ -117,7 +117,7 @@ PyObject* Genome_last(PyGenome* self)
 
 PyObject* Genome_load_factor(PyGenome* self)
 {
-  return Py_BuildValue("d", self->genome->snp.load_factor());
+  return Py_BuildValue("d", self->genome->load_factor());
 }
 
 PyObject* Genome_load(PyGenome* self, PyObject* args)
@@ -157,7 +157,7 @@ static char from_nucleotide(const Nucleotide& n)
 Py_ssize_t Genome_length(PyObject* self)
 {
   auto genome = reinterpret_cast<PyGenome*>(self);
-  return static_cast<Py_ssize_t>(genome->genome->snp.size());
+  return static_cast<Py_ssize_t>(genome->genome->size());
 }
 
 PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
