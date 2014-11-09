@@ -7,14 +7,14 @@
 #include <sparsehash/dense_hash_map>
 #include "dnatraits.hpp"
 
-struct RSIDHash {
+struct DLL_LOCAL RSIDHash {
   inline std::size_t operator() (const RSID& rsid) const
   {
     return static_cast<std::size_t>(rsid);
   }
 };
 
-struct RSIDEq {
+struct DLL_LOCAL RSIDEq {
   inline bool operator()(const RSID& a, const RSID& b) const
   {
     return a == b;
@@ -182,8 +182,8 @@ struct SNPMapSerializer {
   }
 };
 
-struct Genome::GenomeImpl {
-  SNPMap snps;
+struct DLL_LOCAL Genome::GenomeImpl {
+  DLL_LOCAL SNPMap snps;
 
   GenomeImpl(const size_t size) :
     snps(size)

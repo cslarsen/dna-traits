@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "mmap.hpp"
 
-MMap::MMap(void *address,
+DLL_LOCAL MMap::MMap(void *address,
            size_t length,
            int protection_level,
            int flags,
@@ -24,6 +24,6 @@ MMap::MMap(void *address,
     throw std::runtime_error("mmap error");
 }
 
-MMap::~MMap() {
+DLL_LOCAL MMap::~MMap() {
   munmap(p, l);
 }
