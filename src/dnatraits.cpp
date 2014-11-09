@@ -3,7 +3,7 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
-#include "dnatraits.h"
+#include "dnatraits.hpp"
 
 const SNP NONE_SNP(NO_CHR, 0, NN);
 

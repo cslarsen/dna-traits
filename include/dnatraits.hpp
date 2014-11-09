@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <vector>
 #include <sparsehash/dense_hash_map>
-#include "fileptr.h"
+#include "fileptr.hpp"
 
 enum Nucleotide {
   NONE, A, G, C, T, D, I

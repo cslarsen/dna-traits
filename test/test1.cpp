@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <unistd.h>
-#include "dnatraits.h"
+#include "dnatraits.hpp"
 
 /**
  * Has blue eye color? gs237 criteria http://snpedia.com/index.php/Gs237/criteria

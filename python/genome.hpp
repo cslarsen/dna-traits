@@ -5,7 +5,7 @@
 
 #include <Python.h>
 #include <structmember.h>
-#include "dnatraits.h"
+#include "dnatraits.hpp"
 
 struct PyGenome {
   PyObject_HEAD

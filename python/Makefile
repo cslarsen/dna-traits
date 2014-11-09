@@ -13,13 +13,13 @@ PYLDFLAGS := $(shell python-config --ldflags)
 
 all: $(TARGETS)
 
-dna_traits.o: dna_traits.cpp genome.h
+dna_traits.o: dna_traits.cpp genome.hpp
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
 libdnatraits.so: ../libdnatraits.so
 	cp $^ $@
 
-genome.o: genome.cpp genome.h
+genome.o: genome.cpp genome.hpp
 	$(CXX) $(CXXFLAGS) $(PYCFLAGS) -c -o $@ $<
 
 _dna_traits.so: libdnatraits.so dna_traits.o genome.o

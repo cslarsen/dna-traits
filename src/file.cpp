@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <string>
-#include "file.h"
+#include "file.hpp"
 
 File::File(const char* filename, const int flags):
   fd(open(filename, flags))

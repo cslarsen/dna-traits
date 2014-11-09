@@ -5,7 +5,7 @@
 
 #include <stdexcept>
 #include <sys/stat.h>
-#include "filesize.h"
+#include "filesize.hpp"
 
 off_t filesize(const int file_descriptor)
 {

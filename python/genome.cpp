@@ -4,7 +4,7 @@
  */
 
 #include <stdio.h>
-#include "genome.h"
+#include "genome.hpp"
 
 PyMemberDef Genome_members[] = {
   {NULL}

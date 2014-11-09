@@ -5,7 +5,7 @@
 
 #include <string>
 #include <stdio.h>
-#include "fileptr.h"
+#include "fileptr.hpp"
 
 FilePtr::FilePtr(const char* filename, const char* mode):
   f(fopen(filename, mode))

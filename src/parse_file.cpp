@@ -3,10 +3,10 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
-#include "dnatraits.h"
-#include "file.h"
-#include "filesize.h"
-#include "mmap.h"
+#include "dnatraits.hpp"
+#include "file.hpp"
+#include "filesize.hpp"
+#include "mmap.hpp"
 
 static Nucleotide CharToNucleotide[256] = {NONE};
 

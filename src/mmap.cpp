@@ -4,7 +4,7 @@
  */
 
 #include <stdexcept>
-#include "mmap.h"
+#include "mmap.hpp"
 
 MMap::MMap(void *address,
            size_t length,
