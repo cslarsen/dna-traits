@@ -11,25 +11,13 @@
 #include <cstdint>
 #include <vector>
 #include "fileptr.hpp"
+#include "export.hpp"
 
 typedef std::uint32_t Position;
 typedef std::uint32_t RSID;
 
 enum Nucleotide {
   NONE, A, G, C, T, D, I
-};
-
-// We can get this down to a byte if we want to
-#pragma pack(1)
-struct Genotype {
-  Nucleotide first : 3;
-  Nucleotide second : 3;
-
-  Genotype(const Nucleotide& a = NONE,
-           const Nucleotide& b = NONE);
-
-  friend Genotype operator~(const Genotype&);
-  bool operator==(const Genotype& g) const;
 };
 
 enum Chromosome {
@@ -41,27 +29,40 @@ enum Chromosome {
   CHR21, CHR22, CHR_MT, CHR_X, CHR_Y
 };
 
+// We can get this down to a byte if we want to
+#pragma pack(1)
+struct DLL_PUBLIC Genotype {
+  Nucleotide first : 3;
+  Nucleotide second : 3;
+
+  Genotype(const Nucleotide& a = NONE,
+           const Nucleotide& b = NONE);
+
+  friend Genotype operator~(const Genotype&);
+  bool operator==(const Genotype& g) const;
+};
+
 // Some handy constants
-extern const Genotype AA;
-extern const Genotype AC;
-extern const Genotype AG;
-extern const Genotype AT;
-extern const Genotype CA;
-extern const Genotype CC;
-extern const Genotype CG;
-extern const Genotype CT;
-extern const Genotype GA;
-extern const Genotype GC;
-extern const Genotype GG;
-extern const Genotype GT;
-extern const Genotype NN;
-extern const Genotype TA;
-extern const Genotype TC;
-extern const Genotype TG;
-extern const Genotype TT;
+extern DLL_PUBLIC const Genotype AA;
+extern DLL_PUBLIC const Genotype AC;
+extern DLL_PUBLIC const Genotype AG;
+extern DLL_PUBLIC const Genotype AT;
+extern DLL_PUBLIC const Genotype CA;
+extern DLL_PUBLIC const Genotype CC;
+extern DLL_PUBLIC const Genotype CG;
+extern DLL_PUBLIC const Genotype CT;
+extern DLL_PUBLIC const Genotype GA;
+extern DLL_PUBLIC const Genotype GC;
+extern DLL_PUBLIC const Genotype GG;
+extern DLL_PUBLIC const Genotype GT;
+extern DLL_PUBLIC const Genotype NN;
+extern DLL_PUBLIC const Genotype TA;
+extern DLL_PUBLIC const Genotype TC;
+extern DLL_PUBLIC const Genotype TG;
+extern DLL_PUBLIC const Genotype TT;
 
 #pragma pack(1)
-struct SNP {
+struct DLL_PUBLIC SNP {
   Chromosome chromosome : 5;
   Position position;
   Genotype genotype;
@@ -74,7 +75,9 @@ struct SNP {
   bool operator==(const Genotype& g) const;
 };
 
-struct Genome {
+extern DLL_PUBLIC const SNP NONE_SNP;
+
+struct DLL_PUBLIC Genome {
   bool ychromo;
   RSID first;
   RSID last;
@@ -94,8 +97,8 @@ struct Genome {
   std::vector<RSID> intersect(const Genome& genome) const;
 
 private:
-  struct GenomeImpl;
-  GenomeImpl* pimpl;
+  struct DLL_LOCAL GenomeImpl;
+  DLL_LOCAL GenomeImpl* pimpl;
 };
 
 Nucleotide complement(const Nucleotide& n);
@@ -105,8 +108,5 @@ std::ostream& operator<<(std::ostream&, const Nucleotide&);
 std::ostream& operator<<(std::ostream&, const SNP&);
 std::string format(const Genome&, const RSID&);
 void parse_file(const std::string& filename, Genome&);
-void summary(const Genome&);
-
-extern const SNP NONE_SNP;
 
 #endif

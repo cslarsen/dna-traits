@@ -3,4 +3,6 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
-off_t filesize(const int file_descriptor);
+#include "export.hpp"
+
+off_t DLL_LOCAL filesize(const int file_descriptor);

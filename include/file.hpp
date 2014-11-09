@@ -6,7 +6,9 @@
 #ifndef DNA_FILE_H
 #define DNA_FILE_H
 
-class File {
+#include "export.hpp"
+
+class DLL_LOCAL File {
   int fd;
 public:
   File(const char* filename, const int flags);

@@ -7,8 +7,9 @@
 #define DNA_FILEPTR_H
 
 #include <stdio.h>
+#include "export.hpp"
 
-class FilePtr {
+class DLL_LOCAL FilePtr {
   FILE *f;
 public:
   FilePtr(const char* file, const char* mode);

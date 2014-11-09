@@ -7,8 +7,9 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include "export.hpp"
 
-class MMap {
+class DLL_LOCAL MMap {
   size_t l;
   void *p;
 public:
