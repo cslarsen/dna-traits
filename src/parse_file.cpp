@@ -77,7 +77,7 @@ void parse_file(const std::string& name, Genome& genome)
   CharToNucleotide[static_cast<unsigned>('D')] = D;
   CharToNucleotide[static_cast<unsigned>('I')] = I;
 
-  File fd(name, O_RDONLY);
+  File fd(name.c_str(), O_RDONLY);
   MMap fmap(0, filesize(fd), PROT_READ, MAP_PRIVATE, fd, 0);
   auto s = static_cast<const char*>(fmap.ptr());
 

@@ -6,22 +6,13 @@
 #ifndef DNA_FILEPTR_H
 #define DNA_FILEPTR_H
 
-#include <string>
 #include <stdio.h>
 
 class FilePtr {
   FILE *f;
 public:
-  FilePtr(const std::string& file, const char* mode):
-    f(fopen(file.c_str(), mode))
-  {
-    if ( !f )
-      throw std::runtime_error("Could not open file: " + file);
-  }
-
-  ~FilePtr() {
-    fclose(f);
-  }
+  FilePtr(const char* file, const char* mode);
+  ~FilePtr();
 
   inline operator FILE*() const {
     return f;

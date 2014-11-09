@@ -7,7 +7,10 @@ override CXXFLAGS += -Iinclude --std=c++11 -Wall \
 
 OBJFILES := \
 	src/dnatraits.o \
+	src/file.o \
+	src/fileptr.o \
 	src/filesize.o \
+	src/mmap.o \
 	src/parse_file.o \
 	test/test1.o
 
