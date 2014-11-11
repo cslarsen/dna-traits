@@ -147,72 +147,6 @@ bool SNP::operator==(const Genotype& g) const {
   return genotype == g;
 }
 
-struct SNPMapSerializer {
-  // Write
-  bool operator()(
-      FILE *f,
-      const std::pair<const RSID, SNP>& v) const
-  {
-    // Write RSID
-    const RSID rsid = htonl(v.first);
-    if ( fwrite(&rsid, sizeof(rsid), 1, f) != 1 )
-      return false;
-
-    // Write chromosome
-    const SNP& snp = v.second;
-    const uint8_t chromosome = static_cast<uint8_t>(snp.chromosome);
-    if ( fwrite(&chromosome, sizeof(chromosome), 1, f) != 1 )
-      return false;
-
-    // Write position
-    Position position = htonl(snp.position);
-    if ( fwrite(&position, sizeof(position), 1, f) != 1 )
-      return false;
-
-    // Write genotype
-    assert(sizeof(Genotype) == 1);
-    const Genotype genotype = snp.genotype;
-    if ( fwrite(&genotype, sizeof(genotype), 1, f) != 1)
-      return false;
-
-    return true;
-  }
-
-  // Read
-  bool operator()(
-      FILE *f,
-      std::pair<const RSID, SNP>* v) const
-  {
-    // Read RSID from network endianess
-    RSID rsid = 0;
-    if ( fread(&rsid, sizeof(rsid), 1, f) != 1 )
-      return false;
-    *const_cast<RSID*>(&v->first) = ntohl(rsid);
-
-    // Read chromosome
-    uint8_t chromosome = 0;
-    if ( fread(&chromosome, sizeof(chromosome), 1, f) != 1 )
-      return false;
-    const_cast<SNP*>(&v->second)->chromosome =
-      static_cast<Chromosome>(chromosome);
-
-    // Read position
-    Position position = 0;
-    if ( fread(&position, sizeof(position), 1, f) != 1 )
-      return false;
-    const_cast<SNP*>(&v->second)->position = ntohl(position);
-
-    // Read genotype
-    assert(sizeof(Genotype) == 1);
-    Genotype genotype;
-    if ( fread(&genotype, sizeof(genotype), 1, f) != 1)
-      return false;
-    const_cast<SNP*>(&v->second)->genotype = genotype;
-
-    return true;
-  }
-};
-
 struct DLL_LOCAL Genome::GenomeImpl {
   DLL_LOCAL SNPMap snps;
 
@@ -242,14 +176,6 @@ struct DLL_LOCAL Genome::GenomeImpl {
 
   const SNP& operator[](const RSID& rsid) const {
     return !contains(rsid)? NONE_SNP : const_cast<SNPMap&>(snps)[rsid];
-  }
-
-  bool save(FILE* f) {
-    return snps.serialize(SNPMapSerializer(), f);
-  }
-
-  bool load(FILE* f) {
-    return snps.unserialize(SNPMapSerializer(), f);
   }
 };
 
@@ -309,72 +235,6 @@ double Genome::load_factor() const
 void Genome::insert(const RSID& rsid, const SNP& snp)
 {
   pimpl->snps.insert({rsid, snp});
-}
-
-bool Genome::save(const char* filename) {
-  FilePtr f(filename, "wb");
-
-  static const char magic[] = "dnatraits binary file";
-  if ( fwrite(&magic, sizeof(magic)/sizeof(char), 1, f) != 1 )
-    return false;
-  const int eof = EOF;
-  if ( fwrite(&eof, sizeof(eof), 1, f) != 1 )
-    return false;
-
-  static const uint32_t version[] = {htonl(1), htonl(0)};
-  if ( fwrite(&version[0], sizeof(version[0]), 1, f) != 1 )
-    return false;
-  if ( fwrite(&version[1], sizeof(version[0]), 1, f) != 1 )
-    return false;
-  if ( fwrite(&y_chromosome, sizeof(y_chromosome), 1, f) != 1 )
-    return false;
-
-  RSID rsid;
-  rsid = htonl(first);
-  if ( fwrite(&rsid, sizeof(RSID), 1, f) != 1 )
-    return false;
-
-  rsid = htonl(last);
-  if ( fwrite(&rsid, sizeof(RSID), 1, f) != 1 )
-    return false;
-
-  return pimpl->save(f);
-}
-
-bool Genome::load(const char* filename) {
-  FilePtr f(filename, "rb");
-
-  char magic[22] = {0};
-  fread(&magic, sizeof(magic)/sizeof(char), 1, f);
-  if ( strncmp(magic, "dnatraits binary file\0", 22) != 0 ) {
-    // not a dnatraits file
-    return false;
-  }
-  int eof = 0;
-  if ( fread(&eof, sizeof(eof), 1, f) != 1 )
-    return false;
-  if ( eof != EOF )
-    return false;
-
-  uint32_t version[] = {0, 0};
-  fread(&version[0], sizeof(version[0]), 1, f);
-  fread(&version[1], sizeof(version[1]), 1, f);
-  version[0] = ntohl(version[0]);
-  version[1] = ntohl(version[1]);
-  if ( version[0]!=1 && version[1]!=0 ) {
-    // incorrect version
-    return false;
-  }
-
-  fread(&y_chromosome, sizeof(y_chromosome), 1, f);
-
-  RSID rsid;
-  fread(&rsid, sizeof(RSID), 1, f);
-  first = ntohl(rsid);
-  fread(&rsid, sizeof(RSID), 1, f);
-  last = ntohl(rsid);
-
-  return pimpl->load(f);
 }
 
 std::vector<RSID> Genome::intersect(const Genome& genome) const {

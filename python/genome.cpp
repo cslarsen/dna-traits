@@ -22,10 +22,6 @@ PyMethodDef Genome_methods[] = {
    "Returns True if genome contains a Y-chromosome."},
   {"load_factor", (PyCFunction)Genome_load_factor, METH_NOARGS,
     "Returns the hash map's load factor."},
-  {"save", (PyCFunction)Genome_save, METH_VARARGS,
-    "Saves genome to binary format."},
-  {"load", (PyCFunction)Genome_load, METH_VARARGS,
-    "Loads genome from binary format."},
   {"first", (PyCFunction)Genome_first, METH_NOARGS,
     "Returns first RSID."},
   {"last", (PyCFunction)Genome_last, METH_NOARGS,
@@ -127,26 +123,6 @@ PyObject* Genome_last(PyGenome* self)
 PyObject* Genome_load_factor(PyGenome* self)
 {
   return Py_BuildValue("d", self->genome->load_factor());
-}
-
-PyObject* Genome_load(PyGenome* self, PyObject* args)
-{
-  PyObject *fname;
-  if ( !PyArg_UnpackTuple(args, "name", 1, 1, &fname) )
-    return NULL;
-
-  const char *name = PyString_AsString(fname);
-  return self->genome->load(name) ? Py_True : Py_False;
-}
-
-PyObject* Genome_save(PyGenome* self, PyObject* args)
-{
-  PyObject *fname;
-  if ( !PyArg_UnpackTuple(args, "name", 1, 1, &fname) )
-    return NULL;
-
-  const char *name = PyString_AsString(fname);
-  return self->genome->save(name) ? Py_True : Py_False;
 }
 
 static char from_nucleotide(const Nucleotide& n)

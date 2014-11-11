@@ -92,8 +92,6 @@ struct DLL_PUBLIC Genome {
   void insert(const RSID& rsid, const SNP& snp);
   double load_factor() const;
   size_t size() const;
-  bool save(const char* filename);
-  bool load(const char* filename);
   std::vector<RSID> intersect(const Genome& genome) const;
 
 private:
