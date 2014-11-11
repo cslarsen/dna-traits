@@ -4,7 +4,7 @@ TARGETS := dna_traits.o genome.o _dna_traits.so libdnatraits.so
 CXX := g++
 CC := $(CXX)
 
-override CXXFLAGS += -I../include --std=c++11 -Wall \
+override CXXFLAGS += -I../include --std=c++11 -W -Wall \
 					 -Ofast -march=native -mtune=native \
 					 -flto
 
