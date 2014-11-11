@@ -7,7 +7,7 @@
 #include "genome.hpp"
 
 PyMemberDef Genome_members[] = {
-  {NULL}
+  {NULL, 0, 0, 0, NULL}
 };
 
 PyMappingMethods Genome_map = {
@@ -30,7 +30,7 @@ PyMethodDef Genome_methods[] = {
     "Returns first RSID."},
   {"last", (PyCFunction)Genome_last, METH_NOARGS,
     "Returns last RSID."},
-  {NULL}
+  {NULL, NULL, 0, NULL}
 };
 
 PyTypeObject GenomeType = {
@@ -74,6 +74,15 @@ PyTypeObject GenomeType = {
   (initproc)Genome_init, // init
   0, // alloc
   Genome_new, // tp new
+  NULL, // tp free
+  NULL, // tp_is_gc
+  NULL, // tp_bases
+  NULL, // tp_mro
+  NULL, // tp_cache
+  NULL, // tp_subclasses
+  NULL, // tp_weaklist
+  NULL, // tp_del
+  0, // tp_version_tag
 };
 
 void Genome_dealloc(PyGenome* self)
@@ -83,8 +92,8 @@ void Genome_dealloc(PyGenome* self)
 }
 
 PyObject* Genome_new(PyTypeObject* type,
-                     PyObject* args,
-                     PyObject *kw)
+                     PyObject* /*args*/,
+                     PyObject* /*kw*/)
 {
   auto p = reinterpret_cast<PyGenome*>(type->tp_alloc(type, 0));
 
