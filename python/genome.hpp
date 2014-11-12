@@ -12,6 +12,7 @@ struct PyGenome {
   Genome *genome;
 };
 
+PyObject* Genome_eq(PyGenome*, PyObject*);
 PyObject* Genome_first(PyGenome*);
 PyObject* Genome_getitem(PyObject*, PyObject*);
 PyObject* Genome_last(PyGenome*);

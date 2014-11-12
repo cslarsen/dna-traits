@@ -17,7 +17,6 @@ PyMappingMethods Genome_map = {
 };
 
 PyMethodDef Genome_methods[] = {
-  // TODO: make y_chromosome a property
   {"y_chromosome", (PyCFunction)Genome_y_chromosome, METH_NOARGS,
    "Returns True if genome contains a Y-chromosome."},
   {"load_factor", (PyCFunction)Genome_load_factor, METH_NOARGS,
@@ -26,6 +25,8 @@ PyMethodDef Genome_methods[] = {
     "Returns first RSID."},
   {"last", (PyCFunction)Genome_last, METH_NOARGS,
     "Returns last RSID."},
+  {"eq", (PyCFunction)Genome_eq, METH_O,
+    "Checks for equality"},
   {NULL, NULL, 0, NULL}
 };
 
@@ -190,4 +191,16 @@ PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
   PyTuple_SetItem(tuple, 1, pchromo);
   PyTuple_SetItem(tuple, 2, Py_BuildValue("I", snp.position));
   return tuple;
+}
+
+PyObject* Genome_eq(PyGenome* self, PyObject* other)
+{
+  if ( !PyObject_TypeCheck(other, &GenomeType) ) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Can only compare types of dna_traits.Genome");
+    return NULL;
+  }
+
+  auto right = reinterpret_cast<PyGenome*>(other);
+  return self->genome->operator==(*right->genome)? Py_True : Py_False;
 }

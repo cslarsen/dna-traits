@@ -143,7 +143,20 @@ SNP& SNP::operator=(const SNP& snp) {
   return *this;
 }
 
-bool SNP::operator==(const Genotype& g) const {
+bool SNP::operator==(const SNP& snp) const
+{
+  return genotype == snp.genotype &&
+         chromosome == snp.chromosome &&
+         position == snp.position;
+}
+
+bool SNP::operator!=(const SNP& snp) const
+{
+  return !(*this == snp);
+}
+
+bool SNP::operator==(const Genotype& g) const
+{
   return genotype == g;
 }
 
@@ -237,12 +250,36 @@ void Genome::insert(const RSID& rsid, const SNP& snp)
   pimpl->snps.insert({rsid, snp});
 }
 
-std::vector<RSID> Genome::intersect(const Genome& genome) const {
+std::vector<RSID> Genome::intersect(const Genome& genome) const
+{
   std::vector<RSID> r;
 
-  for ( const auto it : pimpl->snps )
-    if ( genome.has(it.first) )
-      r.push_back(it.first);
+  for ( const auto i : pimpl->snps )
+    if ( genome.has(i.first) )
+      r.push_back(i.first);
 
   return r;
+}
+
+bool Genome::operator==(const Genome& o) const
+{
+  if ( first != o.first ) return false;
+  if ( last != o.last ) return false;
+  if ( y_chromosome != o.y_chromosome ) return false;
+  if ( o.size() != size() ) return false;
+
+  for ( const auto i : pimpl->snps ) {
+    if ( !o.has(i.first) )
+      return false;
+
+    if ( i.second != o[i.first] )
+      return false;
+  }
+
+  return true;
+}
+
+bool Genome::operator!=(const Genome& o) const
+{
+  return !(*this == o);
 }

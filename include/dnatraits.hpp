@@ -67,12 +67,15 @@ struct DLL_PUBLIC SNP {
   Position position;
   Genotype genotype;
 
-  SNP(const Chromosome& chr = NO_CHR,
-      const Position& pos = 0,
-      const Genotype& gt = NN);
-  SNP(const SNP& snp);
-  SNP& operator=(const SNP& snp);
-  bool operator==(const Genotype& g) const;
+  SNP(const Chromosome& = NO_CHR,
+      const Position& = 0,
+      const Genotype& = NN);
+  SNP(const SNP&);
+
+  SNP& operator=(const SNP&);
+  bool operator==(const Genotype&) const;
+  bool operator==(const SNP&) const;
+  bool operator!=(const SNP&) const;
 };
 
 extern DLL_PUBLIC const SNP NONE_SNP;
@@ -93,6 +96,9 @@ struct DLL_PUBLIC Genome {
   double load_factor() const;
   size_t size() const;
   std::vector<RSID> intersect(const Genome& genome) const;
+
+  bool operator==(const Genome&) const;
+  bool operator!=(const Genome&) const;
 
 private:
   struct DLL_LOCAL GenomeImpl;

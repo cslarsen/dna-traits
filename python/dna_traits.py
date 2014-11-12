@@ -251,6 +251,12 @@ class Genome:
         """Returns number of SNPs in this genome."""
         return len(self._genome)
 
+    def __eq__(self, genome):
+        return self._genome.eq(genome._genome)
+
+    def __ne__(self, genome):
+        return not self.__eq__(genome)
+
     def match(self, criteria):
         """Match list of (RSID, BasePair) with genome. BasePair should be a
         string with positive orientation.
