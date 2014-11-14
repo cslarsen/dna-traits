@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+"""
+Gives a similarity score between two genomes.
+
+This is not a symmetric property, because genomes may not contain the same
+or the same number of SNPs.
+
+Copyright (C) 2014 Christian Stigen Larsen
+Distributed under the GPL v3 or later. See COPYING.
+"""
+
+import sys
+import dna_traits as dt
+
+def snp_similarity(base_genome, other_genome):
+    """Returns ratio of SNPs that are equal in both genomes."""
+    rsids = base_genome.intersect_snp(other_genome)
+    return float(len(rsids)) / len(base_genome)
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Usage: similarity base file1 [ file2 ... ]")
+        print("Prints how many SNPs are equal for two genomes.")
+        sys.exit(1)
+
+    base = dt.parse(sys.argv[1])
+
+    for f in sys.argv[2:]:
+        print("%s %.2f%%" % (f, 100.0 * snp_similarity(base, dt.parse(f))))
+
+    sys.exit(0)

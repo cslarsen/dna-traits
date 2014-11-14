@@ -202,6 +202,24 @@ class Genome:
     def __iter__(self):
         return GenomeIterator(self)
 
+    def intersect_rsid(self, genome):
+        """Find RSIDs that exist in both genomes.
+
+        Returns:
+            A list of RSID integers.
+        """
+        assert(isinstance(genome, Genome))
+        return sorted(self._genome.intersect_rsid(genome._genome))
+
+    def intersect_snp(self, genome):
+        """Find RSID of SNPs that are equal in both genomes.
+
+        Returns:
+            A list of RSID integers.
+        """
+        assert(isinstance(genome, Genome))
+        return sorted(self._genome.intersect_snp(genome._genome))
+
     @property
     def first(self):
         """Returns lowest RSID in genome."""

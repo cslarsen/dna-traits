@@ -27,6 +27,10 @@ PyMethodDef Genome_methods[] = {
     "Returns last RSID."},
   {"eq", (PyCFunction)Genome_eq, METH_O,
     "Checks for equality"},
+  {"intersect_rsid", (PyCFunction)Genome_intersect_rsid, METH_O,
+    "Returns list of common RSIDs."},
+  {"intersect_snp", (PyCFunction)Genome_intersect_snp, METH_O,
+    "Returns list of common SNPs."},
   {NULL, NULL, 0, NULL}
 };
 
@@ -203,4 +207,42 @@ PyObject* Genome_eq(PyGenome* self, PyObject* other)
 
   auto right = reinterpret_cast<PyGenome*>(other);
   return self->genome->operator==(*right->genome)? Py_True : Py_False;
+}
+
+PyObject* Genome_intersect_rsid(PyGenome* self, PyObject* other)
+{
+  if ( !PyObject_TypeCheck(other, &GenomeType) ) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Expected type dna_traits.Genome");
+    return NULL;
+  }
+
+  const auto right = reinterpret_cast<PyGenome*>(other);
+  auto rsids = self->genome->intersect_rsid(*right->genome);
+
+  auto list = PyList_New(rsids.size());
+  size_t n=0;
+  for ( auto rsid : rsids )
+    PyList_SetItem(list, n++, Py_BuildValue("I", rsid));
+
+  return list;
+}
+
+PyObject* Genome_intersect_snp(PyGenome* self, PyObject* other)
+{
+  if ( !PyObject_TypeCheck(other, &GenomeType) ) {
+    PyErr_SetString(PyExc_TypeError,
+                    "Expected type dna_traits.Genome");
+    return NULL;
+  }
+
+  const auto right = reinterpret_cast<PyGenome*>(other);
+  auto rsids = self->genome->intersect_snp(*right->genome);
+
+  auto list = PyList_New(rsids.size());
+  size_t n=0;
+  for ( auto rsid : rsids )
+    PyList_SetItem(list, n++, Py_BuildValue("I", rsid));
+
+  return list;
 }

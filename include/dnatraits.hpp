@@ -6,10 +6,11 @@
 #ifndef INC_DNATRAITS_H
 #define INC_DNATRAITS_H
 
-#include <iostream>
-#include <string>
 #include <cstdint>
+#include <iostream>
 #include <vector>
+#include <string>
+
 #include "fileptr.hpp"
 #include "export.hpp"
 
@@ -40,6 +41,7 @@ struct DLL_PUBLIC Genotype {
 
   friend Genotype operator~(const Genotype&);
   bool operator==(const Genotype& g) const;
+  bool operator<(const Genotype& g) const;
 };
 
 // Some handy constants
@@ -73,16 +75,31 @@ struct DLL_PUBLIC SNP {
   SNP(const SNP&);
 
   SNP& operator=(const SNP&);
+  bool operator!=(const SNP&) const;
+  bool operator<(const SNP&) const;
+  bool operator<=(const SNP&) const;
   bool operator==(const Genotype&) const;
   bool operator==(const SNP&) const;
-  bool operator!=(const SNP&) const;
+  bool operator>(const SNP&) const;
+  bool operator>=(const SNP&) const;
 };
 
 extern DLL_PUBLIC const SNP NONE_SNP;
 
 struct DLL_PUBLIC Genome {
+  /*!
+   * True if genome contains a Y-chromosome (with non-empty genotypes).
+   */
   bool y_chromosome;
+
+  /*!
+   * Lowest RSID.
+   */
   RSID first;
+
+  /*!
+   * Highest RSID.
+   */
   RSID last;
 
   Genome(const size_t size);
@@ -90,12 +107,45 @@ struct DLL_PUBLIC Genome {
   Genome& operator=(const Genome&);
   ~Genome();
 
+  /*!
+   * Access SNP. Throws on not found.
+   */
   const SNP& operator[](const RSID& id) const;
+
+  /*!
+   * Checks if hash table contains given RSID.
+   */
   bool has(const RSID& id) const;
+
+  /*!
+   * Add a SNP to the hash table.
+   */
   void insert(const RSID& rsid, const SNP& snp);
+
+  /*!
+   * Underlying hash table's load factor. (For developer purposes)
+   */
   double load_factor() const;
+
+  /*!
+   * Number of SNPs.
+   */
   size_t size() const;
-  std::vector<RSID> intersect(const Genome& genome) const;
+
+  /*!
+   * Returns RSIDs that exist in both genomes.
+   */
+  std::vector<RSID> intersect_rsid(const Genome& genome) const;
+
+  /*!
+   * Returns RSID for SNPs that have the same genotype in both genomes.
+   */
+  std::vector<RSID> intersect_snp(const Genome& genome) const;
+
+  /*!
+   * Returns all RSIDs in this genome.
+   */
+  std::vector<RSID> rsids() const;
 
   bool operator==(const Genome&) const;
   bool operator!=(const Genome&) const;
@@ -106,11 +156,15 @@ private:
 };
 
 Nucleotide complement(const Nucleotide& n);
+
+/*!
+ * Parse a 23andMe genome text file and put contents into genome.
+ */
+void parse_file(const std::string& filename, Genome&);
+
 std::ostream& operator<<(std::ostream&, const Chromosome&);
 std::ostream& operator<<(std::ostream&, const Genotype&);
 std::ostream& operator<<(std::ostream&, const Nucleotide&);
 std::ostream& operator<<(std::ostream&, const SNP&);
-std::string format(const Genome&, const RSID&);
-void parse_file(const std::string& filename, Genome&);
 
 #endif

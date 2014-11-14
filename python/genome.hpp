@@ -15,6 +15,8 @@ struct PyGenome {
 PyObject* Genome_eq(PyGenome*, PyObject*);
 PyObject* Genome_first(PyGenome*);
 PyObject* Genome_getitem(PyObject*, PyObject*);
+PyObject* Genome_intersect_rsid(PyGenome*, PyObject*);
+PyObject* Genome_intersect_snp(PyGenome*, PyObject*);
 PyObject* Genome_last(PyGenome*);
 PyObject* Genome_load(PyGenome*, PyObject*);
 PyObject* Genome_load_factor(PyGenome*);

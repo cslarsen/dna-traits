@@ -96,13 +96,6 @@ Nucleotide complement(const Nucleotide& n)
   }
 }
 
-std::string format(const Genome& genome, const RSID& id)
-{
-  std::stringstream s;
-  s << "rs" << id << " " << genome[id];
-  return s.str();
-}
-
 Genotype::Genotype(const Nucleotide& a, const Nucleotide& b)
   : first(a), second(b)
 {
@@ -114,8 +107,20 @@ Genotype operator~(const Genotype& g)
                   complement(g.second));
 }
 
-bool Genotype::operator==(const Genotype& g) const {
+bool Genotype::operator==(const Genotype& g) const
+{
   return first == g.first && second == g.second;
+}
+
+bool Genotype::operator<(const Genotype& g) const
+{
+  if ( first < g.first )
+    return true;
+
+  if ( first > g.first )
+    return false;
+
+  return second < g.second;
 }
 
 SNP::SNP(const Chromosome& chr,
@@ -148,6 +153,38 @@ bool SNP::operator==(const SNP& snp) const
   return genotype == snp.genotype &&
          chromosome == snp.chromosome &&
          position == snp.position;
+}
+
+bool SNP::operator<(const SNP& snp) const
+{
+  if ( position > snp.position )
+    return false;
+  if ( position < snp.position )
+    return true;
+
+  // equal position
+  if ( chromosome > snp.chromosome )
+    return false;
+  if ( chromosome < snp.chromosome )
+    return true;
+
+  // equal chromosome
+  return genotype < snp.genotype;
+}
+
+bool SNP::operator>(const SNP& snp) const
+{
+  return !(*this <= snp);
+}
+
+bool SNP::operator<=(const SNP& snp) const
+{
+  return *this == snp || *this < snp;
+}
+
+bool SNP::operator>=(const SNP& snp) const
+{
+  return *this == snp || *this > snp;
 }
 
 bool SNP::operator!=(const SNP& snp) const
@@ -250,13 +287,35 @@ void Genome::insert(const RSID& rsid, const SNP& snp)
   pimpl->snps.insert({rsid, snp});
 }
 
-std::vector<RSID> Genome::intersect(const Genome& genome) const
+std::vector<RSID> Genome::intersect_rsid(const Genome& genome) const
 {
   std::vector<RSID> r;
 
   for ( const auto i : pimpl->snps )
     if ( genome.has(i.first) )
       r.push_back(i.first);
+
+  return r;
+}
+
+std::vector<RSID> Genome::intersect_snp(const Genome& genome) const
+{
+  std::vector<RSID> r;
+
+  for ( const auto i : pimpl->snps )
+    if ( genome.has(i.first) )
+      if ( genome[i.first] == operator[](i.first) )
+        r.push_back(i.first);
+
+  return r;
+}
+
+std::vector<RSID> Genome::rsids() const
+{
+  std::vector<RSID> r;
+
+  for ( const auto i : pimpl->snps )
+    r.push_back(i.first);
 
   return r;
 }

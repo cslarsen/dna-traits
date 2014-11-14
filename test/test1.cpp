@@ -4,11 +4,21 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include <unistd.h>
+
 #include "dnatraits.hpp"
 
+static std::string format(const Genome& genome, const RSID& id)
+{
+  std::stringstream s;
+  s << "rs" << id << " " << genome[id];
+  return s.str();
+}
+
 /**
- * Has blue eye color? gs237 criteria http://snpedia.com/index.php/Gs237/criteria
+ * Has blue eye color?
+ * gs237 criteria taken from http://snpedia.com/index.php/Gs237/criteria
  * For more info, see http://snpedia.com/index.php/Eye_color
  */
 static bool gs237(const Genome& genome)
