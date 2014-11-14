@@ -26,7 +26,7 @@ rules = {
 
     "rs1800497-":
         {"CC": "Normal; better avoidance of errors, normal OCD risk,\n" +
-               "lower ADHD risk, less alcohol dependence, etc.\n",
+               "lower ADHD risk, less alcohol dependence, etc.",
          "CT": "Bad at avoidance of errors, 0.5x lower OCD risk,\n" +
                "higher ADHD risk, etc.",
          "TT": "Bad at avoidance of errors, 0.25x lower OCD,\n" +
