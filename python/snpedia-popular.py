@@ -69,11 +69,18 @@ def check(filename):
             if negative:
                 snp = ~snp
 
+            # Basically, ignore phasing
             if snp == genotype or snp == reversed(genotype):
-                print("%-10s %2s: %s" % (rsid, genotype, descr))
+                lines = descr.split("\n")
+                print("%10s %2s: %s" % (rsid, genotype, lines[0]))
+                for line in lines[1:]:
+                    print("%10s %2s  %s" % ("", "", line))
+
+    print("")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         print("NOTE: This is *very* speculative, and may even be erronous!")
         print("Data taken from www.snpedia.com, but code here may be wrong")
+        print("")
     map(check, sys.argv[1:])
