@@ -30,7 +30,11 @@ class Nucleotide:
             return 1
 
     def __eq__(self, o):
-        return self._value == o._value
+        """Checks if nucleotides are equal."""
+        if isinstance(o, Nucleotide):
+            return self._value == o._value
+        else:
+            raise TypeError("Can only compare Nucleotides")
 
     def complement(self):
         """Returns the complement of this nucleotide."""
@@ -49,15 +53,27 @@ class Nucleotide:
 class SNP:
     """A single-nucleotide polymorphism."""
 
-    def __init__(self, genotype, rsid, orientation, chromosome, position):
+    def __init__(self,
+                 genotype,
+                 rsid,
+                 orientation,
+                 chromosome,
+                 position,
+                 phased=False):
         self._genotype = genotype
         self._rsid = rsid
         self._orientation = orientation
         self._chromosome = chromosome
         self._position = position
+        self._phased = phased
 
     def _genostr(self):
         return "".join(map(str, self._genotype))
+
+    @property
+    def phased(self):
+        """Returns whether this SNP is phased or not."""
+        return self._phased
 
     @property
     def chromosome(self):
@@ -110,10 +126,21 @@ class SNP:
             return self
 
     def __eq__(self, obj):
+        """Rich-comparison operator for SNPs."""
         if isinstance(obj, SNP):
             return str(self.positive()) == str(obj.positive())
         elif isinstance(obj, str):
-            return self.positive()._genostr() == obj
+            if obj[0]=="~":
+                # TODO: Should invert obj instead of us; doesn't matter
+                genotype = self.negative()._genostr()
+                obj = obj[1:]
+            else:
+                genotype = self.positive()._genostr()
+
+            if not self.phased:
+                return genotype==obj or "".join(reversed(genotype))==obj
+            else:
+                return genotype==obj
         else:
             return NotImplemented
 

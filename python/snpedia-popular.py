@@ -26,7 +26,7 @@ rules = {
     "rs6152": {
         "AA": "Won't go bald",
         "AG": "If male, won't go bald",
-        "GG": "ABle to go bald"
+        "GG": "Able to go bald"
     },
 
     "rs1800497-": {
@@ -70,8 +70,7 @@ def check(filename):
 
         hit = False
         for genotype, descr in genotypes.items():
-            # Basically, ignore phasing
-            if snp == genotype or snp == "".join(reversed(genotype)):
+            if snp == genotype:
                 hit = True
                 lines = descr.split("\n")
                 print("%10s %2s: %s" % (rsid, genotype, lines[0]))
