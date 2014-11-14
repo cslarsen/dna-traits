@@ -64,18 +64,22 @@ def check(filename):
             negative = True
             rsid = rsid[:-1]
 
-        for genotype, descr in genotypes.items():
-            snp = genome[rsid]
-            if negative:
-                snp = ~snp
+        snp = genome[rsid]
+        if negative:
+            snp = ~snp
 
+        hit = False
+        for genotype, descr in genotypes.items():
             # Basically, ignore phasing
-            if snp == genotype or snp == reversed(genotype):
+            if snp == genotype or snp == "".join(reversed(genotype)):
+                hit = True
                 lines = descr.split("\n")
                 print("%10s %2s: %s" % (rsid, genotype, lines[0]))
                 for line in lines[1:]:
                     print("%10s %2s  %s" % ("", "", line))
 
+        if not hit:
+            print("%10s %2s  %s" % (rsid, "", "<No match>"))
     print("")
 
 if __name__ == "__main__":
