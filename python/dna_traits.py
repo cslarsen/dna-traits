@@ -86,9 +86,34 @@ class SNP:
         return self._position
 
     @property
-    def orientation(self):
-        """Returns orientation as either -1 or +1."""
-        return self._orientation
+    def homozygous(self):
+        """Returns whether we have two nucleotides equal to each other."""
+        g = self._genostr()
+        return len(g)==2 and g[0] == g[1]
+
+    @property
+    def heterozygous(self):
+        """Returns whether we have two nucleotides different from each other."""
+        g = self._genostr()
+        return len(g)==2 and g[0] != g[1]
+
+    @property
+    def haploid(self):
+        """Returns whether SNP is on a haploid chromosome."""
+        if self.chromosome in ["X", "Y", "MT"]:
+            return True
+        genotype = self._genostr().replace("-", "")
+        return len(genotype) == 1
+
+    @property
+    def sex_chromosome(self):
+        """Checks whether associated chromosome is a sex-chromosome."""
+        return self.chromosome in ["X", "Y"]
+
+    @property
+    def mitochondrial(self):
+        """True if mitochondrial DNA."""
+        return self.chromosome == "MT"
 
     def __len__(self):
         return sum(map(len, self._genotype))
@@ -104,6 +129,11 @@ class SNP:
     def count(self, nucleotide):
         """Returns number of given nucleotide in this SNP."""
         return self._genostr().count(nucleotide.upper())
+
+    @property
+    def orientation(self):
+        """Returns orientation as either -1 or +1."""
+        return self._orientation
 
     def complement(self):
         """Returns this SNP's complement."""
