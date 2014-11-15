@@ -21,6 +21,7 @@ PyObject* Genome_last(PyGenome*);
 PyObject* Genome_load(PyGenome*, PyObject*);
 PyObject* Genome_load_factor(PyGenome*);
 PyObject* Genome_new(PyTypeObject*, PyObject*, PyObject*);
+PyObject* Genome_rsids(PyGenome*);
 PyObject* Genome_save(PyGenome*, PyObject*);
 PyObject* Genome_y_chromosome(PyGenome*);
 Py_ssize_t Genome_length(PyObject*);

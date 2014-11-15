@@ -166,20 +166,20 @@ class SNP:
 class GenomeIterator:
     def __init__(self, genome, start=-1):
         self._genome = genome
-        self._rsid = genome.first if start==-1 else start
+        self._rsids = self._genome.rsids
+        self._index = 0 if start==-1 else start
 
     def __iter__(self):
         return self
 
     def next(self):
-        while self._rsid not in self._genome:
-            self._rsid += 1
-            if self._rsid >= self._genome.last:
-                raise StopIteration()
-
-        rsid = self._rsid
-        self._rsid += 1
-        return self._genome[rsid]
+        if self._index < len(self._rsids):
+            rsid = self._rsids[self._index]
+            snp = self._genome[rsid]
+            self._index += 1
+            return snp
+        else:
+            raise StopIteration()
 
 class Genome:
     """A genome consisting of SNPs."""
@@ -210,6 +210,11 @@ class Genome:
         """
         assert(isinstance(genome, Genome))
         return sorted(self._genome.intersect_rsid(genome._genome))
+
+    @property
+    def rsids(self):
+        """Returns all RSIDs in this genome."""
+        return sorted(self._genome.rsids())
 
     def intersect_snp(self, genome):
         """Find RSID of SNPs that are equal in both genomes.

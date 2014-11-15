@@ -31,6 +31,8 @@ PyMethodDef Genome_methods[] = {
     "Returns list of common RSIDs."},
   {"intersect_snp", (PyCFunction)Genome_intersect_snp, METH_O,
     "Returns list of common SNPs."},
+  {"rsids", (PyCFunction)Genome_rsids, METH_NOARGS,
+    "Returns list of all RSIDs in this genome."},
   {NULL, NULL, 0, NULL}
 };
 
@@ -240,6 +242,18 @@ PyObject* Genome_intersect_snp(PyGenome* self, PyObject* other)
   auto rsids = self->genome->intersect_snp(*right->genome);
 
   auto list = PyList_New(rsids.size());
+  size_t n=0;
+  for ( auto rsid : rsids )
+    PyList_SetItem(list, n++, Py_BuildValue("I", rsid));
+
+  return list;
+}
+
+PyObject* Genome_rsids(PyGenome* self)
+{
+  const auto rsids = self->genome->rsids();
+  auto list = PyList_New(rsids.size());
+
   size_t n=0;
   for ( auto rsid : rsids )
     PyList_SetItem(list, n++, Py_BuildValue("I", rsid));
