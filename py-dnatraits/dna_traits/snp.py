@@ -141,8 +141,8 @@ class SNP:
         return self._genostr()
 
     def __repr__(self):
-        s = "SNP(genotype=%s, rsid='%s', orientation=%s, " % (
-                repr(self._genotype), self._rsid, self._orientation)
+        s = "SNP(genotype='%s', rsid='%s', orientation=%s, " % (
+                self._genostr(), self._rsid, self._orientation)
         s += "chromosome=%s, position=%s)" % (self._chromosome,
                 self._position)
         return s
