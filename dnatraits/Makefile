@@ -20,8 +20,7 @@ OBJFILES := \
 	src/parse_file.o \
 
 TARGETS := $(OBJFILES) \
-	src/libdnatraits.o \
-	libdnatraits.so
+	src/libdnatraits.o
 
 all: $(TARGETS)
 
