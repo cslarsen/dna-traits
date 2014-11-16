@@ -24,5 +24,7 @@ all: $(TARGETS)
 libdnatraits.so: $(OBJFILES)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
+check: $(TARGETS)
+
 clean:
 	rm -f $(TARGETS)
