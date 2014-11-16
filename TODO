@@ -1,4 +1,3 @@
-- ychromo is broken, needs to check that we don't have "--" genotype
 - Add phased-property to genome/snp
 - Add gchr version no. in genome
 - Clean up dna.h in general

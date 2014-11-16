@@ -91,13 +91,18 @@ void parse_file(const std::string& name, Genome& genome)
       continue;
     }
 
-    RSID rsid(parse_uint32(s+=2)); // rs[0-9]+
+    RSID rsid(parse_uint32(s+=2)); // skip "rs"-prefix
+
     genome.first = rsid < genome.first? rsid : genome.first;
     genome.last = rsid > genome.last? rsid : genome.last;
-    genome.y_chromosome |= (*skipwhite(s)=='Y'); // is Y chromosome?
 
-    genome.insert(rsid, SNP(parse_chromo(s),
-                            parse_uint32(skipwhite(s)),
-                            parse_genotype(skipwhite(s))));
+    SNP snp(parse_chromo(skipwhite(s)),
+            parse_uint32(skipwhite(s)),
+            parse_genotype(skipwhite(s)));
+
+    genome.y_chromosome |= (snp.chromosome==CHR_Y &&
+                            snp.genotype.first!=NONE);
+
+    genome.insert(rsid, snp);
   }
 }
