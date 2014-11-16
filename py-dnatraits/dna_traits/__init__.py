@@ -323,7 +323,7 @@ class Genome:
 
     def __getattr__(self, rsid):
         # Query with genome.rs28357092
-        if isinstance(rsid, str) and rsid.startswith("rs"):
+        if isinstance(rsid, str) and rsid.lower().startswith("rs"):
             return self.__getitem__(rsid)
         raise AttributeError("Unknown attribute %s" % rsid)
 
