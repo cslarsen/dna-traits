@@ -2,6 +2,4 @@
 *.o
 *.so
 *.txt
-dna
-genome.txt
-read
+genomes

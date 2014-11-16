@@ -11,7 +11,7 @@ sys.stdout.flush()
 
 best = min(timeit.Timer(
   """
-  dt.parse('../genome.txt')
+  dt.parse('../genomes/genome.txt')
   sys.stdout.write("#");
   sys.stdout.flush()
   """,

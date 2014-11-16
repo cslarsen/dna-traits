@@ -7,7 +7,7 @@ import dna_traits as dt
 class TestGenome(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.genome = dt.parse("../genome.txt")
+        cls.genome = dt.parse("../genomes/genome.txt")
 
     def test_len(self):
         self.assertGreater(len(self.genome), 0)
