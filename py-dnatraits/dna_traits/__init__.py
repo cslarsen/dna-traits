@@ -352,6 +352,6 @@ def parse(filename, orientation=+1):
     return Genome(_dna_traits.parse(filename), orientation)
 
 
-__all__ = [parse, Nucleotide, SNP, Genome, GenomeIterator]
+__all__ = ["parse", "Nucleotide", "SNP", "Genome", "GenomeIterator"]
 __author__ = "Christian Stigen Larsen"
 __version__ = "1.0"
