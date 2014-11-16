@@ -14,12 +14,16 @@ OBJFILES := \
 	src/fileptr.o \
 	src/filesize.o \
 	src/mmap.o \
-	src/parse_file.o
+	src/parse_file.o \
 
 TARGETS := $(OBJFILES) \
+	src/libdnatraits.o \
 	libdnatraits.so
 
 all: $(TARGETS)
+
+src/libdnatraits.o: $(OBJFILES)
+	$(LD) -r $^ -o $@
 
 libdnatraits.so: $(OBJFILES)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@

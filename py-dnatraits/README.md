@@ -1,9 +1,8 @@
 DNA-traits Python API
 =====================
 
-This directory contains a Python API for parsing and querying 23andMe genome
-text files.  As the main page says, the main selling point of this project
-is *speed*.
+This directory contains Python bindings for the insanely fast 23andMe genome
+text file parser.
 
 Current status
 --------------
@@ -13,10 +12,6 @@ Current status
 
   * Iterators are currently flaky and extremely slow. I have a solution for
     this that will make it into the Python API later.
-
-  * The .rs<number> accessor will change later and return a function so you
-    can do `genome.rs123("AA")` and get a boolean value.  You'll still have
-    the other accessors such as `genome["rs123"]` and `genome[123]`.
 
 Usage
 -----

@@ -12,11 +12,10 @@ Regarding speed, a naive parser I wrote in pure Python takes around 2.5
 seconds to read a million SNPs --- I've also seen some parsers take up to 8
 seconds.
 
-*This one* consistently lands on a mere 0.16 seconds on my (old) machine.
-The reason it's so fast is because it memory maps the file and always scans
-forward --- every byte in the file is only ever touched once.  To top it
-off, I'm using the Google dense hash map for storing SNPs by RSID, which is
-extremely fast.
+*This one* consistently lands on a mere 0.16 seconds on _my_ machine.  It's
+so fast is because it memory maps the file and always scans forward ---
+every byte in the file is only ever touched once.  To top it off, I'm using
+the Google dense hash map for storing SNPs by RSID, which is extremely fast.
 
 While slow parsing is not a big concern for serious users, the existence of
 a fast open source parser may also benefit other projects. And, admittedly,
@@ -32,6 +31,8 @@ and then prints its complement.
     >>> genome = dt.parse("genome.txt")
     >>> genome
     <Genome: SNPs=949904, ychromo=True, orientation=1>
+    >>> genome.male
+    True
     >>> genome["rs123"]
     SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123',
     orientation=1, chromosome=7, position=24966446)
@@ -40,7 +41,7 @@ and then prints its complement.
     >>> str(~genome.rs123)
     'TT'
 
-More information can be found in `python/README.md`
+More information can be found in `py-dnatraits/README.md`
 
 Current status
 --------------
@@ -73,18 +74,19 @@ Requirements
 
   * Google sparse hash map
 
-  * A 23andMe genome file. Many people have uploaded theirs on the net for
-    free use. See for example OpenSNP.
+  * Genome files in 23andMe format. Many people have uploaded theirs on the
+    net for free use. See for example OpenSNP.  If you're a 23andMe
+    customer, you can download your own from them.
 
   * Python development files, if you want to build the Python module.
 
 Building
 --------
 
-If Google sparse hash map is located in `/usr/local/include`, build
+If Google dense hash map is located in `/usr/local/include`, build
 everything, including the Python API, with:
 
-    $ CXXFLAGS=-I/usr/local/include make -j python-api
+    $ make -j all CXXFALGS=-I/usr/local/include
 
 
 Example of inferring phenotypes
