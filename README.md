@@ -86,8 +86,11 @@ Building
 If Google dense hash map is located in `/usr/local/include`, build
 everything, including the Python API, with:
 
-    $ make -j all CXXFALGS=-I/usr/local/include
+    $ make -j all CXXFLAGS=-I/usr/local/include
 
+Build the `check` target to check if everything works.
+
+    $ make check
 
 Example of inferring phenotypes
 -------------------------------

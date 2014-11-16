@@ -8,8 +8,11 @@ dna_traits/_dna_traits.so: src/_dna_traits.so
 src/_dna_traits.so:
 	$(MAKE) -C src _dna_traits.so
 
-check:
-	$(MAKE) -C src check
+check: all
+	python test/test_dna_traits.py
+
+bench: all
+	python test/bench.py
 
 clean:
 	$(MAKE) -C src clean

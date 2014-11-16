@@ -3,10 +3,9 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
-#include <stdio.h>
-#include <netinet/in.h> // for endianness
 #include <sstream>
-#include <sparsehash/dense_hash_map>
+#include <google/dense_hash_map>
+
 #include "dnatraits.hpp"
 
 struct DLL_LOCAL RSIDHash {
