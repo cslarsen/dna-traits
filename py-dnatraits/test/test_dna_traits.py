@@ -54,8 +54,8 @@ class TestGenome(unittest.TestCase):
             self.assertIsNotNone(self.genome.__getattr__("rs%d" % rsid))
             self.assertIsNotNone(self.genome["rs%d" % rsid])
             self.assertIsNotNone(self.genome[rsid])
-            self.assertIsNotNone(self.genome.snp("rs%d" % rsid))
-            self.assertIsNotNone(self.genome.snp(rsid))
+            self.assertIsNotNone(self.genome["rs%d" % rsid])
+            self.assertIsNotNone(self.genome[rsid])
             #
             self.assertEqual(self.genome["rs%d" % (rsid*2)], NN)
             self.assertEqual(self.genome[rsid*100], NN)

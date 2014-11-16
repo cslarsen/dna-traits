@@ -15,17 +15,17 @@ class GenomeIterator:
     def __init__(self, genome, start=-1):
         self._genome = genome
         self._rsids = self._genome.rsids
+        self._len = len(self._rsids)
         self._index = 0 if start==-1 else start
 
     def __iter__(self):
         return self
 
     def next(self):
-        if self._index < len(self._rsids):
+        if self._index < self._len:
             rsid = self._rsids[self._index]
-            snp = self._genome[rsid]
             self._index += 1
-            return snp
+            return self._genome.snp(rsid)
         else:
             raise StopIteration()
 
@@ -37,6 +37,7 @@ class Genome:
         self._orientation = orientation
 
     def _rsid(self, rsid):
+        """Converts RSID to integer."""
         if isinstance(rsid, int):
             return rsid
         elif isinstance(rsid, str) and rsid.lower().startswith("rs"):
@@ -107,23 +108,24 @@ class Genome:
     def __getitem__(self, key):
         """Returns SNP with given RSID.  If RSID is not present, return an
         empty SNP."""
-        if isinstance(key, slice):
+        if isinstance(key, int):
+            return self.snp(key)
+        if isinstance(key, str):
+            return self.snp(self._rsid(key))
+        elif isinstance(key, slice):
             return [self[i] for i in xrange(*key.indices(len(self)))]
-        elif isinstance(key, str) or isinstance(key, int):
-            rsid = self._rsid(key)
-            try:
-                genotype, chromo, position = self._genome[rsid]
-                geno = map(Nucleotide, genotype)
-                return _to_snp("rs%d" % rsid, self._orientation, (geno, chromo,
-                    position))
-            except KeyError:
-                return SNP([], "rs%d" % rsid, self._orientation, 0, 0)
         else:
             raise ValueError("Unknown key type %s" % type(key))
 
     def snp(self, rsid):
-        """Returns SNP with given RSID."""
-        return self.__getitem__(rsid)
+        """Returns SNP with given integer-only RSID."""
+        try:
+            genotype, chromo, position = self._genome[rsid]
+            geno = map(Nucleotide, genotype)
+            return _to_snp("rs%d" % rsid, self._orientation, (geno, chromo,
+                position))
+        except KeyError:
+            return SNP([], "rs%d" % rsid, self._orientation, 0, 0)
 
     def __str__(self):
         return "Genome"
