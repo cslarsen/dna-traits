@@ -11,7 +11,6 @@
 #include <vector>
 #include <string>
 
-#include "fileptr.hpp"
 #include "export.hpp"
 
 typedef std::uint32_t Position;

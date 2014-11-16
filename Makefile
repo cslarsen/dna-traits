@@ -1,7 +1,7 @@
 CXX := g++
 CC := $(CXX)
 
-override CXXFLAGS += -Iinclude --std=c++11 -W -Wall \
+override CXXFLAGS += -Iinclude -Isrc --std=c++11 -W -Wall \
 					 -Ofast -march=native -mtune=native \
 					 -flto
 
