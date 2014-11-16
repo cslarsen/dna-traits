@@ -30,16 +30,16 @@ and then prints its complement.
     >>> import dna_traits as dt
     >>> genome = dt.parse("genome.txt")
     >>> genome
-    <Genome: SNPs=949904, ychromo=True, orientation=1>
+    <Genome: SNPs=949905, y_chromosome=True, orientation=1>
     >>> genome.male
     True
     >>> genome["rs123"]
-    SNP(genotype=[Nucleotide('A'), Nucleotide('A')], rsid='rs123',
-    orientation=1, chromosome=7, position=24966446)
-    >>> str(genome.rs123)
-    'AA'
-    >>> str(~genome.rs123)
-    'TT'
+    SNP(genotype='AA', rsid='rs123', orientation=1, chromosome=7, position=24966446)
+    >>> snp = genome.rs123
+    >>> snp.homozygous
+    True
+    >>> ~snp
+    SNP(genotype='TT', rsid='rs123', orientation=1, chromosome=7, position=24966446)
 
 More information can be found in `py-dnatraits/README.md`
 
