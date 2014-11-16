@@ -8,6 +8,9 @@ override CXXFLAGS += \
 	-W -Wall \
 	-Ofast -march=native -mtune=native -flto
 
+override LDFLAGS += \
+	-arch x86_64
+
 OBJFILES := \
 	src/dnatraits.o \
 	src/file.o \
@@ -23,7 +26,7 @@ TARGETS := $(OBJFILES) \
 all: $(TARGETS)
 
 src/libdnatraits.o: $(OBJFILES)
-	$(LD) -r $^ -o $@
+	$(LD) $(LDFLAGS) -r $^ -o $@
 
 libdnatraits.so: $(OBJFILES)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
