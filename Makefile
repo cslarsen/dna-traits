@@ -1,6 +1,8 @@
 .PHONY:
 
-all: dnatraits py-dnatraits
+all:
+	$(MAKE) -C dnatraits all
+	$(MAKE) -C py-dnatraits all
 
 check: all
 	$(MAKE) -C dnatraits check
