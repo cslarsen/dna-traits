@@ -5,7 +5,6 @@
 - The Python .rs123 attrs should return a function taking a param, so we can
   write genome.rs123("AT") -> True/False. __getitem__ and friends should work
   like they do now (returning the full SNP).
-- Expose .intersection for Python
 - Use a bloom filter in front of Genome::has to speed up membership tests
 - Google's dense hashmap is unordered, but by using bloom filter above we
   can create an iterator (with some overhead) that can iterate in-order.
