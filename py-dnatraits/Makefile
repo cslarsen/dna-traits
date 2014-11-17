@@ -16,4 +16,4 @@ bench: all
 
 clean:
 	$(MAKE) -C src clean
-	rm -f $(TARGETS)
+	rm -f $(TARGETS) dna_traits/*.pyc
