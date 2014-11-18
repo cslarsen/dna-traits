@@ -58,7 +58,6 @@ def mantel_haenszel_or(ORs, weights):
     OR_mh = sum(map(lambda (o,w): o*w, zip(ORs, weights))) / sum(weights)
     return OR_mh
 
-
 def pooled_or(data):
     """Computes the pooled odds ratios by estimating the standard errors
     from the P-values and using them to calculate weights for the
@@ -68,7 +67,7 @@ def pooled_or(data):
         data: List of (odds_ratio, p_value) tuples
 
     Returns:
-        (OR_mh, SE_pooled_or)
+        (pooled odds ratio, pooled standard error)
     """
     stderrs = [standard_error(or_, pval) for (or_, pval) in data]
     weights = [1.0/se**2 for se in stderrs]
