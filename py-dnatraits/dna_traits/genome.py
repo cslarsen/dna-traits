@@ -65,7 +65,15 @@ class Genome:
     def ethnicity(self):
         """Can be set to provide more accurate analysis."""
         # TODO: Try to infer it if it's not explicitly set
-        return self._ethnicity
+        if self._ethnicity is None:
+            return "european" # Assumed by default
+        else:
+            return self._ethnicity.lower()
+
+    @ethnicity.setter
+    def ethnicity(self, value):
+        assert(isinstance(value, str))
+        self._ethnicity = value.lower()
 
     @property
     def rsids(self):

@@ -9,6 +9,8 @@ from genome import Genome, GenomeIterator
 from nucleotide import Nucleotide
 from parse import parse
 from snp import SNP
+from odds import *
+from health import *
 
 __all__ = ["parse", "Nucleotide", "SNP", "Genome", "GenomeIterator"]
 __author__ = "Christian Stigen Larsen"
