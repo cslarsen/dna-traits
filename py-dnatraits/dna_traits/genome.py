@@ -32,9 +32,10 @@ class GenomeIterator:
 class Genome:
     """A genome consisting of SNPs."""
 
-    def __init__(self, genome, orientation):
+    def __init__(self, genome, orientation, ethnicity=None):
         self._genome = genome
         self._orientation = orientation
+        self._ethnicity = ethnicity
 
     def _rsid(self, rsid):
         """Converts RSID to integer."""
@@ -59,6 +60,12 @@ class Genome:
         """
         assert(isinstance(genome, Genome))
         return sorted(self._genome.intersect_rsid(genome._genome))
+
+    @property
+    def ethnicity(self):
+        """Can be set to provide more accurate analysis."""
+        # TODO: Try to infer it if it's not explicitly set
+        return self._ethnicity
 
     @property
     def rsids(self):
