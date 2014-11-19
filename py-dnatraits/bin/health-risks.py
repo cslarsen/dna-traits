@@ -11,17 +11,17 @@ Distributed under the GPL v3 or later. See COPYING.
 
 import sys
 
-from dna_traits.health import health_reports
+from dna_traits.health import health_report
 import dna_traits as dt
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: health-reports genome(s)")
+        print("Usage: health-risks genome(s)")
         sys.exit(1)
 
     for filename in sys.argv[1:]:
         genome = dt.parse(filename)
-        result = health_reports(genome)
+        result = health_report(genome)
 
         print(filename)
 

@@ -29,6 +29,7 @@ def apoe_variants(genome):
 
 def rheumatoid_arthritis_risk(genome):
     """Rheumatoid arthritis."""
+    raise NotImplementedError()
 
     odds = 0
 
@@ -64,18 +65,68 @@ def rheumatoid_arthritis_risk(genome):
     else:
         return "high risk"
 
-def health_reports(genome):
+def chronic_kidney_disease(genome):
+    """Chrinic kidney disease.
+
+    rs4293393 european AA = 1.08
+    rs7805747 european GG = 0.96, AG = 1.14
+
+    Citations:
+        http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=PubMed&term=21082022
+        http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=PubMed&term=20686651
+        http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=PubMed&term=19430482
+    """
+    raise NotImplementedError()
+    # TODO: See studies, find odds ratios and implement
+
+    # From http://www.snpedia.com/index.php/Rs4293393
+    risk = 1.0
+    risk -= 0.24 * ~genome.rs4293393.count("G")
+
+    # 1.18 [1.12-1.25], P-val 4E-12
+    risk -= genome.rs7805747.count("A")*1.18
+
+    return risk
+
+def restless_leg_syndrome(genome):
+    """Restless leg syndrome.
+
+    Only for European ancestry.
+
+    rs3923809 AA 1.26
+              AG 0.74
+
+    Citations:
+        http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=PubMed&term=17634447
+        http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=PubMed&term=17637780
+        http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Search&db=PubMed&term=11340155
+    """
+    if genome.rs3923809 == "GG":
+        return "Normal risk"
+    elif genome.rs3923809 == "AG" or genome.rs3923809 == "GA":
+        return "Slightly increased risk"
+    elif genome.rs3923809 == "AA":
+        return "Twice as high risk for developing"
+    else:
+        return "<Unknown genotype for rs3923809 %s>" % genome.rs3923809
+
+def health_report(genome):
     """Computes some health-related risks."""
 
     checks = [
         apoe_variants,
+        chronic_kidney_disease,
+        restless_leg_syndrome,
         rheumatoid_arthritis_risk,
     ]
 
     report = {}
 
     for check in checks:
-        title = check.__doc__[:check.__doc__.index(".")]
-        report[title] = check(genome)
+        try:
+            title = check.__doc__[:check.__doc__.index(".")]
+            report[title] = check(genome)
+        except NotImplementedError:
+            continue
 
     return report
