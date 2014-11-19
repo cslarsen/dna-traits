@@ -112,4 +112,4 @@ class TestGenome(unittest.TestCase):
         self.assertIsNotNone(self.genome["rs1800401"])
 
 if __name__ == "__main__":
-  unittest.main(failfast=True, verbosity=2)
+    unittest.main(failfast=True, verbosity=2)
