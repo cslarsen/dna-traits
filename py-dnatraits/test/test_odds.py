@@ -1,18 +1,33 @@
+"""
+Sources for numbers:
+
+  (1) http://www.plosgenetics.org/article/fetchObject.action?uri=info%3Adoi%2F10.1371%2Fjournal.pgen.1001039&representation=PDF
+
+"""
+
 import unittest
 import dna_traits.odds as odds
 
 class TestOdds(unittest.TestCase):
     def test_pooled_or(self):
         """Pooled OR using Mantel-Haenszel."""
-        # Source of numbers is table table 3 on page 6 of:
-        # http://www.plosgenetics.org/article/fetchObject.action?uri=info%3Adoi%2F10.1371%2Fjournal.pgen.1001039&representation=PDF
+        # From table 3, page 6 in (1)
         ors = [0.88, 0.91]
         pvals = [0.0053, 0.13]
-        pooled_or, pooled_se = odds.pooled_or(zip(ors, pvals))
+        pooled_or, pooled_se, pooled_p = odds.pooled_or(zip(ors, pvals))
         self.assertAlmostEqual(pooled_or, 0.89, 2)
+        self.assertAlmostEqual(pooled_p, 0.00075, 5)
+
+    def test_pooled_or_2(self):
+        """Pooled OR using Mantel-Haenszel, take two."""
+        # From table 3, page 6 in (1)
+        por, pse, pp = odds.pooled_or(zip([0.89, 0.85], [0.00075, 0.022]))
+        self.assertAlmostEqual(por, 0.88, 2)
+        self.assertAlmostEqual(pp, 5.7e-5)
 
     def test_confidence_interval(self):
         """Confidence interval from OR, P-value and CI."""
+        # From table 3, page 6 in (1)
         ci = odds.confidence_interval(0.89, 0.00075, 0.95)
 
         self.assertEqual(len(ci), 2)
@@ -51,6 +66,11 @@ class TestOdds(unittest.TestCase):
         self.assertAlmostEqual(odds.z_value(0.5), 0.67449, 5)
         self.assertAlmostEqual(odds.z_value(0.001), 3.29053, 5)
 
+    def test_p_value(self):
+        """P-value from Z-value."""
+        self.assertAlmostEqual(odds.p_value(0.67449), 0.5, 5)
+        self.assertAlmostEqual(odds.p_value(3.29053), 0.001, 5)
+
     def test_standard_error(self):
         """Standard error from OR and P-value."""
         self.assertAlmostEqual(
@@ -58,4 +78,4 @@ class TestOdds(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(failfast=True, verbosity=2)
+    unittest.main(failfast=False, verbosity=2)

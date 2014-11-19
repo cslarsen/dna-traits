@@ -13,7 +13,7 @@ Some sources:
 
 """
 
-from scipy.special import ndtri
+from scipy.special import ndtri, ndtr
 import math
 
 
@@ -21,16 +21,17 @@ def z_value(p_value):
     """Computes Z-value from P-value."""
     return abs(ndtri(p_value/2.0))
 
+def p_value(z_value):
+    return (1.0 - ndtr(z_value))*2.0
+
 def wald_stat(p_value):
     """Computes the Wald statistic from a P-value."""
     return z_value(p_value)**2
 
-def standard_error(or_, p_value):
+def standard_error(beta, p_value):
     """Estimates the standard error of an odds ratio given OR and
     P-value."""
-    # TODO: Instead of or_ we should have taken the beta, or math.log(or_),
-    # but everything works if we don't pass the beta! Investigate.
-    return or_ / z_value(p_value)
+    return beta / z_value(p_value)
 
 def confidence_interval(odds_ratio, p_value, output_ci):
     """Returns the confidence interval given an odds ratio, P-value and
@@ -68,12 +69,13 @@ def pooled_or(data):
     Returns:
         (pooled odds ratio, pooled standard error)
     """
-    stderrs = [standard_error(or_, pval) for (or_, pval) in data]
+    stderrs = [standard_error(math.log(or_), pval) for (or_, pval) in data]
     weights = [1.0/se**2 for se in stderrs]
     ors = [or_ for (or_, _) in data]
     or_mh = mantel_haenszel_or(ors, weights)
     se_fem = math.sqrt(1.0 / sum(weights)) # pooled standard error
 
-    # Can use the return values and log(OR_fem) and z = z_value(1.0 - ci) to
-    # calculate a confidence interval such as [log(OR_fem) +/- z*se_fem]
-    return (or_mh, se_fem)
+    # Calculate pooled P-value as well (FIXME: this isn't entirely correct!)
+    pooled_p = p_value(abs(math.log(or_mh)/se_fem))
+
+    return (or_mh, se_fem, pooled_p)
