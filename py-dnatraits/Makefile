@@ -16,4 +16,5 @@ bench: all
 
 clean:
 	$(MAKE) -C src clean
-	rm -f $(TARGETS) dna_traits/*.pyc
+	rm -f $(TARGETS)
+	find . \( -name '*.pyc' -or -name '*.pyo' \) -exec rm {} \;
