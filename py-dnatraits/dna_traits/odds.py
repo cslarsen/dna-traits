@@ -18,20 +18,21 @@ import math
 
 
 def z_value(p_value):
-    """Computes Z-value from P-value."""
+    """Computes Z-value from P-value.
+
+    This is the inverse of the standard normal cumulative distribution."""
     return abs(ndtri(p_value/2.0))
 
 def wald_stat(p_value):
     """Computes the Wald statistic from a P-value."""
     return z_value(p_value)**2
 
-def standard_error(beta, p_value):
-    """Estimates the standard error of an odds ratio given a
-    (non-logarithmic) odds ratio and P-value.
-
-    The beta is the natural logarithm of the odds radio.
-    """
-    return beta / z_value(p_value)
+def standard_error(or_, p_value):
+    """Estimates the standard error of an odds ratio given OR and
+    P-value."""
+    # TODO: Instead of or_ we should have taken the beta, or math.log(or_),
+    # but everything works if we don't pass the beta! Investigate.
+    return or_ / z_value(p_value)
 
 def confidence_interval(odds_ratio, p_value, output_ci):
     """Returns the confidence interval given an odds ratio, P-value and
@@ -42,12 +43,12 @@ def confidence_interval(odds_ratio, p_value, output_ci):
     z = z_value(1.0 - output_ci)
     ci_beta = [beta - z*se, beta + z*se]
     ci_or = map(math.exp, ci_beta)
-    return ci_or
+    return [min(ci_or), max(ci_or)]
 
 def statsig(ci):
     """If the confidence interval (ci) does not include 1.0, it is
     statistically significant."""
-    return min(ci) > 1.0
+    return not (min(ci) <= 1.0 <= max(ci))
 
 def mantel_haenszel_or(ORs, weights):
     """Computes the pooled odds ratio given ratios and weights using the
