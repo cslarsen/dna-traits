@@ -79,3 +79,12 @@ def pooled_or(data):
     pooled_p = p_value(abs(math.log(or_mh)/se_fem))
 
     return (or_mh, se_fem, pooled_p)
+
+def relative_risk(odds_ratio, absolute_risk):
+    """Converts odds ratio and absolute risk to relative risk.
+
+    The absolute risk is for the unexposed group (the control group).
+
+    See http://en.wikipedia.org/wiki/Odds_ratio
+    """
+    return odds_ratio / (1.0 - absolute_risk + absolute_risk*odds_ratio)
