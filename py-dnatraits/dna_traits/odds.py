@@ -18,9 +18,7 @@ import math
 
 
 def z_value(p_value):
-    """Computes Z-value from P-value.
-
-    This is the inverse of the standard normal cumulative distribution."""
+    """Computes Z-value from P-value."""
     return abs(ndtri(p_value/2.0))
 
 def wald_stat(p_value):
