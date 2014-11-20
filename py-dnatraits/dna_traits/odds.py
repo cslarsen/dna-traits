@@ -1,19 +1,22 @@
 """
-Contains speculative functions to deal with odds ratios, such as pooled (or
-combined) odds ratios and confidence intervals.
+Contains speculative functions to deal meta-analysis.
 
 Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 
 Some sources:
 
-  * http://handbook.cochrane.org/chapter_7/7_7_7_2_obtaining_standard_errors_from_confidence_intervals_and.htm
-  * http://stats.stackexchange.com/questions/66760/calculate-odds-ratio-confidence-intervals-from-plink-output
-  * http://stats.stackexchange.com/questions/9483/how-to-calculate-confidence-intervals-for-pooled-odd-ratios-in-meta-analysis
+    * http://handbook.cochrane.org/chapter_7/7_7_7_2_obtaining_standard_errors_from_confidence_intervals_and.htm
+    * http://stats.stackexchange.com/questions/66760/calculate-odds-ratio-confidence-intervals-from-plink-output
+    * http://stats.stackexchange.com/questions/9483/how-to-calculate-confidence-intervals-for-pooled-odd-ratios-in-meta-analysis
 
+TODO:
+    - Implement Fisher's combined probability test, see:
+      http://www.ncbi.nlm.nih.gov/pubmed/16135132
 """
 
 from scipy.special import ndtri, ndtr
+from scipy.stats import chi2
 import math
 
 
@@ -79,6 +82,31 @@ def pooled_or(data):
     pooled_p = p_value(abs(math.log(or_mh)/se_fem))
 
     return (or_mh, se_fem, pooled_p)
+
+def combined_p_chi2(p_values):
+    """Returns combined P-value.
+
+    Requirement:
+    The underlying random variables are independent and identically
+    distributed (aka "i.i.d.").
+
+    For an explanation, see
+    http://www.stat.wisc.edu/~wardrop/courses/meta2.pdf
+    """
+    # The distribution of W is chi-squared with k degrees of freedom
+    k = len(p_values)
+    W = sum(map(lambda p: -math.log(p), p_values))
+
+    # Area under chi-squared curve to the right of W
+    return 1.0 - chi2.cdf(W, k)
+
+def combined_p_fisher(p_values):
+    """Computes the combined P-value using Fisher's combined probability
+    test.
+    """
+    k = len(p_values)
+    W = -2.0 * sum(map(math.log, p_values))
+    return 1.0 - chi2.cdf(W, df=2*k)
 
 def relative_risk(odds_ratio, absolute_risk):
     """Converts odds ratio and absolute risk to relative risk.
