@@ -25,6 +25,7 @@ def z_value(p_value):
     return abs(ndtri(p_value/2.0))
 
 def p_value(z_value):
+    """Computes P-value from Z-value."""
     return (1.0 - ndtr(z_value))*2.0
 
 def wald_stat(p_value):
@@ -61,20 +62,25 @@ def mantel_haenszel_or(ORs, weights):
     OR_mh = sum(map(lambda (o,w): o*w, zip(ORs, weights))) / sum(weights)
     return OR_mh
 
-def pooled_or(data):
+def pooled_or(data, vif=None):
     """Computes the pooled odds ratios by estimating the standard errors
     from the P-values and using them to calculate weights for the
     Mantel-Haenszel procedure.
 
     Arguments:
         data: List of (odds_ratio, p_value) tuples
+        vif: Variance inflaction factor, used if not None.
 
     Returns:
         (pooled odds ratio, pooled standard error)
     """
-    stderrs = [standard_error(math.log(or_), pval) for (or_, pval) in data]
+    stderrs = [standard_error(math.log(o), p) for (o, p) in data]
+
+    if vif is not None:
+        stderrs = map(lambda se: se/math.sqrt(vif), stderrs)
+
     weights = [1.0/se**2 for se in stderrs]
-    ors = [or_ for (or_, _) in data]
+    ors = [o for (o, _) in data]
     or_mh = mantel_haenszel_or(ors, weights)
     se_fem = math.sqrt(1.0 / sum(weights)) # pooled standard error
 

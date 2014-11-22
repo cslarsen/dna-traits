@@ -14,14 +14,14 @@ class TestOdds(unittest.TestCase):
         # From table 3, page 6 in (1)
         ors = [0.88, 0.91]
         pvals = [0.0053, 0.13]
-        por, pse, pp =  pooled_or(zip(ors, pvals))
+        por, pse, pp =  pooled_or(zip(ors, pvals), 1.15)
         self.assertAlmostEqual(por, 0.89, 2)
         self.assertAlmostEqual(pp, 0.00075, 5)
 
     def test_pooled_or_2(self):
         """Pooled OR using Mantel-Haenszel, take two."""
         # From table 3, page 6 in (1)
-        por, pse, pp = pooled_or(zip([0.89, 0.85], [0.00075, 0.022]))
+        por, pse, pp = pooled_or(zip([0.89, 0.85], [0.00075, 0.022]), 1.15)
         self.assertAlmostEqual(por, 0.88, 2)
         self.assertAlmostEqual(pp, 5.7e-5)
 
@@ -70,6 +70,11 @@ class TestOdds(unittest.TestCase):
         """P-value from Z-value."""
         self.assertAlmostEqual(p_value(0.67449), 0.5, 5)
         self.assertAlmostEqual(p_value(3.29053), 0.001, 5)
+
+    def test_pz_value_roundtrip(self):
+        for n in [0.123, 0, 1, 0.5566, 0.999999, 0.0001]:
+            self.assertAlmostEqual(z_value(p_value(n)), n)
+            self.assertAlmostEqual(p_value(z_value(n)), n)
 
     def test_standard_error(self):
         """Standard error from OR and P-value."""
