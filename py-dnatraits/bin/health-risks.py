@@ -27,5 +27,3 @@ if __name__ == "__main__":
 
         for title, description in sorted(result.items()):
             print("%s: %s" % (title, description))
-
-        print("")
