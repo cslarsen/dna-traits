@@ -32,10 +32,11 @@ class GenomeIterator:
 class Genome:
     """A genome consisting of SNPs."""
 
-    def __init__(self, genome, orientation, ethnicity=None):
+    def __init__(self, genome, orientation, ethnicity=None, year=None):
         self._genome = genome
         self._orientation = orientation
         self._ethnicity = ethnicity
+        self._year = year # year of birth
 
     def _rsid(self, rsid):
         """Converts RSID to integer."""
@@ -69,6 +70,16 @@ class Genome:
             return "european" # Assumed by default
         else:
             return self._ethnicity.lower()
+
+    @property
+    def year_of_birth(self):
+        """Can be set to provide more accurate analysis."""
+        return self._year
+
+    @year_of_birth.setter
+    def year_of_birth(self, value):
+        assert(isinstance(value, int))
+        self._year = value
 
     @ethnicity.setter
     def ethnicity(self, value):
