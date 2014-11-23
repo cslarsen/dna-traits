@@ -10,6 +10,10 @@ Some sources:
     * http://stats.stackexchange.com/questions/66760/calculate-odds-ratio-confidence-intervals-from-plink-output
     * http://stats.stackexchange.com/questions/9483/how-to-calculate-confidence-intervals-for-pooled-odd-ratios-in-meta-analysis
 
+For a good introduction on odds ratios, relative risk, see:
+
+    * http://stanford.edu/class/gene210/web/html/exercises.html
+
 TODO:
     - Implement Fisher's combined probability test, see:
       http://www.ncbi.nlm.nih.gov/pubmed/16135132
