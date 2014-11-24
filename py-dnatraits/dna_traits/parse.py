@@ -17,4 +17,4 @@ def parse(filename, orientation=+1, year=None, ethnicity=None):
         ethnicity: Ethnicity for individial (optional).
     """
     return Genome(_dna_traits.parse(filename), orientation, year=year,
-            ethnicity=ethnicity.lower())
+            ethnicity=ethnicity)
