@@ -39,14 +39,18 @@ class Genome:
         self._year = year # year of birth
 
     def _rsid(self, rsid):
-        """Converts RSID to integer."""
+        """Converts RSID or internal ID to integer."""
         if isinstance(rsid, int):
             return rsid
-        elif isinstance(rsid, str) and rsid.lower().startswith("rs"):
-            try:
-                return int(rsid[2:])
-            except ValueError:
-                raise ValueError("Invalid RSID: %s" % rsid)
+        elif isinstance(rsid, str):
+            if rsid.lower().startswith("rs"):
+                try:
+                    return int(rsid[2:])
+                except ValueError:
+                    raise ValueError("Invalid RSID: %s" % rsid)
+            elif rsid.lower().startswith("i"):
+                raise NotImplementedError(
+                        "Internal IDs are not yet supported")
         else:
             raise ValueError("Invalid RSID: %s" % rsid)
 
@@ -167,11 +171,14 @@ class Genome:
         return "<Genome: SNPs=%d, y_chromosome=%s, orientation=%s>" % (
                 len(self), self.y_chromosome, self.orientation)
 
-    def __getattr__(self, rsid):
+    def __getattr__(self, attr):
         # Query with genome.rs28357092
-        if isinstance(rsid, str) and rsid.lower().startswith("rs"):
-            return self.__getitem__(rsid)
-        raise AttributeError("Unknown attribute %s" % rsid)
+        if isinstance(attr, str):
+            if attr.lower().startswith("rs"):
+                return self.__getitem__(attr)
+            elif attr.lower().startswith("i"):
+                return self.__getitem__(attr)
+        raise AttributeError("Unknown attribute %s" % attr)
 
     def __len__(self):
         """Returns number of SNPs in this genome."""
