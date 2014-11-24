@@ -12,6 +12,7 @@ Distributed under the GPL v3 or later. See COPYING.
 import sys
 
 from dna_traits.health import health_report
+from dna_traits.conditions import inherited_conditions
 import dna_traits as dt
 
 if __name__ == "__main__":
@@ -21,9 +22,15 @@ if __name__ == "__main__":
 
     for filename in sys.argv[1:]:
         genome = dt.parse(filename)
-        result = health_report(genome)
+        health = health_report(genome)
+        conditions = inherited_conditions(genome)
 
         print(filename)
 
-        for title, description in sorted(result.items()):
+        print("\nHealth risks:")
+        for title, description in sorted(health.items()):
+            print("%s: %s" % (title, description))
+
+        print("\nInherited conditions:")
+        for title, description in sorted(conditions.items()):
             print("%s: %s" % (title, description))
