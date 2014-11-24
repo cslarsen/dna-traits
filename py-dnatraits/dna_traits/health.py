@@ -195,6 +195,18 @@ def restless_leg_syndrome(genome):
     else:
         return "<Unknown genotype for rs3923809 %s>" % genome.rs3923809
 
+def scleroderma(genome):
+    """Scleroderma (limited cutaneous type)."""
+    # TODO: Implement odds ratios, find all alleles
+    if genome.ethnicity is None or genome.ethnicity == "european":
+        if genome.rs7574865 == "TT":
+            return "Higher odds"
+        if genome.rs7574865.count("T") > 0:
+            return "Slight risk"
+        return "<Unknown>"
+    else:
+        return "<Unknown for this ethnicity>"
+
 def health_report(genome):
     """Computes some health-related risks."""
 
@@ -203,6 +215,7 @@ def health_report(genome):
         chronic_kidney_disease,
         restless_leg_syndrome,
         rheumatoid_arthritis_risk,
+        scleroderma,
     ]
 
     report = {}
