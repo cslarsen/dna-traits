@@ -29,7 +29,10 @@ def apoe_variants(genome):
         "TTTT": "e2/e2",
     }
 
-    return variants[genotypes]
+    try:
+        return variants[genotypes]
+    except KeyError:
+        return "<Unknown variant: %s>" % genotypes
 
 def rheumatoid_arthritis_risk(genome):
     """Rheumatoid arthritis."""
