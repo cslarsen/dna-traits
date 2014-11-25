@@ -12,12 +12,19 @@ Distributed under the GPL v3 or later. See COPYING.
 
 def bitter_taste(genome):
     """Bitter taste perception."""
-    rs713598 = "".join(sorted(str(genome.rs713598)))
-    if rs713598 == "GG" or rs713598 == "CG":
-        return "Can taste bitter flavours that others can't"
-    if rs713598 == "CC":
-        return "Probably cannot taste certain bitter flavours"
-    return "<Unknown>"
+    phenotypes = {
+        "GG": "Can taste bitter flavours that others can't",
+        "CG": "Can taste bitter flavours that others can't",
+        "GC": "Can taste bitter flavours that others can't",
+        "CC": "Probably can't taste certain bitter flavours"
+    }
+
+    snp = str(genome.rs713598)
+
+    if snp in phenotypes:
+        return phenotypes[snp]
+    else:
+        return "<Unknown>"
 
 def traits_report(genome):
     """Computes some traits."""
