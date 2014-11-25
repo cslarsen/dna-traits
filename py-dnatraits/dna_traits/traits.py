@@ -131,6 +131,14 @@ def caffeine_metabolism(genome):
         "AC": "Slow metabolizer",
         "CC": "Slow metabolizer"})
 
+def heroin_addiction(genome):
+    if genome.ethnicity is not None and genome.ethnicity != "european":
+        raise ValueError("Only valid for genomes of European ethnicity")
+
+    return unphased_match(genome.rs1799971, {
+        "GG": "Higher odds of addiction",
+        "AG": "Higher odds of addiction",
+        "AA": "Typical odds of addiction"})
 
 def traits_report(genome):
     """Computes some traits."""
@@ -142,6 +150,7 @@ def traits_report(genome):
         caffeine_metabolism,
         earwax_type,
         eye_color,
+        heroin_addiction,
         lactose_intolerance,
         malaria_resistance,
         male_pattern_baldness,
@@ -155,7 +164,10 @@ def traits_report(genome):
     report = {}
 
     for check in checks:
-        title = check.__doc__[:check.__doc__.index(".")]
+        if check.__doc__ is not None:
+            title = check.__doc__[:check.__doc__.index(".")]
+        else:
+            title = check.__name__.replace("_", " ").capitalize()
         try:
             report[title] = check(genome)
         except ValueError, e:
