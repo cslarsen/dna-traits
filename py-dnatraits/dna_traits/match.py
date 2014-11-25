@@ -25,6 +25,7 @@ def unphased_match(snp, phenotypes):
     if genotype in phenotypes:
         return phenotypes[genotype]
 
+    # Default return value
     if None in phenotypes:
         return phenotypes[None]
 
