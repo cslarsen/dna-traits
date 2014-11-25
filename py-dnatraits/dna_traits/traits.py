@@ -9,6 +9,7 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
+from dna_traits.match import unphased_match
 
 def bitter_taste(genome):
     """Bitter taste perception."""
@@ -64,6 +65,14 @@ def eye_color(genome):
     elif snp == "GG":
         return "Most likely blue, but 30% have green and 1% brown"
 
+def lactose_intolerance(genome):
+    """Lactose intolerance."""
+    return unphased_match(genome.rs4988235, {
+        "AA": "Likely tolerant",
+        "AG": "Likely tolerant",
+        "GG": "Likely intolerant",
+        None: "Unknown"})
+
 def traits_report(genome):
     """Computes some traits."""
 
@@ -72,6 +81,7 @@ def traits_report(genome):
         bitter_taste,
         earwax_type,
         eye_color,
+        lactose_intolerance,
     ]
 
     report = {}
