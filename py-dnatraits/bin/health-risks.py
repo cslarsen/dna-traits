@@ -25,7 +25,13 @@ def print_report(title, report, underline="="):
 
     width = max(map(len, report.keys()))
     for key, value in sorted(report.items()):
-        print("%-*s %s" % (width+1, "%s:" % key, value))
+        lines = value.split("\n")
+        if lines == 1:
+            print("%-*s %s" % (width+1, "%s:" % key, value))
+        else:
+            print("%-*s %s" % (width+1, "%s:" % key, lines[0]))
+            for line in lines[1:]:
+                print("%-*s %s" % (width+1, " "*(len(key)+1), line))
 
     if title is not None:
         print("")

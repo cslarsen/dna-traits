@@ -9,7 +9,9 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
+from match import unphased_match
 import odds
+
 
 def apoe_variants(genome):
     """APOE-variants (Alzheimer's)."""
@@ -225,12 +227,53 @@ def scleroderma(genome):
     else:
         return "<Unknown for this ethnicity>"
 
+def hypothyroidism(genome):
+    """Hypothyroidism.
+
+    Studies:
+        http://dx.doi.org/10.1371/journal.pone.0034442
+    """
+    if genome.ethnicity is not None and genome.ethnicity != "european":
+        raise ValueError("Only applicable to Europeans")
+
+    # TODO: Use a better score metric and use weighting and ORs.
+    # TODO: Try to use interval arithmetic as well, for fun.
+
+    scores = {
+        "rs7850258": {"GG": 0.5, "AG": 0,   "AA": -0.5, None: 0},
+        "rs2476601": {"GG": 1,   "AG": 0.5, "AA":  0,   None: 0},
+        "rs3184504": {"TT": 0.5, "CT": 0,   "CC": -0.5, None: 0},
+        "rs4915077": {"CC": 1,   "CT": 0.5, "TT":  0,   None: 0},
+        "rs2517532": {"GG": 0.5, "AG": 0,   "AA": -0.5, None: 0},
+    }
+
+    hi = sum(map(lambda l: max(l.values()), scores.values()))
+    lo = sum(map(lambda l: min(l.values()), scores.values()))
+
+    score = 0.0
+    for rsid, genotypes in scores.items():
+        score += unphased_match(genome[rsid], genotypes)
+
+    if score > 0:
+        s = "About %.1f%% higher risk than baseline\n" % (100.0*score/hi)
+        s += "(%.1f vs %.1f of %.1f points)\n" % (score, lo, hi)
+        s += "Test is unweighted, see 23andMe for more info"
+        return s
+    elif score < 0:
+        s = "About %.1f%% lower risk than baseline\n" % 100.0*score/lo
+        s += "(%.1f vs %.1f of %.1f points)\n" % (score, lo, hi)
+        s += "Test is unweighted, see 23andMe for more info"
+        return s
+    else:
+        return "Typical risk"
+
 def health_report(genome):
     """Computes some health-related risks."""
 
     checks = [
         apoe_variants,
         chronic_kidney_disease,
+        hypothyroidism,
         restless_leg_syndrome,
         rheumatoid_arthritis_risk,
         scleroderma,
