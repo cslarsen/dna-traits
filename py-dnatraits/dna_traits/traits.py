@@ -26,10 +26,24 @@ def bitter_taste(genome):
     else:
         return "<Unknown>"
 
+def alcohol_flush_reaction(genome):
+    """Alcohol flush reaction."""
+    snp = genome.rs671
+
+    if snp == "AA":
+        return "High reaction (no copies of the ALDH2 genej)"
+    elif snp == "AG":
+        return "Moderate reaction (one copy of the ALDH2 gene)"
+    elif snp == "GG":
+        return "Little or no reaction (two copies of the ALDH2 gene)"
+    else:
+        return "<Unknown>"
+
 def traits_report(genome):
     """Computes some traits."""
 
     checks = [
+        alcohol_flush_reaction,
         bitter_taste,
     ]
 
