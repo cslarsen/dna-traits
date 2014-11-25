@@ -9,38 +9,55 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
-from dna_traits import odds
+import odds
 
 def apoe_variants(genome):
     """APOE-variants (Alzheimer's)."""
 
-    genotypes = "".join(sorted(str(genome.rs429358)))
-    genotypes += "".join(sorted(str(genome.rs7412)))
+    rs429358 = genome.rs429358
+    rs7412 = genome.rs7412
 
-    variants = {
-        "CCCC": "e4/e4",
-        "CCCT": "e1/e4",
-        "CCTT": "e1/e1",
-        "CTCC": "e3/e4",
-        "CTCT": "e1/e3 or e2/e4", # ambiguous
-        "CTTT": "e1/e2",
-        "TTCC": "e3/e3",
-        "TTCT": "e2/e3",
-        "TTTT": "e2/e2",
-    }
+    # If both SNPs are phased we can resolve all ambiguities, and finding
+    # APOe-variants are straight-forward
+    if rs429358.phased and rs7412.phased:
+        apoe = {"CT": "e1",
+                "TT": "e2",
+                "TC": "e3",
+                "CC": "e4"}
+        variant = []
+        for n in [0,1]:
+            variant.append(apoe[str(rs429358) + str(rs7412)])
+        return "/".join(sorted(variant))
+    else:
+        # At least one SNP is non-phased; we can guess the result in all but
+        # one case
+        genotypes = "".join(sorted(str(rs429358)))
+        genotypes += "".join(sorted(str(rs7412)))
 
-    try:
-        return variants[genotypes]
-    except KeyError:
-        return "<Unknown variant: %s>" % genotypes
+        variants = {
+            "CCCC": "e4/e4",
+            "CCCT": "e1/e4",
+            "CCTT": "e1/e1",
+            "CTCC": "e3/e4",
+            "CTCT": "e1/e3 or e2/e4", # ambiguous
+            "CTTT": "e1/e2",
+            "TTCC": "e3/e3",
+            "TTCT": "e2/e3",
+            "TTTT": "e2/e2",
+        }
+
+        try:
+            return variants[genotypes]
+        except KeyError:
+            return "<Unknown variant: %s>" % genotypes
 
 def rheumatoid_arthritis_risk(genome):
     """Rheumatoid arthritis."""
     raise NotImplementedError()
 
-    odds = 0
+    OR = 0
 
-    # FIXME: Fix the odds calculation, it's a complete mess right now
+    # FIXME: Fix the OR calculation, it's a complete mess right now
     # (attempt to use Mantel-Haenszel instead).
     #
     # We currently just give a score for each risk allele instead and give
@@ -48,29 +65,29 @@ def rheumatoid_arthritis_risk(genome):
 
     # These are not applicable for Asians
     if genome.ethnicity == "european":
-        odds += genome.rs6457617.count("T")
-        if genome.rs2476601 == "GG": odds -= 1
+        OR += genome.rs6457617.count("T")
+        if genome.rs2476601 == "GG": OR -= 1
 
-    if genome.rs3890745 == "CC": odds += -1
-    if genome.rs2327832 == "AG": odds += -1
+    if genome.rs3890745 == "CC": OR += -1
+    if genome.rs2327832 == "AG": OR += -1
 
     # Only Europeans
     # http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2636867/
-    odds += genome.rs3761847.count("G")
+    OR += genome.rs3761847.count("G")
 
-    if genome.rs7574865 == "TT": odds += 1
-    if genome.rs1569723 == "AA": odds += 1
-    if genome.rs13031237 == "GT": odds += 1
+    if genome.rs7574865 == "TT": OR += 1
+    if genome.rs1569723 == "AA": OR += 1
+    if genome.rs13031237 == "GT": OR += 1
 
     # TODO: Implement rest, ignore scores, just give a "low/medium/high"
-    # odds.
+    # OR.
 
-    if odds <= 2:
-        return "low risk"
-    elif odds <= 4:
-        return "medium risk"
+    if OR <= 2:
+        return "low risk??"
+    elif OR <= 4:
+        return "medium risk??"
     else:
-        return "high risk"
+        return "high risk??"
 
 def chronic_kidney_disease(genome):
     """Chronic kidney disease (CKD).
