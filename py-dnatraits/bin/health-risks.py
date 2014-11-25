@@ -16,27 +16,28 @@ from dna_traits.health import health_report
 from dna_traits.traits import traits_report
 import dna_traits as dt
 
+def print_report(title, report, underline="="):
+    """Prints a dict with some text formatting."""
+    if title is not None:
+        print(title)
+        if underline is not None:
+            print(underline*len(title))
+
+    width = max(map(len, report.keys()))
+    for key, value in sorted(report.items()):
+        print("%-*s %s" % (width+1, "%s:" % key, value))
+
+    if title is not None:
+        print("")
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: health-risks genome(s)")
         sys.exit(1)
 
     for filename in sys.argv[1:]:
+        print("%s\n" % filename)
         genome = dt.parse(filename)
-        health = health_report(genome)
-        conditions = inherited_conditions(genome)
-        traits = traits_report(genome)
-
-        print(filename)
-
-        print("\nHealth risks:")
-        for title, description in sorted(health.items()):
-            print("%s: %s" % (title, description))
-
-        print("\nInherited conditions:")
-        for title, description in sorted(conditions.items()):
-            print("%s: %s" % (title, description))
-
-        print("\nTraits:")
-        for title, description in sorted(traits.items()):
-            print("%s: %s" % (title, description))
+        print_report("Health report", health_report(genome))
+        print_report("Inherited conditions", inherited_conditions(genome))
+        print_report("Traits", traits_report(genome))
