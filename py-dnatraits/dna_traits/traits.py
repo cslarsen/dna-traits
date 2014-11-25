@@ -50,7 +50,19 @@ def earwax_type(genome):
     else:
         return "<Unknown>"
 
+def eye_color(genome):
+    """Eye color."""
+    snp = genome.rs12913832
 
+    if genome.ethnicity is not None and genome.ethnicity != "european":
+        return "<Can only determine for Europeans>"
+
+    if snp == "AA":
+        return "Brown eyes, although 14% have green and 1% have blue"
+    elif snp == "AG":
+        return "Most likely brown or green, but 7% have blue"
+    elif snp == "GG":
+        return "Most likely blue, but 30% have green and 1% brown"
 
 def traits_report(genome):
     """Computes some traits."""
@@ -59,6 +71,7 @@ def traits_report(genome):
         alcohol_flush_reaction,
         bitter_taste,
         earwax_type,
+        eye_color,
     ]
 
     report = {}
