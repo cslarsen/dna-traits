@@ -20,6 +20,7 @@ def apoe_variants(genome):
     # If both SNPs are phased we can resolve all ambiguities, and finding
     # APOe-variants are straight-forward
     if rs429358.phased and rs7412.phased:
+        assert(len(rs429358)==len(rs7412)==2)
         apoe = {"CT": "e1",
                 "TT": "e2",
                 "TC": "e3",
@@ -241,7 +242,7 @@ def health_report(genome):
         try:
             title = check.__doc__[:check.__doc__.index(".")]
             report[title] = check(genome)
-        except NotImplementedError:
+        except:
             continue
 
     return report
