@@ -26,7 +26,7 @@ def apoe_variants(genome):
                 "CC": "e4"}
         variant = []
         for n in [0,1]:
-            variant.append(apoe[str(rs429358) + str(rs7412)])
+            variant.append(apoe[str(rs429358)[n] + str(rs7412)[n]])
         return "/".join(sorted(variant))
     else:
         # At least one SNP is non-phased; we can guess the result in all but
