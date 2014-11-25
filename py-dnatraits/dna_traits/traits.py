@@ -121,6 +121,17 @@ def pain_sensitivity(genome):
         "AG": "Typical sensitivity to pain",
         "GG": "Less sensitive to pain"})
 
+def caffeine_metabolism(genome):
+    """Caffeine metabolism."""
+    if genome.ethnicity is not None and genome.ethnicity != "european":
+        raise ValueError("Only valid for genomes of European ethnicity")
+
+    return unphased_match(genome.rs762551, {
+        "AA": "Fast metabolizer",
+        "AC": "Slow metabolizer",
+        "CC": "Slow metabolizer"})
+
+
 def traits_report(genome):
     """Computes some traits."""
 
@@ -128,6 +139,7 @@ def traits_report(genome):
         alcohol_flush_reaction,
         bitter_taste,
         blond_vs_brown_hair,
+        caffeine_metabolism,
         earwax_type,
         eye_color,
         lactose_intolerance,
