@@ -39,12 +39,26 @@ def alcohol_flush_reaction(genome):
     else:
         return "<Unknown>"
 
+def earwax_type(genome):
+    """Earwax type."""
+    snp = genome.rs17822931
+
+    if snp == "CC" or snp == "CT":
+        return "Wet earwax (sticky, golden color)"
+    elif snp == "TT":
+        return "Dry earwax (flaky, pale)"
+    else:
+        return "<Unknown>"
+
+
+
 def traits_report(genome):
     """Computes some traits."""
 
     checks = [
         alcohol_flush_reaction,
         bitter_taste,
+        earwax_type,
     ]
 
     report = {}
