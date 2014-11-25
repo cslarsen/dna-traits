@@ -74,6 +74,14 @@ def male_pattern_baldness(genome):
     # rs6113491, A->C is risk mutation (AA has OR 1.77)
     # TODO: Attempt to match ORs
 
+def norovirus_resistance(genome):
+    """Norovirus resistance (most common strain)."""
+    return unphased_match(genome.rs601338, {
+        "AA": "Resistant to most common strain",
+        "AG": "Likely not resistant to most common strain",
+        "GG": "Likely not resistant to most common strain",
+        })
+
 def muscle_performance(genome):
     """Muscle performance."""
     return unphased_match(genome.rs1815739, {
@@ -82,18 +90,54 @@ def muscle_performance(genome):
         "TT": "Unlikely sprinter, but likely endurance athlete (no copies)",
         None: "Unable to tell"})
 
+def smoking_behaviour(genome):
+    """Smoking behaviour."""
+    if genome.ethnicity is not None and genome.ethnicity != "european":
+        raise ValueError("Only valid for genomes of European ethnicity")
+
+    return unphased_match(genome.rs1051730, {
+        "AA": "Likely to smoke more than average",
+        "AG": "Likely to smoke a little bit more than average",
+        "GG": "Likely to smoke typical amount of cigarettes per day"})
+
+def red_hair(genome):
+    """Hair-color, red hair odds."""
+    return unphased_match(genome.rs1805007, {
+        "TT": "Greatly increased odds for red hair",
+        "CT": "Substantially increased odds for red hair",
+        "CC": "Typical odds for red hair"})
+
+def blond_vs_brown_hair(genome):
+    """Hair-color, blond vs brown."""
+    return unphased_match(genome.rs1667394, {
+        "TT": "Typical odds of having blond hair vs. brown hair",
+        "CT": "Decreased odds of having blond hair vs. brown",
+        "CC": "Greatly decreased odds of having blond hair vs. brown"})
+
+def pain_sensitivity(genome):
+    """Pain sensitivity."""
+    return unphased_match(genome.rs6269, {
+        "AA": "Increased sensitivity to pain",
+        "AG": "Typical sensitivity to pain",
+        "GG": "Less sensitive to pain"})
+
 def traits_report(genome):
     """Computes some traits."""
 
     checks = [
         alcohol_flush_reaction,
         bitter_taste,
+        blond_vs_brown_hair,
         earwax_type,
         eye_color,
         lactose_intolerance,
         malaria_resistance,
         male_pattern_baldness,
         muscle_performance,
+        norovirus_resistance,
+        pain_sensitivity,
+        red_hair,
+        smoking_behaviour,
     ]
 
     report = {}
