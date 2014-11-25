@@ -239,10 +239,14 @@ def health_report(genome):
     report = {}
 
     for check in checks:
+        title = check.__doc__[:check.__doc__.index(".")]
         try:
-            title = check.__doc__[:check.__doc__.index(".")]
             report[title] = check(genome)
-        except:
+        except ValueError, e:
+            report[title] = "Error: %s" % e
+        except KeyError, e:
+            report[title] = "Error: %s" % e
+        except NotImplementedError:
             continue
 
     return report
