@@ -11,6 +11,11 @@ Distributed under the GPL v3 or later. See COPYING.
 
 from dna_traits.match import unphased_match
 
+def _assert_european(genome):
+    """If ethnicity is set, make sure it's European."""
+    if genome.ethnicity not in [None, "european"]:
+        raise ValueError("Only applicable to Europeans")
+
 def bitter_taste(genome):
     "Bitter taste perception."
     return unphased_match(genome.rs713598, {
@@ -37,9 +42,7 @@ def earwax_type(genome):
 
 def eye_color(genome):
     "Eye color."
-    if genome.ethnicity is not None and genome.ethnicity != "european":
-        raise ValueError("Only valid for genomes of European ethnicity")
-
+    _assert_european(genome)
     return unphased_match(genome.rs12913832, {
         "AA": "Brown eyes, although 14% have green and 1% have blue",
         "AG": "Most likely brown or green, but 7% have blue",
@@ -93,9 +96,7 @@ def muscle_performance(genome):
 
 def smoking_behaviour(genome):
     """Smoking behaviour."""
-    if genome.ethnicity is not None and genome.ethnicity != "european":
-        raise ValueError("Only valid for genomes of European ethnicity")
-
+    _assert_european(genome)
     return unphased_match(genome.rs1051730, {
         "AA": "Likely to smoke more than average",
         "AG": "Likely to smoke a little bit more than average",
@@ -124,18 +125,15 @@ def pain_sensitivity(genome):
 
 def caffeine_metabolism(genome):
     """Caffeine metabolism."""
-    if genome.ethnicity is not None and genome.ethnicity != "european":
-        raise ValueError("Only valid for genomes of European ethnicity")
-
+    _assert_european(genome)
     return unphased_match(genome.rs762551, {
         "AA": "Fast metabolizer",
         "AC": "Slow metabolizer",
         "CC": "Slow metabolizer"})
 
 def heroin_addiction(genome):
-    if genome.ethnicity is not None and genome.ethnicity != "european":
-        raise ValueError("Only valid for genomes of European ethnicity")
-
+    """Heroin addiction."""
+    _assert_european(genome)
     return unphased_match(genome.rs1799971, {
         "GG": "Higher odds of addiction",
         "AG": "Higher odds of addiction",
