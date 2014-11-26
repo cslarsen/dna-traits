@@ -153,6 +153,13 @@ def hair_curl(genome):
         "AG": "Straighter hair on average",
         "GG": "Slightly curlier hair on average"})
 
+def hiv_aids_resistance(genome):
+    """Resistance to HIV/AIDS."""
+    return unphased_match(genome.i3003626, {
+        "DD": "Some resistance to most common strain of HIV",
+        "DI": "Not resistant, but may have slower disease progression",
+        "II": "Not resistant"})
+
 def traits_report(genome):
     """Computes some traits."""
 
@@ -165,6 +172,7 @@ def traits_report(genome):
         eye_color,
         hair_curl,
         heroin_addiction,
+        hiv_aids_resistance,
         lactose_intolerance,
         malaria_resistance,
         male_pattern_baldness,
