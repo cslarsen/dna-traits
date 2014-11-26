@@ -9,6 +9,8 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
+from dna_traits.util import make_report
+
 
 def arsacs(genome):
     """ARSACS."""
@@ -64,20 +66,8 @@ def alpha_1_antitrypsin_deficiency(genome):
         return "<Unknown variant: %s>" % (rs17580 + rs28929474)
 
 def inherited_conditions(genome):
-    """Computes some inherited conditions."""
-
-    checks = [
+    """Infers some inherited conditions."""
+    return make_report(genome, [
         alpha_1_antitrypsin_deficiency,
         arsacs,
-    ]
-
-    report = {}
-
-    for check in checks:
-        try:
-            title = check.__doc__[:check.__doc__.index(".")]
-            report[title] = check(genome)
-        except NotImplementedError:
-            continue
-
-    return report
+    ])

@@ -10,6 +10,8 @@ Distributed under the GPL v3 or later. See COPYING.
 """
 
 from dna_traits.match import unphased_match
+from dna_traits.util import make_report
+
 
 def _assert_european(genome):
     """If ethnicity is set, make sure it's European."""
@@ -183,8 +185,8 @@ def adiponectin_levels(genome):
             "AG": "Typical (rs7193788)",
             "GG": "Slightly lower, which may be bad (rs7193788)",
             None: "Unable to determine for rs7193788"})
-
         return r
+
     elif genome.ethnicity in [None, "european"]:
         return unphased_match(genome.rs6444175, {
             "AA": "Lower, which may be bad",
@@ -193,9 +195,8 @@ def adiponectin_levels(genome):
             None: "Unable to determine"})
 
 def traits_report(genome):
-    """Computes some traits."""
-
-    checks = [
+    """Infer traits from genome."""
+    return make_report(genome, [
         adiponectin_levels,
         alcohol_flush_reaction,
         aspargus_detection,
@@ -215,22 +216,4 @@ def traits_report(genome):
         pain_sensitivity,
         red_hair,
         smoking_behaviour,
-    ]
-
-    report = {}
-
-    for check in checks:
-        if check.__doc__ is not None:
-            title = check.__doc__[:check.__doc__.index(".")]
-        else:
-            title = check.__name__.replace("_", " ").capitalize()
-        try:
-            report[title] = check(genome)
-        except ValueError, e:
-            report[title] = "Error: %s" % e
-        except AssertionError, e:
-            report[title] = "Error: %s" % e
-        except NotImplementedError:
-            continue
-
-    return report
+    ])

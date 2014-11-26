@@ -9,8 +9,9 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
-from match import unphased_match
-import odds
+from dna_traits.match import unphased_match
+from dna_traits.util import make_report
+import dna_traits.odds as odds
 
 
 def apoe_variants(genome):
@@ -268,28 +269,12 @@ def hypothyroidism(genome):
         return "Typical risk"
 
 def health_report(genome):
-    """Computes some health-related risks."""
-
-    checks = [
+    """Infers some health results."""
+    return make_report(genome, [
         apoe_variants,
         chronic_kidney_disease,
         hypothyroidism,
         restless_leg_syndrome,
         rheumatoid_arthritis_risk,
         scleroderma,
-    ]
-
-    report = {}
-
-    for check in checks:
-        title = check.__doc__[:check.__doc__.index(".")]
-        try:
-            report[title] = check(genome)
-        except ValueError, e:
-            report[title] = "Error: %s" % e
-        except KeyError, e:
-            report[title] = "Error: %s" % e
-        except NotImplementedError:
-            continue
-
-    return report
+    ])
