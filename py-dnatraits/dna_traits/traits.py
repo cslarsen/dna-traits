@@ -169,10 +169,34 @@ def aspargus_detection(genome):
         "GG": "Typical odds of smelling aspargus in urine",
         None: "Unable to determine"})
 
+def adiponectin_levels(genome):
+    """Adiponectin levels."""
+    if genome.ethnicity == "asian":
+        r = unphased_match(genome.rs1851665, {
+            "AA": "Slightly lower, which may be bad (rs1851665)\n",
+            "AG": "Typical (rs1851665)\n",
+            "GG": "Slightly higher, which is good (rs1851665)\n",
+            None: "Unable to determine for rs1851665\n"})
+
+        r += unphased_match(genome.rs7193788, {
+            "AA": "Slightly higher, which is good (rs7193788)",
+            "AG": "Typical (rs7193788)",
+            "GG": "Slightly lower, which may be bad (rs7193788)",
+            None: "Unable to determine for rs7193788"})
+
+        return r
+    elif genome.ethnicity in [None, "european"]:
+        return unphased_match(genome.rs6444175, {
+            "AA": "Lower, which may be bad",
+            "AG": "Slightly lower, which may be bad",
+            "GG": "Typical levels",
+            None: "Unable to determine"})
+
 def traits_report(genome):
     """Computes some traits."""
 
     checks = [
+        adiponectin_levels,
         alcohol_flush_reaction,
         aspargus_detection,
         bitter_taste,
