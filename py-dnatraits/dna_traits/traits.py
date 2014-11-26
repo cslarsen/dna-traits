@@ -19,10 +19,10 @@ def _assert_european(genome):
 def bitter_taste(genome):
     "Bitter taste perception."
     return unphased_match(genome.rs713598, {
-        "GG": "Can taste bitter flavours that others can't",
+        "CC": "Probably can't taste certain bitter flavours",
         "CG": "Can taste bitter flavours that others can't",
-        "GC": "Can taste bitter flavours that others can't",
-        "CC": "Probably can't taste certain bitter flavours"})
+        "GG": "Can taste bitter flavours that others can't",
+        None: "Unable to determine"})
 
 def alcohol_flush_reaction(genome):
     "Alcohol flush reaction."
@@ -62,7 +62,8 @@ def malaria_resistance(genome):
     return unphased_match(genome.rs2814778, {
         "CC": "Likely resistant to P. vivax",
         "CT": "Likely to have some resistance to P. vivax",
-        "TT": "Likely not resistant to P. vivax"})
+        "TT": "Likely not resistant to P. vivax",
+        None: "Unable to determine"})
 
 def male_pattern_baldness(genome):
     """Male pattern baldness.
@@ -84,7 +85,7 @@ def norovirus_resistance(genome):
         "AA": "Resistant to most common strain",
         "AG": "Likely not resistant to most common strain",
         "GG": "Likely not resistant to most common strain",
-        })
+        None: "Unable to determine"})
 
 def muscle_performance(genome):
     """Muscle performance."""
@@ -92,7 +93,7 @@ def muscle_performance(genome):
         "CC": "Likely sprinter, perhaps endurance athlete (two copies)",
         "CT": "Likely sprinter, perhaps endurance athlete (one copy)",
         "TT": "Unlikely sprinter, but likely endurance athlete (no copies)",
-        None: "Unable to tell"})
+        None: "Unable to determine"})
 
 def smoking_behaviour(genome):
     """Smoking behaviour."""
@@ -100,28 +101,32 @@ def smoking_behaviour(genome):
     return unphased_match(genome.rs1051730, {
         "AA": "Likely to smoke more than average",
         "AG": "Likely to smoke a little bit more than average",
-        "GG": "Likely to smoke typical amount of cigarettes per day"})
+        "GG": "Likely to smoke typical amount of cigarettes per day",
+        None: "Unable to determine"})
 
 def red_hair(genome):
     """Hair-color, red hair odds."""
     return unphased_match(genome.rs1805007, {
-        "TT": "Greatly increased odds for red hair",
+        "CC": "Typical odds for red hair",
         "CT": "Substantially increased odds for red hair",
-        "CC": "Typical odds for red hair"})
+        "TT": "Greatly increased odds for red hair",
+        None: "Unable to determine"})
 
 def blond_vs_brown_hair(genome):
     """Hair-color, blond vs brown."""
     return unphased_match(genome.rs1667394, {
-        "TT": "Typical odds of having blond hair vs. brown hair",
+        "CC": "Greatly decreased odds of having blond hair vs. brown",
         "CT": "Decreased odds of having blond hair vs. brown",
-        "CC": "Greatly decreased odds of having blond hair vs. brown"})
+        "TT": "Typical odds of having blond hair vs. brown hair",
+        None: "Unable to determine"})
 
 def pain_sensitivity(genome):
     """Pain sensitivity."""
     return unphased_match(genome.rs6269, {
         "AA": "Increased sensitivity to pain",
         "AG": "Typical sensitivity to pain",
-        "GG": "Less sensitive to pain"})
+        "GG": "Less sensitive to pain",
+        None: "Unable to determine"})
 
 def caffeine_metabolism(genome):
     """Caffeine metabolism."""
@@ -129,15 +134,17 @@ def caffeine_metabolism(genome):
     return unphased_match(genome.rs762551, {
         "AA": "Fast metabolizer",
         "AC": "Slow metabolizer",
-        "CC": "Slow metabolizer"})
+        "CC": "Slow metabolizer",
+        None: "Unable to determine"})
 
 def heroin_addiction(genome):
     """Heroin addiction."""
     _assert_european(genome)
     return unphased_match(genome.rs1799971, {
-        "GG": "Higher odds of addiction",
+        "AA": "Typical odds of addiction",
         "AG": "Higher odds of addiction",
-        "AA": "Typical odds of addiction"})
+        "GG": "Higher odds of addiction",
+        None: "Unable to determine"})
 
 def traits_report(genome):
     """Computes some traits."""
