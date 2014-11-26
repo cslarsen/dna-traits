@@ -146,6 +146,13 @@ def heroin_addiction(genome):
         "GG": "Higher odds of addiction",
         None: "Unable to determine"})
 
+def hair_curl(genome):
+    _assert_european(genome)
+    return unphased_match(genome.rs17646946, {
+        "AA": "Straighter hair on average",
+        "AG": "Straighter hair on average",
+        "GG": "Slightly curlier hair on average"})
+
 def traits_report(genome):
     """Computes some traits."""
 
@@ -156,6 +163,7 @@ def traits_report(genome):
         caffeine_metabolism,
         earwax_type,
         eye_color,
+        hair_curl,
         heroin_addiction,
         lactose_intolerance,
         malaria_resistance,
