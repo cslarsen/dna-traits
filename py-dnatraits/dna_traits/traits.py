@@ -105,7 +105,7 @@ def smoking_behaviour(genome):
         None: "Unable to determine"})
 
 def red_hair(genome):
-    """Hair-color, red hair odds."""
+    """Hair color; odds for red hair."""
     return unphased_match(genome.rs1805007, {
         "CC": "Typical odds for red hair",
         "CT": "Substantially increased odds for red hair",
@@ -113,7 +113,7 @@ def red_hair(genome):
         None: "Unable to determine"})
 
 def blond_vs_brown_hair(genome):
-    """Hair-color, blond vs brown."""
+    """Hair color; blond versus brown."""
     return unphased_match(genome.rs1667394, {
         "CC": "Greatly decreased odds of having blond hair vs. brown",
         "CT": "Decreased odds of having blond hair vs. brown",
