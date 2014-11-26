@@ -160,11 +160,21 @@ def hiv_aids_resistance(genome):
         "DI": "Not resistant, but may have slower disease progression",
         "II": "Not resistant"})
 
+def aspargus_detection(genome):
+    """Aspargus metabolite detection."""
+    _assert_european(genome)
+    return unphased_match(genome.rs4481887, {
+        "AA": "Higher odds of smelling aspargus in urine",
+        "AG": "Medium odds of smelling aspargus in urine",
+        "GG": "Typical odds of smelling aspargus in urine",
+        None: "Unable to determine"})
+
 def traits_report(genome):
     """Computes some traits."""
 
     checks = [
         alcohol_flush_reaction,
+        aspargus_detection,
         bitter_taste,
         blond_vs_brown_hair,
         caffeine_metabolism,
