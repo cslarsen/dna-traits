@@ -194,12 +194,65 @@ def adiponectin_levels(genome):
             "GG": "Typical levels",
             None: "Unable to determine"})
 
+def biological_age(genome):
+    """Biological aging (telomere length indication)."""
+    _assert_european(genome)
+    age = []
+
+    age.append(unphased_match(genome.rs10936599, {
+        "TT": 7.82,
+        "CT": 3.91,
+        "CC": 0,
+        None: 0}))
+
+    age.append(unphased_match(genome.rs2736100, {
+        "AA": 3.14,
+        "AC": 0,
+        "CC": -3.14,
+        None: 0}))
+
+    age.append(unphased_match(genome.rs9420907, {
+        "AA": 0,
+        "AC": -2.76,
+        "CC": -5.52,
+        None: 0}))
+
+    age.append(unphased_match(genome.rs755017, {
+        "AA": 0,
+        "AG": -2.47,
+        "GG": -4.94,
+        None: 0}))
+
+
+    age.append(unphased_match(genome.rs11100479, {
+        "CC": 5.98,
+        "CT": -2.99,
+        "TT": 0,
+        None: 0}))
+
+    age.append(unphased_match(genome.rs10165485, {
+        "TT": 0,
+        "CT": -2.23,
+        "CC": -4.46,
+        None: 0}))
+
+    avg = sum(age)/len(age)
+    if avg > 0:
+        s1 = "older"
+    elif avg < 1:
+        s1 = "younger"
+    else:
+        s1 = ""
+    return "Average %.1f years %s than actual age\n(From %.1f to %.1f years)" % (
+            avg, s1, min(age), max(age))
+
 def traits_report(genome):
     """Infer traits from genome."""
     return make_report(genome, [
         adiponectin_levels,
         alcohol_flush_reaction,
         aspargus_detection,
+        biological_age,
         bitter_taste,
         blond_vs_brown_hair,
         caffeine_metabolism,
