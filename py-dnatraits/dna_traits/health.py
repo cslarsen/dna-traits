@@ -268,6 +268,14 @@ def hypothyroidism(genome):
     else:
         return "Typical risk"
 
+def stroke(genome):
+    """Stroke."""
+    return unphased_match(genome.rs12425791, {
+        "AA": "Moderately increased risk of having a stroke",
+        "AG": "Slightly increased risk of having a stroke",
+        "GG": "Typical risk of having a stroke",
+        None: "Unable to determine"})
+
 def health_report(genome):
     """Infers some health results."""
     return make_report(genome, [
@@ -277,4 +285,5 @@ def health_report(genome):
         restless_leg_syndrome,
         rheumatoid_arthritis_risk,
         scleroderma,
+        stroke,
     ])
