@@ -232,6 +232,15 @@ def birth_weight(genome):
     return "From %.1fg to %.1fg (sum: %.1fg) compared to typical weight" % (
             abs(min(weight)), max(weight), sum(weight))
 
+def blood_glucose(genome):
+    """Blood glucose."""
+    _assert_european(genome)
+    return unphased_match(genome.rs560887, {
+        "CC": "Average fasting plasma glucose levels of 5.18mmol/L",
+        "CT": "Average fasting plasma glucose levels of 5.12mmol/L",
+        "TT": "Average fasting plasma glucose levels of 5.06mmol/L",
+        None: "Unable to determine"})
+
 def traits_report(genome):
     """Infer traits from genome."""
     return make_report(genome, [
@@ -242,6 +251,7 @@ def traits_report(genome):
         birth_weight,
         bitter_taste,
         blond_vs_brown_hair,
+        blood_glucose,
         caffeine_metabolism,
         earwax_type,
         eye_color,
