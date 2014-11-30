@@ -195,10 +195,10 @@ def adiponectin_levels(genome):
             None: "Unable to determine"})
 
 def biological_age(genome):
-    """Biological aging (telomere length indication)."""
+    """Biological aging (telomere lengths)."""
     _assert_european(genome)
 
-    telomere_lengths = {
+    ages = {
         "rs10936599": {"TT": 7.82, "CT":  3.91, "CC":  0,    None: 0},
         "rs2736100":  {"AA": 3.14, "AC": 0,     "CC": -3.14, None: 0},
         "rs9420907":  {"AA": 0,    "AC": -2.76, "CC": -5.52, None: 0},
@@ -207,11 +207,30 @@ def biological_age(genome):
         "rs10165485": {"TT": 0,    "CT": -2.23, "CC": -4.46, None: 0},
     }
 
-    age = [unphased_match(genome[rsid], telolen) for (rsid, telolen) in
-            telomere_lengths.items()]
+    age = [unphased_match(genome[rsid], t) for (rsid, t) in ages.items()]
 
-    return "From %.1f years younger to %.1f years older than actual age" % (
-            abs(min(age)), max(age))
+    def qual(age):
+        if age <= 0:
+            return "younger"
+        elif age > 0:
+            return "older"
+
+    msg = "From %.1f years %s to %.1f years %s than actual age\n" % (
+            abs(min(age)), qual(min(age)), abs(max(age)), qual(max(age)))
+    msg += "The sum is %.1f years %s, compared to actual age" % (
+            abs(sum(age)), qual(sum(age)))
+    return msg
+
+def birth_weight(genome):
+    """Birth weight."""
+    _assert_european(genome)
+    weights = {
+        "rs7903146": {"TT":   0, "CT": -30, "CC": -60, None: 0},
+        "rs1799884": {"TT": +54, "CT": +27, "CC":   0, None: 0},
+    }
+    weight = [unphased_match(genome[rsid], w) for (rsid, w) in weights.items()]
+    return "From %.1fg to %.1fg (sum: %.1fg) compared to typical weight" % (
+            abs(min(weight)), max(weight), sum(weight))
 
 def traits_report(genome):
     """Infer traits from genome."""
@@ -220,6 +239,7 @@ def traits_report(genome):
         alcohol_flush_reaction,
         aspargus_detection,
         biological_age,
+        birth_weight,
         bitter_taste,
         blond_vs_brown_hair,
         caffeine_metabolism,
