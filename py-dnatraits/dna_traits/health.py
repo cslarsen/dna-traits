@@ -308,10 +308,33 @@ def migraines(genome):
 
     return "\n".join(s)
 
+def breast_cancer(genome):
+    """Breast cancer."""
+    if not genome.female:
+        raise ValueError("Only applicable for females")
+    s = []
+    s.append(unphased_match(genome.rs1219648, {
+        "AA": "Typical odds",
+        "AG": "Slightly higher odds", 
+        "GG": "Moderately higher odds",
+        None: "Unable to determine (see rs2420946 instead)"}))
+
+    s.append(unphased_match(genome.rs3803662, {
+        "AA": "Moderately increased odds",
+        "AG": "?",
+        "GG": "Typical odds",
+        None: "Unable to determine"}))
+
+    s.append("Note: There are MANY more SNPs to test here...")
+    # TODO: Add remaining SNPs
+
+    return "\n".join(s)
+
 def health_report(genome):
     """Infers some health results."""
     return make_report(genome, [
         apoe_variants,
+        breast_cancer,
         chronic_kidney_disease,
         hypothyroidism,
         migraines,
