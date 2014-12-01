@@ -9,7 +9,7 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
-from dna_traits.match import unphased_match
+from dna_traits.match import unphased_match, assert_european
 from dna_traits.util import make_report
 import dna_traits.odds as odds
 
@@ -276,12 +276,45 @@ def stroke(genome):
         "GG": "Typical risk of having a stroke",
         None: "Unable to determine"})
 
+def exfoliation_glaucoma(genome):
+    """Exfoliation glaucoma."""
+    assert_european(genome)
+    OR = unphased_match(genome.rs2165241, {
+        "CT": 0.79,
+        })
+    raise NotImplementedError()
+
+def migraines(genome):
+    """Migranes."""
+    assert_european(genome)
+    s = []
+    s.append(unphased_match(genome.rs2651899, {
+        "CC": "Slightly higher odds of migraines",
+        "CT": "Typical odds of migraines",
+        "TT": "Slightly lower odds of migraines",
+        None: "Unable to determine"}))
+
+    s.append(unphased_match(genome.rs10166942, {
+        "TT": "Typical odds of migraines",
+        "CT": "Slightly lower odds of migraines",
+        "CC": "Slightly lower odds of migraines",
+        None: "Unable to determine"}))
+
+    s.append(unphased_match(genome.rs11172113, {
+        "TT": "Slightly higher odds of migraines",
+        "CT": "Typical odds of migraines",
+        "CC": "Slightly lower odds of migraines",
+        None: "Unable to determine"}))
+
+    return "\n".join(s)
+
 def health_report(genome):
     """Infers some health results."""
     return make_report(genome, [
         apoe_variants,
         chronic_kidney_disease,
         hypothyroidism,
+        migraines,
         restless_leg_syndrome,
         rheumatoid_arthritis_risk,
         scleroderma,

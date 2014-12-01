@@ -9,14 +9,8 @@ Copyright (C) 2014 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
-from dna_traits.match import unphased_match
+from dna_traits.match import unphased_match, assert_european
 from dna_traits.util import make_report
-
-
-def _assert_european(genome):
-    """If ethnicity is set, make sure it's European."""
-    if genome.ethnicity not in [None, "european"]:
-        raise ValueError("Only applicable to Europeans")
 
 def bitter_taste(genome):
     "Bitter taste perception."
@@ -44,7 +38,7 @@ def earwax_type(genome):
 
 def eye_color(genome):
     "Eye color."
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs12913832, {
         "AA": "Brown eyes, although 14% have green and 1% have blue",
         "AG": "Most likely brown or green, but 7% have blue",
@@ -99,7 +93,7 @@ def muscle_performance(genome):
 
 def smoking_behaviour(genome):
     """Smoking behaviour."""
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs1051730, {
         "AA": "Likely to smoke more than average",
         "AG": "Likely to smoke a little bit more than average",
@@ -132,7 +126,7 @@ def pain_sensitivity(genome):
 
 def caffeine_metabolism(genome):
     """Caffeine metabolism."""
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs762551, {
         "AA": "Fast metabolizer",
         "AC": "Slow metabolizer",
@@ -141,7 +135,7 @@ def caffeine_metabolism(genome):
 
 def heroin_addiction(genome):
     """Heroin addiction."""
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs1799971, {
         "AA": "Typical odds of addiction",
         "AG": "Higher odds of addiction",
@@ -149,7 +143,7 @@ def heroin_addiction(genome):
         None: "Unable to determine"})
 
 def hair_curl(genome):
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs17646946, {
         "AA": "Straighter hair on average",
         "AG": "Straighter hair on average",
@@ -164,7 +158,7 @@ def hiv_aids_resistance(genome):
 
 def aspargus_detection(genome):
     """Aspargus metabolite detection."""
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs4481887, {
         "AA": "Higher odds of smelling aspargus in urine",
         "AG": "Medium odds of smelling aspargus in urine",
@@ -196,7 +190,7 @@ def adiponectin_levels(genome):
 
 def biological_age(genome):
     """Biological aging (telomere lengths)."""
-    _assert_european(genome)
+    assert_european(genome)
 
     ages = {
         "rs10936599": {"TT": 7.82, "CT":  3.91, "CC":  0,    None: 0},
@@ -223,7 +217,7 @@ def biological_age(genome):
 
 def birth_weight(genome):
     """Birth weight."""
-    _assert_european(genome)
+    assert_european(genome)
     weights = {
         "rs7903146": {"TT":   0, "CT": -30, "CC": -60, None: 0},
         "rs1799884": {"TT": +54, "CT": +27, "CC":   0, None: 0},
@@ -234,7 +228,7 @@ def birth_weight(genome):
 
 def blood_glucose(genome):
     """Blood glucose."""
-    _assert_european(genome)
+    assert_european(genome)
     return unphased_match(genome.rs560887, {
         "CC": "Average fasting plasma glucose levels of 5.18mmol/L",
         "CT": "Average fasting plasma glucose levels of 5.12mmol/L",
