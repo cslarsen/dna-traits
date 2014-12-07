@@ -224,7 +224,7 @@ def birth_weight(genome):
     }
     weight = [unphased_match(genome[rsid], w) for (rsid, w) in weights.items()]
     return "From %.1fg to %.1fg (sum: %.1fg) compared to typical weight" % (
-            abs(min(weight)), max(weight), sum(weight))
+            min(weight), max(weight), sum(weight))
 
 def blood_glucose(genome):
     """Blood glucose."""
