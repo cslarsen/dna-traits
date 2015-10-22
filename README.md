@@ -67,6 +67,9 @@ Current status
 
   * Doesn't parse internal IDs yet.
 
+  * Has support for quite some health, traits and condition reports. See the
+    bottom of this page for more information.
+
 Requirements
 ------------
 
@@ -133,10 +136,29 @@ In Python, this can be done in any number of ways, but one way is to use the
                       ("rs1800401",  "GG"))))
 
 
+Example reports
+---------------
+
+I've implemented some of the 23andMe health reports, traits and conditions. You
+can see the content here:
+
+  * Traits,
+    https://github.com/cslarsen/dna-traits/blob/master/py-dnatraits/dna_traits/traits.py
+  * Health,
+    https://github.com/cslarsen/dna-traits/blob/master/py-dnatraits/dna_traits/health.py
+  * Conditions,
+    https://github.com/cslarsen/dna-traits/blob/master/py-dnatraits/dna_traits/conditions.py
+
+Note that there might very well be errors in the above reports, so use with
+care! In particular, the odds ratios are most likely very incorrect.  The best
+bet is the traits. These should be correct, as well as some simple health
+reports. So, the main goal is for this to be educational. In other words,
+explore on your own.
+
 Copyright and license
 ---------------------
 
-Copyright (C) 2014 Christian Stigen Larsen
+Copyright (C) 2014 Christian Stigen Larsen  
 http://csl.name
 
 Distributed under GPL v3 or later. See the file COPYING for the full
