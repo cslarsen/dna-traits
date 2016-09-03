@@ -48,7 +48,11 @@ void init_dna_traits()
   auto module = Py_InitModule3("_dna_traits", methods,
                                "A fast parser for 23andMe genome files");
 
+  #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 3) || __GNUC__ > 4
+  #pragma GCC diagnostic ignored "-Wstrict-aliasing"
   Py_INCREF(&GenomeType);
+  #endif
+
   PyModule_AddObject(module, "Genome",
                      reinterpret_cast<PyObject*>(&GenomeType));
 }
