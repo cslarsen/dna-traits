@@ -12,7 +12,7 @@ check: all
 	PYTHONPATH=. python test/test_dna_traits.py
 
 bench: all
-	python test/bench.py
+	PYTHONPATH=. python test/bench.py
 
 clean:
 	$(MAKE) -C src clean

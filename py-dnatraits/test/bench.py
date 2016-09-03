@@ -9,12 +9,10 @@ print("Measuring parsing speed (%d times) " % count)
 sys.stdout.write("[%s]\r[" % ("."*count))
 sys.stdout.flush()
 
-best = min(timeit.Timer(
-  """
-  dt.parse('../genomes/genome.txt')
-  sys.stdout.write("#");
-  sys.stdout.flush()
-  """,
+best = min(timeit.Timer("""
+dt.parse('../genomes/genome.txt')
+sys.stdout.write("#");
+sys.stdout.flush()""",
   setup = "import dna_traits as dt; import sys")
   .repeat(count, 1))
 
