@@ -46,10 +46,11 @@ static inline Chromosome parse_chromo(const char*& s)
       return static_cast<Chromosome>(parse_uint32(s));
 
   switch ( *s++ ) {
-    case 'M': ++s; return CHR_MT;
+    case 'M': ++s; // skip T in "MT"
+              return CHR_MT;
     case 'X': return CHR_X;
     case 'Y': return CHR_Y;
-    default: return NO_CHR;
+    default:  return NO_CHR;
   }
 }
 
@@ -96,12 +97,12 @@ void parse_file(const std::string& name, Genome& genome)
     genome.first = rsid < genome.first? rsid : genome.first;
     genome.last = rsid > genome.last? rsid : genome.last;
 
-    SNP snp(parse_chromo(skipwhite(s)),
-            parse_uint32(skipwhite(s)),
-            parse_genotype(skipwhite(s)));
+    const auto chromosome = parse_chromo(skipwhite(s));
+    const auto position = parse_uint32(skipwhite(s));
+    const auto genotype = parse_genotype(skipwhite(s));
 
-    genome.y_chromosome |= (snp.chromosome==CHR_Y &&
-                            snp.genotype.first!=NONE);
+    const SNP snp(chromosome, position, genotype);
+    genome.y_chromosome |= (chromosome==CHR_Y && genotype.first!=NONE);
 
     genome.insert(rsid, snp);
   }
