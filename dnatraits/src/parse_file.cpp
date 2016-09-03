@@ -92,7 +92,7 @@ void parse_file(const std::string& name, Genome& genome)
       continue;
     }
 
-    RSID rsid(parse_uint32(s+=2)); // skip "rs"-prefix
+    const RSID rsid(parse_uint32(s+=2)); // skip "rs"-prefix
 
     genome.first = rsid < genome.first? rsid : genome.first;
     genome.last = rsid > genome.last? rsid : genome.last;
