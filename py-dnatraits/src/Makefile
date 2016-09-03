@@ -14,7 +14,6 @@ LD_LIB_PATH := \
 	LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:../../dnatraits \
 	DYLD_LIBRARY_PATH=$$DYLD_LIBRARY_PATH:../../dnatraits \
 
-
 override CXXFLAGS += \
 	$(PYINCLUDE) \
 	-I../../dnatraits/include \
@@ -25,7 +24,7 @@ override CXXFLAGS += \
 all: $(TARGETS)
 
 _dna_traits.so: dna_traits.o genome.o ../../dnatraits/src/libdnatraits.o
-	$(CXX) $(PYLDFLAGS) $(CXXFLAGS) -shared \
+	$(CXX) $(PYLDFLAGS) $(CXXFLAGS) -shared -fPIC \
 		-o $@ $^
 
 check: _dna_traits.so
