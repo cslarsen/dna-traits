@@ -12,7 +12,8 @@ Regarding speed, a naive parser I wrote in pure Python takes around 2.5
 seconds to read a million SNPs --- I've also seen some parsers take up to 8
 seconds.
 
-*This one* consistently lands on a mere 0.16 seconds on _my_ machine.  It's
+*This one* consistently lands on a mere 0.16 seconds on _my_ machine (UPDATE:
+On a newer machine with Xeon CPUs, it takes 0.07 seconds!).  It's
 so fast is because it memory maps the file and always scans forward ---
 every byte in the file is only ever touched once.  To top it off, I'm using
 the Google dense hash map for storing SNPs by RSID, which is extremely fast.
