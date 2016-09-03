@@ -5,18 +5,23 @@ This is a *very* fast 23andMe genome text file parser whose internals are
 written in C++.  The genome itself can then be queried using Python; other
 language bindings may follow.
 
+**UPDATE Sep 2016:** While it always worked with clang, it now also works
+correctly with gcc.
+
 The need for speed
 ------------------
 
-Regarding speed, a naive parser I wrote in pure Python takes around 2.5
-seconds to read a million SNPs --- I've also seen some parsers take up to 8
-seconds.
+Regarding speed, a naive parser I wrote in pure Python takes around 2.5 seconds
+to read a million SNPs — I've also seen some parsers take up to 8 seconds.
 
-*This one* consistently lands on a mere 0.15 seconds on _my_ machine (UPDATE:
-On a newer machine with Xeon CPUs, it takes 0.07 seconds!).  It's
-so fast is because it memory maps the file and always scans forward ---
-every byte in the file is only ever touched once.  To top it off, I'm using
-the Google dense hash map for storing SNPs by RSID, which is extremely fast.
+*This one* consistently lands on a mere 0.07 seconds on a 2013 Xeon CPU.  It's
+so fast is because it memory maps the file and always scans forward --- every
+byte in the file is only ever touched once.  To top it off, I'm using the
+Google dense hash map for storing SNPs by RSID, which is extremely fast.
+
+Furthermore, a single nucleotide pair takes up only *one byte* in memory, while
+a full SNP (containing its chromosome number, position and nucleotide pair)
+takes only *six bytes*.
 
 While slow parsing is not a big concern for serious users, the existence of
 a fast open source parser may also benefit other projects. And, admittedly,
