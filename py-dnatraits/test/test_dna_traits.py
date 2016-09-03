@@ -24,6 +24,12 @@ class TestGenome(unittest.TestCase):
     def test_slice(self):
         self.assertEqual(len(self.genome[0:10]), 10)
 
+    def test_last(self):
+        self.assertEqual(self.genome.last, 80359889)
+
+    def test_first(self):
+        self.assertEqual(self.genome.first, 3)
+
     def test_y_chromosome(self):
         self.assertIsInstance(self.genome.y_chromosome, bool)
         self.assertIsInstance(self.genome.female, bool)
@@ -97,7 +103,6 @@ class TestGenome(unittest.TestCase):
             self.assertIsInstance(str(snp), str)
             self.assertIsInstance(repr(snp), str)
             self.assertTrue(repr(snp).startswith("SNP("))
-
 
     def test_genotypes(self):
         snp = self.genome["rs7495174"]
