@@ -158,7 +158,7 @@ explore on your own.
 Copyright and license
 ---------------------
 
-Copyright (C) 2014 Christian Stigen Larsen  
+Copyright (C) 2014, 2016 Christian Stigen Larsen  
 http://csl.name
 
 Distributed under GPL v3 or later. See the file COPYING for the full

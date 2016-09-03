@@ -142,7 +142,7 @@ Example application: Show some results
 
 Author and license
 ------------------
-Copyright (C) 2014 Christian Stigen Larsen,
+Copyright (C) 2014, 2016 Christian Stigen Larsen,
 http://csl.name
 
 Distributed under the GPL v3 or later.

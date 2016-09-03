@@ -1,7 +1,7 @@
 """
 A library for parsing and querying 23andMe genomes.
 
-Copyright (C) 2014 Christian Stigen Larsen
+Copyright (C) 2014, 2016 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 

@@ -9,7 +9,7 @@ https://github.com/23andMe/api-example-go/blob/master/app.go
 For the paper _that_ is based on, see
 http://www.plosgenetics.org/article/info:doi/10.1371/journal.pgen.1002745
 
-Copyright (C) 2014 Christian Stigen Larsen
+Copyright (C) 2014, 2016 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 

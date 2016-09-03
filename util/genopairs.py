@@ -1,7 +1,7 @@
 """
 Script that illustrates how to encode all nucleotide pairs using only 5 bits.
 
-Copyright (C) 2014 Christian Stigen Larsen
+Copyright (C) 2014, 2016 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 
 The conditions are that

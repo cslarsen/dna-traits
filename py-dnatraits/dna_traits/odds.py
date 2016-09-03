@@ -1,7 +1,7 @@
 """
 Contains speculative functions to deal meta-analysis.
 
-Copyright (C) 2014 Christian Stigen Larsen
+Copyright (C) 2014, 2016 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 
 Some sources:

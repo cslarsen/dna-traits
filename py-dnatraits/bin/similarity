@@ -6,7 +6,7 @@ Gives a similarity score between two genomes.
 NOTE: The goal is to detect relatedness, but currently this doesn't work
 because I'm not even using haplotypes.
 
-Copyright (C) 2014 Christian Stigen Larsen
+Copyright (C) 2014, 2016 Christian Stigen Larsen
 Distributed under the GPL v3 or later. See COPYING.
 """
 
