@@ -2,4 +2,7 @@
 *.o
 *.so
 *.txt
+GPATH
+GRTAGS
+GTAGS
 genomes
