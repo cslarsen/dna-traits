@@ -3,6 +3,9 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
+#ifndef INC_DNATRAITS_GENOME_HPP_20160903
+#define INC_DNATRAITS_GENOME_HPP_20160903
+
 #include <Python.h>
 #include <structmember.h>
 #include "dnatraits.hpp"
@@ -32,3 +35,5 @@ extern PyMappingMethods Genome_map;
 extern PyMemberDef Genome_members[];
 extern PyMethodDef Genome_methods[];
 extern PyTypeObject GenomeType;
+
+#endif

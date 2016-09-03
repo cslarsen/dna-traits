@@ -54,6 +54,7 @@ std::ostream& operator<<(std::ostream& o, const Nucleotide& n)
     case NONE: return o << '-';
     case T: return o << 'T';
   }
+  return o; // appease compiler
 }
 
 std::ostream& operator<<(std::ostream& o, const Genotype& bp)
@@ -71,6 +72,8 @@ std::ostream& operator<<(std::ostream& o, const Chromosome& chr) {
     case CHR_X: return o << "X";
     case CHR_Y: return o << "Y";
   }
+
+  return o; // appease compiler
 }
 
 std::ostream& operator<<(std::ostream& o, const SNP& snp)
@@ -93,6 +96,7 @@ Nucleotide complement(const Nucleotide& n)
     case I: return I;
     case NONE: return NONE;
   }
+  return NONE; // appease compiler
 }
 
 Genotype::Genotype(const Nucleotide& a, const Nucleotide& b)

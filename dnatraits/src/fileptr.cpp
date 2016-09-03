@@ -3,8 +3,9 @@
  * Distributed under the GPL v3 or later. See COPYING.
  */
 
-#include <string>
+#include <stdexcept>
 #include <stdio.h>
+#include <string>
 #include "fileptr.hpp"
 
 FilePtr::FilePtr(const char* filename, const char* mode):
