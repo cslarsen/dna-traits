@@ -19,7 +19,7 @@ override CXXFLAGS += \
 	-I../../dnatraits/include \
 	--std=c++11 \
 	-W -Wall \
-	-Ofast -march=native -mtune=native
+	-Ofast -march=native -mtune=native -DNDEBUG
 
 all: $(TARGETS)
 

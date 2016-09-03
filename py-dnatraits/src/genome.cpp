@@ -143,6 +143,7 @@ static char from_nucleotide(const Nucleotide& n)
     case I: return 'I';
     case NONE: return '-';
   }
+  return '?'; // appease compiler
 }
 
 // Genome.__len__
@@ -181,7 +182,8 @@ PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
                  from_nucleotide(snp.genotype.second), 0};
 
   PyObject* pchromo = NULL;
-  if ( snp.chromosome >= NO_CHR && snp.chromosome < CHR_MT ) {
+  assert(NO_CHR == 0); // due to comparison below
+  if ( snp.chromosome < CHR_MT ) {
     pchromo = Py_BuildValue("I", snp.chromosome);
   } else {
     switch ( snp.chromosome ) {
