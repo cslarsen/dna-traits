@@ -201,7 +201,7 @@ bool SNP::operator==(const Genotype& g) const
 }
 
 struct DLL_LOCAL Genome::GenomeImpl {
-  DLL_LOCAL SNPMap snps;
+  SNPMap snps;
 
   GenomeImpl(const size_t size) :
     snps(size)

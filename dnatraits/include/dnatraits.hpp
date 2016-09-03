@@ -151,7 +151,7 @@ struct DLL_PUBLIC Genome {
 
 private:
   struct DLL_LOCAL GenomeImpl;
-  DLL_LOCAL GenomeImpl* pimpl;
+  GenomeImpl* pimpl;
 };
 
 Nucleotide complement(const Nucleotide& n);
