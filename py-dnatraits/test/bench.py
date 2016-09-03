@@ -3,7 +3,7 @@
 import sys
 import timeit
 
-count = 20
+count = 70
 print("Measuring parsing speed (%d times) " % count)
 
 sys.stdout.write("[%s]\r[" % ("."*count))

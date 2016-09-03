@@ -88,7 +88,7 @@ It parses a file 70 times and prints the best result:
     python bench.py
     Measuring parsing speed (70 times)
     [######################################################################]
-    The best speed was 0.162211179733
+    The best speed was 0.14762878418
     We report only the best time to mitigate OS preemption noise.
 
 As you can see the running time may vary a bit and is usually a bit lower
