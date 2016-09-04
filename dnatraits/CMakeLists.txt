@@ -3,11 +3,8 @@ project(dnatraits CXX)
 set(CMAKE_CXX_STANDARD 11)
 
 file(GLOB sources
-  LIST_DIRECTORIES true
-  ${PROJECT_SOURCE_DIR}/src/*)
-
-list(APPEND
-  CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/../cmake")
+  LIST_DIRECTORIES false
+  ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 find_package(google_densehash REQUIRED)
 
@@ -18,9 +15,5 @@ include_directories(
   ${dnatraits_INCLUDE_DIR}
   ${google_densehash_INCLUDE_DIR}
 )
-
-# TODO: if release mode ...
-# TODO: See if we can get CMake to set these flags automatically
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 add_library(dnatraits SHARED ${sources})

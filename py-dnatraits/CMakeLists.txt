@@ -3,7 +3,7 @@ project(_dna_traits CXX)
 set(CMAKE_CXX_STANDARD 11)
 
 file(GLOB sources
-  LIST_DIRECTORIES true
+  LIST_DIRECTORIES false
   ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 set(Python_ADDITIONAL_VERSIONS 2.7)
