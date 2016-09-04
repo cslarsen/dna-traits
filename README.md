@@ -15,7 +15,7 @@ Regarding speed, a naive parser I wrote in pure Python takes around 2.5 seconds
 to read a million SNPs — I've also seen some parsers take up to 8 seconds.
 
 *This one* consistently lands on a mere 0.07 seconds on a 2013 Xeon CPU.  It's
-so fast is because it memory maps the file and always scans forward --- every
+so fast is because it memory maps the file and always scans forward — every
 byte in the file is only ever touched once.  To top it off, I'm using the
 Google dense hash map for storing SNPs by RSID, which is extremely fast.
 
@@ -77,6 +77,9 @@ Current status
   * Has support for quite some health, traits and condition reports. See the
     bottom of this page for more information.
 
+Building
+========
+
 Requirements
 ------------
 
@@ -90,7 +93,7 @@ Requirements
 
   * Python development files, if you want to build the Python module.
 
-Building
+GNU Make
 --------
 
 If Google dense hash map is located in `/usr/local/include`, build
@@ -102,8 +105,14 @@ Build the `check` target to check if everything works.
 
     $ make check
 
+CMake
+-----
+
+I'm transitioning to CMake, but it's currently not working properly. See
+`build-ninja.sh` and `build-make.sh` to test out the current status.
+
 Example of inferring phenotypes
--------------------------------
+===============================
 
 SNPedia contains the `gs237` criteria for determining whether a person has
 blue eyes. At http://snpedia.com/index.php/Gs237/criteria the rule set says:
@@ -144,7 +153,7 @@ In Python, this can be done in any number of ways, but one way is to use the
 
 
 Example reports
----------------
+===============
 
 I've implemented some of the 23andMe health reports, traits and conditions. You
 can see the content here:
@@ -163,7 +172,7 @@ reports. So, the main goal is for this to be educational. In other words,
 explore on your own.
 
 Copyright and license
----------------------
+=====================
 
 Copyright (C) 2014, 2016 Christian Stigen Larsen  
 http://csl.name

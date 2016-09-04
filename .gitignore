@@ -1,7 +1,7 @@
+build
 *.bin
 *.o
 *.so
-*.txt
 GPATH
 GRTAGS
 GTAGS
