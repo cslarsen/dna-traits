@@ -11,12 +11,16 @@ list(APPEND
 
 find_package(google_densehash REQUIRED)
 
+set(dnatraits_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include PARENT_SCOPE)
+set(dnatraits_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include) # for this scope
+
 include_directories(
-  ${PROJECT_SOURCE_DIR}/include
+  ${dnatraits_INCLUDE_DIR}
   ${google_densehash_INCLUDE_DIR}
 )
 
 # TODO: if release mode ...
+# TODO: See if we can get CMake to set these flags automatically
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
 
 add_library(dnatraits SHARED ${sources})

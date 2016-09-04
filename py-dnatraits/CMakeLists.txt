@@ -8,10 +8,11 @@ file(GLOB sources
 
 set(Python_ADDITIONAL_VERSIONS 2.7)
 find_package(PythonLibs REQUIRED)
+
 include_directories(
+  ${PROJECT_SOURCE_DIR}/src # only the single .hpp file
   ${PYTHON_INCLUDE_DIRS}
-  ${PROJECT_SOURCE_DIR}/src
-  ${PROJECT_SOURCE_DIR}/../dnatraits/include
+  ${dnatraits_INCLUDE_DIR}
 ) # TODO: use package semantics for dnatraits?
 
 add_library(_dna_traits SHARED ${sources})
