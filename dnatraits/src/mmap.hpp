@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+
+#define BUILDING_DLL
 #include "export.hpp"
 
 class DLL_LOCAL MMap {

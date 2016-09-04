@@ -7,6 +7,8 @@
 #define DNA_FILEPTR_H
 
 #include <stdio.h>
+
+#define BUILDING_DLL
 #include "export.hpp"
 
 class DLL_LOCAL FilePtr {

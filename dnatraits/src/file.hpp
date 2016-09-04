@@ -6,6 +6,7 @@
 #ifndef DNA_FILE_H
 #define DNA_FILE_H
 
+#define BUILDING_DLL
 #include "export.hpp"
 
 class DLL_LOCAL File {
