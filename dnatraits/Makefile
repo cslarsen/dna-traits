@@ -6,7 +6,7 @@ override CXXFLAGS += \
 	-Isrc \
 	--std=c++11 \
 	-W -Wall \
-	-Ofast -march=native -mtune=native -DNDEBUG
+	-Ofast -march=native -DNDEBUG
 
 override LDFLAGS += \
 	-arch x86_64

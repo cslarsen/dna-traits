@@ -21,6 +21,6 @@ include_directories(
 
 # TODO: if release mode ...
 # TODO: See if we can get CMake to set these flags automatically
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 add_library(dnatraits SHARED ${sources})
