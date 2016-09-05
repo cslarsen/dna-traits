@@ -41,3 +41,12 @@ install(FILES ${pysources} DESTINATION dna_traits)
 install(FILES ${pyreports} DESTINATION dna_traits/reports)
 install(TARGETS _dna_traits LIBRARY DESTINATION dna_traits)
 install(PROGRAMS ${PROJECT_SOURCE_DIR}/bin/dnatraits DESTINATION bin)
+
+enable_testing()
+add_test(
+  NAME python-unit-tests
+  COMMAND ${PROJECT_SOURCE_DIR}/runtest.sh
+          ${PYTHON_EXECUTABLE}
+          ${PROJECT_SOURCE_DIR}
+          ${CMAKE_BINARY_DIR}
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
