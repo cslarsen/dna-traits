@@ -5,7 +5,7 @@ Parses 23andMe genome into variable `genome` and starts a Python REPL.
 
 Use this for quickly querying a genome by hand.
 
-Exmaple:
+Example::
 
     $ repl genome.txt
     Type `genome` to see Genome parsed from genome.txt
