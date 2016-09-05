@@ -17,3 +17,8 @@ include_directories(
 )
 
 add_library(dnatraits STATIC ${sources})
+
+set_target_properties(dnatraits
+  PROPERTIES
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN 1)
