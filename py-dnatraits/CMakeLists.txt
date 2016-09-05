@@ -28,4 +28,10 @@ set_target_properties(_dna_traits
     PREFIX ""
     SUFFIX ".so")
 
+file(GLOB pysources
+  LIST_DIRECTORIES false
+  ${PROJECT_SOURCE_DIR}/dna_traits/*.py)
+
 add_dependencies(_dna_traits dnatraits)
+install(FILES ${pysources} DESTINATION dna_traits)
+install(TARGETS _dna_traits LIBRARY DESTINATION dnatraits)

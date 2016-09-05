@@ -6,4 +6,5 @@ cd build; time ( \
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+    -DCMAKE_INSTALL_PREFIX=install \
     -G 'Ninja' && ninja $*)
