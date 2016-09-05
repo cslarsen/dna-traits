@@ -16,9 +16,16 @@ include_directories(
 ) # TODO: use package semantics for dnatraits?
 
 add_library(_dna_traits SHARED ${sources})
+
 target_link_libraries(_dna_traits
   ${PYTHON_LIBRARIES}
   dnatraits
 )
+
+# Python modules requires to be named "foo.so"
+set_target_properties(_dna_traits
+  PROPERTIES
+    PREFIX ""
+    SUFFIX ".so")
 
 add_dependencies(_dna_traits dnatraits)
