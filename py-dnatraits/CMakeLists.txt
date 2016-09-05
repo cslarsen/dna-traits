@@ -31,7 +31,13 @@ set_target_properties(_dna_traits
 file(GLOB pysources
   LIST_DIRECTORIES false
   ${PROJECT_SOURCE_DIR}/dna_traits/*.py)
+file(GLOB pyreports
+  LIST_DIRECTORIES false
+  ${PROJECT_SOURCE_DIR}/dna_traits/reports/*.py)
 
 add_dependencies(_dna_traits dnatraits)
+
 install(FILES ${pysources} DESTINATION dna_traits)
-install(TARGETS _dna_traits LIBRARY DESTINATION dnatraits)
+install(FILES ${pyreports} DESTINATION dna_traits/reports)
+install(TARGETS _dna_traits LIBRARY DESTINATION dna_traits)
+install(PROGRAMS ${PROJECT_SOURCE_DIR}/bin/dnatraits DESTINATION bin)

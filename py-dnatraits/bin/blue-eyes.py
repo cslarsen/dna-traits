@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 
 """
 Runs SNPedia criteria gs237 on a genome, determining whether a person (of
@@ -20,8 +20,13 @@ def gs237(genome):
                              ("rs7183877", "CC"),
                              ("rs1800401", "GG"))))
 
+def blue_eyes(filename):
+    """Runs the SNPedia gs237 criterion for determining likelyhood of blue
+    eyes."""
+    genome = dt.parse(filename)
+    result = "Likely" if gs237(genome) else "Unlikely"
+    return "%s: Blue eyes (gs237): %s" % (filename, resul)
+
 if __name__ == "__main__":
     for file in sys.argv[1:]:
-        genome = dt.parse(file)
-        print("%s: Blue eyes (gs237): %s" % (file,
-            "Likely" if gs237(genome) else "Unlikely"))
+        print(blue_eyes(file))

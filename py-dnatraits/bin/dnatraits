@@ -1,0 +1,217 @@
+#! /usr/bin/env python
+
+"""
+A command-line utility for giving reports on 23andMe genome files.
+
+Copyright 2016 Christian Stigen Larsen  
+Distributed under the GPL v3. See the file COPYING for more info.
+"""
+
+import argparse
+import code
+import os
+import sys
+
+import dna_traits
+import dna_traits.conditions
+import dna_traits.reports
+import dna_traits.traits
+
+DISCLAIMER = """
+DISCLAIMER: The results here are to be interpreted as HIGHLY SPECULATIVE and
+may even be downright INCORRECT. Always consult an expert or a medical doctor
+for guidance. I take NO RESPONSIBILITY whatsoever for anything related to this
+information, including loss of life, money, spouses, self-esteem and so on. Use
+at YOUR OWN RISK.
+"""
+
+GUIDE = """
+Note: Some results contain several results using different methodologies. If
+they may seem conflicting, it is because there is no definite way to check for
+that given phenotype yet.
+"""
+
+try:
+    # Requires scipy
+    import dna_traits.health
+    _HEALTH_AVAILABLE = True
+except ImportError:
+    _HEALTH_AVAILABLE = False
+
+def parse_args():
+    p = argparse.ArgumentParser(
+            prog=os.path.basename(sys.argv[0]),
+            description=__doc__.strip().split("\n")[0],
+            epilog="Copyright 2014, 2016 Christian Stigen Larsen --- GPL v3")
+
+    p.add_argument("--bone-strength", action="store_true", default=False,
+            help=dna_traits.reports.bone_strength.__doc__.strip().split("\n")[0])
+    p.add_argument("files", metavar="FILE", type=str, nargs="+",
+            help="23andMe genome (.txt) files to parse")
+    p.add_argument("--all", "-a", action="store_true", default=False,
+            help="Print all reports")
+    p.add_argument("--repl", action="store_true", default=False,
+            help="Starts a Python REPL with the genome")
+    p.add_argument("--skin", action="store_true", default=False,
+            help="Attempts to deduce skin complexion")
+    p.add_argument("--traits", action="store_true", default=False,
+            help="Provides a report of traits")
+    p.add_argument("--conditions", action="store_true", default=False,
+            help="Provides a report of inherited conditions")
+    p.add_argument("--popular", action="store_true", default=False,
+            help="Provides a report on popular SNPedia entries")
+    p.add_argument("--no-disclaimer", dest="disclaimer",
+            action="store_false", default=True,
+            help="Do not print the disclaimer")
+    p.add_argument("--show-sensitive", dest="show_sensitive", action="store_true",
+            default=False,
+            help="Show sensitive results (things like Alzheimer's, cancer, etc.)")
+
+    if _HEALTH_AVAILABLE:
+        p.add_argument("--health", action="store_true", default=False,
+                help="Provides a general health report")
+
+    return p.parse_args()
+
+def _log(message, stream=sys.stderr):
+    stream.write(message)
+    stream.flush()
+
+def repl(genome, filename):
+    genome.filename = filename
+    env = {"dna_traits": dna_traits,
+           "genome": genome,
+           "filename": filename}
+    code.interact("Type `genome` to see Genome parsed from %s" % filename,
+            local=env)
+
+def print_report(title, report, underline="="):
+    """Prints a dict with some text formatting."""
+    if title is not None:
+        print(title)
+        if underline is not None:
+            print(underline*len(title))
+
+    width = max(map(len, report.keys()))
+    for key, value in sorted(report.items()):
+        lines = value.split("\n")
+        if lines == 1:
+            print("%-*s %s" % (width+1, "%s:" % key, value))
+        else:
+            print("%-*s %s" % (width+1, "%s:" % key, lines[0]))
+            for line in lines[1:]:
+                print("%-*s %s" % (width+1, " "*(len(key)+1), line))
+
+    if title is not None:
+        print("")
+
+def bone_strength_report(genome):
+    report = dna_traits.reports.bone_strength.bone_strength(genome)
+
+    total_score = 0
+    total_possible = 0
+    for key, value in report.items():
+        possible, score = value
+        total_score += score
+        total_possible += possible
+        report[key] = "%d / %d" % (score, possible)
+    report["Total"] = "%d out of %d possible" % (total_score,
+            total_possible)
+
+    missing = []
+    for rsid in ["rs2707466", "rs2908004", "rs7776725", "rs9525638"]:
+        if rsid not in genome:
+            missing.append(rsid)
+
+    if len(missing):
+        report.update({"Note":
+            "Missing SNPs %s; scores may be a bit too high" % (
+                ", ".join(missing),)})
+
+    return report
+
+def skin_report(genome):
+    complexion = dna_traits.reports.skin.skin_complexion(genome)
+    report = {
+        "Complexion based on rs1426654": complexion,
+    }
+    return report
+
+def remove_sensitive(report):
+    """Removes sensitive results like Alzheimer's, cancer, etc."""
+    blacklist = ("alzheimer", "cancer", "apoe")
+
+    def bad(key, value):
+        s = (key + " " + str(value)).lower()
+        for word in blacklist:
+            if word in s:
+                return True
+        return False
+
+    results = list(report.items())
+    for key, value in results:
+        if bad(key, value):
+            report[key] = "<Redacted; use --show-sensitive>"
+    return report
+
+def main():
+    args = parse_args()
+
+    for filename in args.files:
+        genome = None
+        try:
+            _log("%s ... " % filename)
+            genome = dna_traits.parse(filename)
+            _log("%d SNPs (%s)\n\n" % (len(genome),
+                "male" if genome.male else "female"))
+        except:
+            _log("\n")
+            raise
+
+        if genome is None:
+            print("Error: Not a recognized 23andMe file: %s" % filename)
+            continue
+
+        reports = []
+
+        if args.all or args.bone_strength:
+            reports.append(("Bone Strength (higher is better)",
+                bone_strength_report(genome)))
+
+        if args.all or args.traits:
+            reports.append(("Traits", dna_traits.traits.traits_report(genome)))
+
+        if (args.all or args.health) and _HEALTH_AVAILABLE:
+            reports.append(("Health report",
+                dna_traits.health.health_report(genome)))
+
+        if args.all or args.conditions:
+            reports.append(("Inherited conditions",
+                dna_traits.conditions.inherited_conditions(genome)))
+
+        if args.all or args.skin:
+            reports.append(("Skin", skin_report(genome)))
+
+        if args.all or args.popular:
+            reports.append(("Popular SNPedia results",
+                dna_traits.reports.popular.popular_snpedia(genome)))
+
+        # Show all reports
+        for title, report in reports:
+            if not args.show_sensitive:
+                report = remove_sensitive(report)
+            print_report(title, report)
+
+        if args.repl:
+            repl(genome, filename)
+
+    if args.disclaimer:
+        print(GUIDE)
+        print(DISCLAIMER)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        raise

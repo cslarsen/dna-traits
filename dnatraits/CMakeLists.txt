@@ -16,4 +16,4 @@ include_directories(
   ${google_densehash_INCLUDE_DIR}
 )
 
-add_library(dnatraits SHARED ${sources})
+add_library(dnatraits STATIC ${sources})
