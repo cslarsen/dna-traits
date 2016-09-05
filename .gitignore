@@ -1,10 +1,11 @@
-CMakeCache.txt
-CMakeFiles
-build
 *.bin
+*.dylib
 *.o
 *.so
+CMakeCache.txt
+CMakeFiles
 GPATH
 GRTAGS
 GTAGS
+build
 genomes
