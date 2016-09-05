@@ -1,4 +1,5 @@
 *.bin
+*.dSYM
 *.dylib
 *.o
 *.so
