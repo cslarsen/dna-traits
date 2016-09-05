@@ -6,8 +6,8 @@ file(GLOB sources
   LIST_DIRECTORIES false
   ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
-set(Python_ADDITIONAL_VERSIONS 2.7)
-find_package(PythonLibs REQUIRED)
+find_package(PythonLibs 2 REQUIRED)
+find_package(PythonInterp 2 REQUIRED)
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/src # only the single .hpp file
