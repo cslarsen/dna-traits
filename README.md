@@ -1,34 +1,48 @@
 dna-traits
 ==========
 
-This is a *very* fast 23andMe genome text file parser whose internals are
-written in C++.  The genome itself can then be queried using Python; other
-language bindings may follow.
+This is a *very* fast 23andMe raw genome parser, whose internals are written in
+fine-tuned C++. It reads a genome and lets you lookup SNPs based in their
+RSIDs:
 
-**UPDATE Sep 2016:** While it always worked with clang, it now also works
-correctly with gcc.
+    >>> import dna_traits
+    >>> genome = dna_traits.parse("your-genome.txt")
+    >>> len(genome)
+    949904
+    >>> genome["rs3"]
+    SNP(genotype='CC', rsid='rs3', orientation=1, chromosome=13, position=32446842)
+
+Updates
+-------
+
+  * September, 2016: Fixed compilation problems with gcc (had only ever tested
+    with clang)
 
 The need for speed
 ------------------
 
-Regarding speed, a naive parser I wrote in pure Python takes around 2.5 seconds
-to read a million SNPs — I've also seen some parsers take up to 8 seconds.
+On my machine, an old 2010 MacBook Pro with an SSD, I can parse a 24 Mb genome
+and create a dictionary using the `csv` Python module in 2.5 seconds. Pandas
+takes around 2.1 seconds — I've even seen some 23andMe parsers take up to 8
+seconds!
 
-*This one* consistently lands on a mere 0.07 seconds on a 2013 Xeon CPU.  It's
-so fast is because it memory maps the file and always scans forward — every
-byte in the file is only ever touched once.  To top it off, I'm using the
-Google dense hash map for storing SNPs by RSID, which is extremely fast.
+*This one* consistently takes a mere *0.15 seconds* for the exact same
+operation, and also uses *dramatically* less memory (one byte per nucleotide
+pair; or six bytes per SNP, which contains chromosome, position and nucleotide
+pair).
 
-Furthermore, a single nucleotide pair takes up only *one byte* in memory, while
-a full SNP (containing its chromosome number, position and nucleotide pair)
-takes only *six bytes*.
+A more recent ~2013 Xeon CPU Linux machine with SSD takes only **0.07
+seconds**!
 
-While slow parsing is not a big concern for serious users, the existence of
-a fast open source parser may also benefit other projects. And, admittedly,
-it's a lot of fun trying to push the envelope!
+While slow parsing may not be a big concern for many types of users, the
+existence of a fast open source parser may benefit other projects. And,
+admittedly, pushing the envelope is always fun!
 
 The Python API
 --------------
+
+The project is split up into two parts: A C++ API, and a Python 2 extension
+module based on it. You can create bindings for other languages as well.
 
 Here's an example of the Python API, which parses the file, displays `rs123`
 and then prints its complement.
@@ -49,33 +63,17 @@ and then prints its complement.
 
 More information can be found in `py-dnatraits/README.md`
 
-Current status
+Current issues
 --------------
 
-  * Only 23andMe files are currently supported
+  * Currently lacking PyPi support
 
-  * Parsing is extremely fast: On *my* machine, it only takes 0.15 seconds
-    to fully parse a 23andMe genome text file and build up a hash table in
-    memory.  That's around 155 Mb/s out of 200 Mb/s possible on my drive.
-    UPDATE: On newer Xeon CPUs, it takes only 0.07 seconds!
-
-    In fact, it's fast enough that I won't bother saving the hash table in a
-    binary format, as originally intended (Update: I tried it, and reading a
-    binary file is only *9 ms* faster than parsing the text file).
-
-  * Rules and phenotype criteria from SNPedia can be written using the
-    Python API.
-
-  * In time, I will extract this repo into a Python PyPi 23andMe parser
-    library.
+  * Dependson GNU Make, but an incomplete CMake configuration is in progress.
 
   * The Python API is currenty somewhat limited and inconsistent, but still
-    very usable!
+    very much usable!
 
-  * Doesn't parse internal IDs yet.
-
-  * Has support for quite some health, traits and condition reports. See the
-    bottom of this page for more information.
+  * Doesn't parse 23andMe internal IDs yet.
 
 Building
 ========
