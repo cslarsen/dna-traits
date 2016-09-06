@@ -6,6 +6,7 @@ Distributed under the GPL v3 or later. See COPYING.
 """
 
 from genome import Genome, GenomeIterator
+from match import unphased_match
 from nucleotide import Nucleotide
 from parse import parse
 from snp import SNP
@@ -22,4 +23,5 @@ __all__ = [
     "Nucleotide",
     "SNP",
     "parse",
+    "unphased_match",
 ]

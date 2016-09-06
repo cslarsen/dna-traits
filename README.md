@@ -1,51 +1,52 @@
-dna-traits
-==========
+The dna-traits 23andMe parser library
+=====================================
 
-This is a *very* fast 23andMe raw genome parser, whose internals are written in
-fine-tuned C++. It reads a genome and lets you lookup SNPs based in their
-RSIDs:
+This is a *very* fast 23andMe raw genome file parser, letting you lookup SNPs
+from RSIDs:
 
-    >>> import dna_traits
-    >>> genome = dna_traits.parse("your-genome.txt")
-    >>> len(genome)
-    949904
-    >>> genome["rs3"]
-    SNP(genotype='CC', rsid='rs3', orientation=1, chromosome=13, position=32446842)
+    import dna_traits as dt
 
-Updates
--------
+    genome = dt.parse("genome.txt")
 
-  * September, 2016: Fixed compilation problems with gcc (had only ever tested
-    with clang)
+    gender = "man" if genome.y_chromosome else "woman",
+    complexion = "light" if genome.rs1426654 == "AA" else "dark",
+
+    eye_color = dt.unphased_match(genome.rs12913832, {
+        "AA": "brown",
+        "AG": "brown or green",
+        "GG": "blue"})
+
+    print("You are a {gender} with {eye_color} eyes and {complexion} skin.".format(
+      gender=gender, eye_color=eye_color, complexion=complexion))
+
+In my case, this little program produces
+
+    You are a man with blue eyes and light skin.
 
 The need for speed
 ------------------
 
-On my machine, an old 2010 MacBook Pro with an SSD, I can parse a 24 Mb genome
-and create a dictionary using the `csv` Python module in 2.5 seconds. Pandas
-takes around 2.1 seconds — I've even seen some 23andMe parsers take up to 8
-seconds!
+On *my machine* (2010-era MBP with SSD) I can parse a 24 Mb genome and create a
+dictionary using the `csv` Python module in 2.5 seconds. Pandas takes around
+2.1 seconds — I've even seen some 23andMe parsers take up to 8 seconds!
 
-*This one* consistently takes a mere *0.15 seconds* for the exact same
-operation, and also uses *dramatically* less memory (one byte per nucleotide
-pair; or six bytes per SNP, which contains chromosome, position and nucleotide
-pair).
+*This parser* takes *0.15 seconds* and uses dramatically less memory (six bytes
+per SNP, containing nucleotide pair, chromosome and position).  A faster
+machine (2013-era Intel Xeon, Linux with SSD) takes **0.07 seconds**!
 
-A more recent ~2013 Xeon CPU Linux machine with SSD takes only **0.07
-seconds**!
-
-While slow parsing may not be a big concern for many types of users, the
-existence of a fast open source parser may benefit other projects. And,
-admittedly, pushing the envelope is always fun!
+The finely-tuned C++ backend memory maps the genome file and *never* scans
+backwards — every single bye is touched only once. The SNPs are stored in a
+memory efficient packed struct and stored in Google's dense hash map, keyed by
+its 32-bit RSID.
 
 The Python API
 --------------
 
-The project is split up into two parts: A C++ API, and a Python 2 extension
-module based on it. You can create bindings for other languages as well.
+The project is split up into two parts: A C++ API, and a Python 2 module
+front-end. It should be straight-forward to create bindings for other languages
+as well.
 
-Here's an example of the Python API, which parses the file, displays `rs123`
-and then prints its complement.
+Here are some examples illustrating various facets of the Python API:
 
     >>> import dna_traits as dt
     >>> genome = dt.parse("genome.txt")
@@ -64,9 +65,9 @@ and then prints its complement.
 More information can be found in `py-dnatraits/README.md`
 
 Current issues
---------------
+==============
 
-  * Currently lacking PyPi support
+  * The Python module is not ready for PyPi
 
   * Dependson GNU Make, but an incomplete CMake configuration is in progress.
 
@@ -77,6 +78,8 @@ Current issues
 
 Building
 ========
+
+The main build system is GNU Make, but I am slowly transitioning to CMake.
 
 Requirements
 ------------
@@ -169,18 +172,33 @@ bet is the traits. These should be correct, as well as some simple health
 reports. So, the main goal is for this to be educational. In other words,
 explore on your own.
 
-Copyright and license
-=====================
+License
+=======
 
 Copyright (C) 2014, 2016 Christian Stigen Larsen  
-http://csl.name
+https://csl.name
 
-Distributed under GPL v3 or later. See the file COPYING for the full
-license.
+Distributed under GPL v3 or later. See the file COPYING for the full license.
+This software makes use of open source software; see LICENSES for details.
 
+Additional disclaimer
+=====================
+
+In addition to the GPL v3 license terms, and given that this code deals with
+health-related issues, I want to stress that the provided code most likely
+contains errors, or invalid genome reports.  Results from this code must be
+interpreted as HIGHLY SPECULATIVE and may even be downright INCORRECT. Always
+consult a medical expert for guidance.  I take NO RESPONSIBILITY whatsoever for
+any consequences of using this code, including but not limited to loss of life,
+money, spuses, self-esteem and so on. Use at YOUR OWN RISK.
+
+The indended use is for casual, educational purposes. If this code is used for
+research purposes, I would be happy if you should cite me. If so, beware that
+the parser code may contain serious errors. I would advise you to check for
+updates, and also to double-check results with other parsers.
 
 Places of interest
-------------------
+==================
 
   * SNPedia, http://snpedia.com
   * OpenSNP, http://opensnp.org/genotypes
