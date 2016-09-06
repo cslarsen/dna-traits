@@ -20,6 +20,23 @@ def bitter_taste(genome):
         "GG": "Can taste bitter flavours that others can't",
         None: "Unable to determine"})
 
+def breastfeeding_iq(genome):
+    "Breastfeeding and IQ."
+    assert_european(genome)
+    s = ""
+
+    if "C" in genome.rs174575:
+        s += "Being breastfed raised subjects' IQ by 6-7 points on average (rs174575)\n"
+    else:
+        s += "Little to no effect of being breastfed on IQ (rs174575)\n"
+
+    if "A" in genome.rs1535:
+        s += "Being breastfed raised subjects' IQ by 4-5 points on average (rs1535)\n"
+    else:
+        s += "Little or no effect of being breastfed on IQ (rs1535)\n"
+
+    return s
+
 def alcohol_flush_reaction(genome):
     "Alcohol flush reaction."
     return unphased_match(genome.rs671, {
@@ -246,6 +263,7 @@ def traits_report(genome):
         bitter_taste,
         blond_vs_brown_hair,
         blood_glucose,
+        breastfeeding_iq,
         caffeine_metabolism,
         earwax_type,
         eye_color,
