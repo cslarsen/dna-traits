@@ -17,7 +17,7 @@ from RSIDs:
         "GG": "blue"})
 
     print("You are a {gender} with {eye_color} eyes and {complexion} skin.".format(
-      gender=gender, eye_color=eye_color, complexion=complexion))
+        gender=gender, eye_color=eye_color, complexion=complexion))
 
 In my case, this little program produces
 
