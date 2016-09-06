@@ -64,9 +64,9 @@ def parse_args():
     p.add_argument("--no-disclaimer", dest="disclaimer",
             action="store_false", default=True,
             help="Do not print the disclaimer")
-    p.add_argument("--show-sensitive", dest="show_sensitive", action="store_true",
+    p.add_argument("--show-redacted", dest="show_redacted", action="store_true",
             default=False,
-            help="Show sensitive results (things like Alzheimer's, cancer, etc.)")
+            help="Show redacted results (things like Alzheimer's, cancer, etc.)")
 
     if _HEALTH_AVAILABLE:
         p.add_argument("--health", action="store_true", default=False,
@@ -138,8 +138,8 @@ def skin_report(genome):
     }
     return report
 
-def remove_sensitive(report):
-    """Removes sensitive results like Alzheimer's, cancer, etc."""
+def remove_redacted(report):
+    """Removes redacted results like Alzheimer's, cancer, etc."""
     blacklist = ("alzheimer", "cancer", "apoe")
 
     def bad(key, value):
@@ -152,7 +152,7 @@ def remove_sensitive(report):
     results = list(report.items())
     for key, value in results:
         if bad(key, value):
-            report[key] = "<Redacted; use --show-sensitive>"
+            report[key] = "<Redacted; use --show-redacted>"
     return report
 
 def main():
@@ -187,8 +187,12 @@ def main():
                 dna_traits.health.health_report(genome)))
 
         if args.all or args.conditions:
-            reports.append(("Inherited conditions",
-                dna_traits.conditions.inherited_conditions(genome)))
+            if not args.show_redacted:
+                reports.append(("Inherited conditions",
+                    {"Note": "<Redacted; use --show-redacted>"}))
+            else:
+                reports.append(("Inherited conditions",
+                    dna_traits.conditions.inherited_conditions(genome)))
 
         if args.all or args.skin:
             reports.append(("Skin", skin_report(genome)))
@@ -199,8 +203,8 @@ def main():
 
         # Show all reports
         for title, report in reports:
-            if not args.show_sensitive:
-                report = remove_sensitive(report)
+            if not args.show_redacted:
+                report = remove_redacted(report)
             print("")
             print_report(title, report)
 
