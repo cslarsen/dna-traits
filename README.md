@@ -2,7 +2,7 @@ The dna-traits 23andMe parser library
 =====================================
 
 This is a *very* fast 23andMe raw genome file parser, letting you lookup SNPs
-from RSIDs:
+from RSIDs in Python:
 
     import dna_traits as dt
 
