@@ -32,11 +32,25 @@ class GenomeIterator:
 class Genome:
     """A genome consisting of SNPs."""
 
-    def __init__(self, genome, orientation, ethnicity=None, year=None):
+    def __init__(self, genome, orientation, ethnicity=None, year=None,
+            filename=None, name=None):
+        """Initializes a Genome.
+
+        Args:
+            genome: The actual genome data
+            orientation (int): The genome's orientation (+1 or -1)
+            ethnicity (str): Defaults to "european". Used to raise errors on
+                reports that are only applicable to specific ethnic groups.
+            year (int): Optional year of birth.
+            filename (str): Optional name of file the genome was read from.
+            name (str): Optional free form string to label the genome.
+        """
         self._genome = genome
         self._orientation = orientation
         self._ethnicity = ethnicity
-        self._year = year # year of birth
+        self._year = year
+        self.filename = filename
+        self.name = name
 
     def _rsid(self, rsid):
         """Converts RSID or internal ID to integer."""
@@ -157,9 +171,6 @@ class Genome:
         except KeyError:
             return SNP([], "rs%d" % rsid, self._orientation, 0, 0)
 
-    def __str__(self):
-        return "Genome"
-
     def __contains__(self, rsid):
         try:
             self._genome[self._rsid(rsid)]
@@ -168,8 +179,9 @@ class Genome:
             return False
 
     def __repr__(self):
-        return "<Genome: SNPs=%d, y_chromosome=%s, orientation=%s>" % (
-                len(self), self.y_chromosome, self.orientation)
+        return "<Genome: SNPs=%d, y_chromosome=%s, orientation=%s, filename=%s, name=%s>" % (
+                    len(self), self.y_chromosome, self.orientation,
+                    repr(self.filename), repr(self.name))
 
     def __getattr__(self, attr):
         # Query with genome.rs28357092
@@ -178,7 +190,8 @@ class Genome:
                 return self.__getitem__(attr)
             elif attr.lower().startswith("i"):
                 return self.__getitem__(attr)
-        raise AttributeError("Unknown attribute %s" % attr)
+        raise AttributeError("'Genome' object has no attribute %s" %
+                repr(attr))
 
     def __len__(self):
         """Returns number of SNPs in this genome."""
