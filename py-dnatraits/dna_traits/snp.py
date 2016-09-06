@@ -4,6 +4,7 @@ Distributed under the GPL v3 or later. See COPYING.
 """
 
 import copy
+from nucleotide import Nucleotide
 
 class SNP:
     """A single-nucleotide polymorphism."""
@@ -24,6 +25,19 @@ class SNP:
 
     def _genostr(self):
         return "".join(map(str, self._genotype))
+
+    def __contains__(self, s):
+        if isinstance(s, str):
+            s = list(map(Nucleotide, s.upper()))
+        elif isinstance(s, Nucleotide):
+            s = [s]
+
+        try:
+            start = self._genotype.index(s[0])
+        except ValueError:
+            return False
+
+        return s == self._genotype[start:start+len(s)]
 
     @property
     def phased(self):
