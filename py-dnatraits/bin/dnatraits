@@ -78,13 +78,28 @@ def _log(message, stream=sys.stderr):
     stream.write(message)
     stream.flush()
 
-def repl(genome, filename):
-    genome.filename = filename
-    env = {"dna_traits": dna_traits,
-           "genome": genome,
-           "filename": filename}
-    code.interact("Type `genome` to see Genome parsed from %s" % filename,
-            local=env)
+def repl(genomes, filenames):
+    assert(len(genomes) == len(filenames))
+    env = {"dna_traits": dna_traits}
+
+    if len(genomes) == 0:
+        return
+    elif len(genomes) == 1:
+        genome = genomes[0]
+        filename = filenames[0]
+        genome.filename = filename
+        env["genome"] = genome
+        env["filename"] = filename
+        message = 'Type "genome", "filename" to see variables'
+    else:
+        for g, f in zip(genomes, filenames):
+            g.filename = f
+        env["genomes"] = genomes
+        env["filenames"] = filenames
+        message = 'Type "genomes", "filenames" to see variables'
+
+    print("Python %s" % sys.version)
+    code.interact(message, local=env)
 
 def print_report(title, report, underline="="):
     """Prints a dict with some text formatting."""
@@ -158,6 +173,19 @@ def remove_redacted(report):
 def main():
     args = parse_args()
 
+    if args.repl:
+        genomes = []
+        if len(args.files) > 0:
+            _log("Reading ")
+        for file in args.files:
+            _log("%s " % file)
+            genomes.append(dna_traits.parse(file))
+        if len(args.files) > 0:
+            _log("\n")
+
+        repl(genomes, args.files)
+        sys.exit(0)
+
     for filename in args.files:
         genome = None
         try:
@@ -207,9 +235,6 @@ def main():
                 report = remove_redacted(report)
             print("")
             print_report(title, report)
-
-        if args.repl:
-            repl(genome, filename)
 
     if args.disclaimer:
         print(GUIDE.strip())
