@@ -26,14 +26,15 @@ In my case, this little program produces
 The need for speed
 ------------------
 
-On *my* machine (a 2010-era MBP with SSD), I can parse a 24 Mb file with
-Python's `csv` module and create a dictionary — all in 2.5 seconds.  Pandas
-takes around 2.1 seconds, and I've seen some parsers take up to 8 seconds for
-23andMe data.
+On *my* machine, a 2010-era MBP with SSD, I can parse a 24 Mb file using
+Python's `csv` module and create a dictionary in 2.5 seconds. Pandas takes
+around 2.1 seconds, and I've seen some parsers take up to 8.
+data.
 
-*This parser* takes *0.15 seconds* and uses dramatically less memory (six bytes
-per SNP, containing nucleotide pair, chromosome and position). A faster machine
-(2013-era Intel Xeon, Linux with SSD) **parses in only 0.07 seconds**!
+*This parser* takes *only 0.15 seconds* and uses dramatically less memory (six
+bytes per SNP, containing nucleotide pair, chromosome and position). A more
+recent machine (2013-era Intel Xeon, Linux with SSD) **parses in only 0.07
+seconds**!
 
 The finely-tuned C++ backend memory maps the genome file and *never* scans
 backwards — every single bye is touched only once. The SNPs are stored in a
