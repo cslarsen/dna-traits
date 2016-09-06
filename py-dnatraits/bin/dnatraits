@@ -22,11 +22,12 @@ DISCLAIMER: The results here are to be interpreted as HIGHLY SPECULATIVE and
 may even be downright INCORRECT. Always consult an expert or a medical doctor
 for guidance. I take NO RESPONSIBILITY whatsoever for anything related to this
 information, including loss of life, money, spouses, self-esteem and so on. Use
-at YOUR OWN RISK.
+at YOUR OWN RISK. Moreover, not every entry in the 23andMe raw data has been
+quality assured, so there may even be errors in the source file itself.
 """
 
 GUIDE = """
-Note: Some results contain several results using different methodologies. If
+NOTE: Some results contain several results using different methodologies. If
 they may seem conflicting, it is because there is no definite way to check for
 that given phenotype yet.
 """
@@ -162,7 +163,7 @@ def main():
         try:
             _log("%s ... " % filename)
             genome = dna_traits.parse(filename)
-            _log("%d SNPs (%s)\n\n" % (len(genome),
+            _log("%d SNPs (%s)\n" % (len(genome),
                 "male" if genome.male else "female"))
         except:
             _log("\n")
@@ -200,14 +201,16 @@ def main():
         for title, report in reports:
             if not args.show_sensitive:
                 report = remove_sensitive(report)
+            print("")
             print_report(title, report)
 
         if args.repl:
             repl(genome, filename)
 
     if args.disclaimer:
-        print(GUIDE)
-        print(DISCLAIMER)
+        print(GUIDE.strip())
+        print("")
+        print(DISCLAIMER.strip())
 
 if __name__ == "__main__":
     try:
