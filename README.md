@@ -8,8 +8,8 @@ from RSIDs:
 
     genome = dt.parse("genome.txt")
 
-    gender = "man" if genome.y_chromosome else "woman",
-    complexion = "light" if genome.rs1426654 == "AA" else "dark",
+    gender = "man" if genome.y_chromosome else "woman"
+    complexion = "light" if genome.rs1426654 == "AA" else "dark"
 
     eye_color = dt.unphased_match(genome.rs12913832, {
         "AA": "brown",
