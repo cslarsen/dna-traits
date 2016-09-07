@@ -30,10 +30,10 @@ On *my* machine, a 2010-era MBP with SSD, I can parse a 24 Mb file using
 Python's `csv` module and create a dictionary in 2.5 seconds. Pandas takes
 around 2.1 seconds, and I've seen some parsers take up to 8.
 
-In comparison, `dna_traits` takes only *0.15 seconds*, and uses dramatically
-less memory (six bytes per SNP, containing its nucleotide pair, chromosome and
-position). A more recent 2013-era, Intel Xeon Linux box does the same **in a
-blazing 0.07 seconds**!
+In comparison, `dna_traits` takes only *0.12 seconds* (g++ 5.3), and uses
+dramatically less memory (six bytes per SNP, containing its nucleotide pair,
+chromosome and position). A more recent 2013-era, Intel Xeon Linux box does the
+same **in a blazing 0.07 seconds**!
 
 While I love Pandas for its power and generality, this library is fast because
 it is meticulously specialized:  The finely-tuned C++ backend memory maps the
