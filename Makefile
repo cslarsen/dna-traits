@@ -17,6 +17,9 @@ dnatraits: .PHONY
 py-dnatraits: dnatraits
 	$(MAKE) -C $@
 
+repl: all
+	$(MAKE) -C py-dnatraits repl
+
 clean:
 	$(MAKE) -C dnatraits clean
 	$(MAKE) -C py-dnatraits clean

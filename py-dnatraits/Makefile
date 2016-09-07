@@ -14,6 +14,9 @@ check: all
 bench: all
 	PYTHONPATH=. python test/bench.py
 
+repl: all
+	PYTHONPATH=. python -i -c 'import dna_traits; genome = dna_traits.parse("../genomes/genome.txt")'
+
 clean:
 	$(MAKE) -C src clean
 	rm -f $(TARGETS)
