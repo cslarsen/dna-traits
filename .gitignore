@@ -1,6 +1,7 @@
 *.bin
 *.dSYM
 *.dylib
+*.ipynb
 *.o
 *.so
 CMakeCache.txt
