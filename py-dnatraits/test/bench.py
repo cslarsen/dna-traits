@@ -19,8 +19,9 @@ for n in xrange(5000):
     snp = genome[pos]
 """,
 
-    "iterate snps":
+    "iterate items in genome":
 r"""
+assert(False) # this is too slow at the moment
 num = 0
 for snp in genome:
     num += 1
@@ -31,6 +32,14 @@ assert(num == len(genome))
 r"""
 num = 0
 for snp in genome.rsids:
+    num += 1
+assert(num == len(genome))
+""",
+
+    "iterate snps":
+r"""
+num = 0
+for snp in genome.snps:
     num += 1
 assert(num == len(genome))
 """,
@@ -75,6 +84,8 @@ def all_benchmarks(filename, times):
         try:
             results[name] = benchmark(times, code, filename=filename,
                     genome=genome, random=random)
+        except Exception as e:
+            log("e")
         finally:
             log("\n")
 

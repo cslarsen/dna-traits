@@ -146,6 +146,11 @@ struct DLL_PUBLIC Genome {
    */
   std::vector<RSID> rsids() const;
 
+  /*!
+   * Returns all SNPs.
+   */
+  std::vector<SNP> snps() const;
+
   bool operator==(const Genome&) const;
   bool operator!=(const Genome&) const;
 

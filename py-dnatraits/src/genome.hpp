@@ -26,14 +26,14 @@ PyObject* Genome_load_factor(PyGenome*);
 PyObject* Genome_new(PyTypeObject*, PyObject*, PyObject*);
 PyObject* Genome_rsids(PyGenome*);
 PyObject* Genome_save(PyGenome*, PyObject*);
+PyObject* Genome_snps(PyGenome*);
 PyObject* Genome_y_chromosome(PyGenome*);
 Py_ssize_t Genome_length(PyObject*);
-int Genome_init(PyGenome*, PyObject*, PyObject*);
-void Genome_dealloc(PyGenome* self);
-
 extern PyMappingMethods Genome_map;
 extern PyMemberDef Genome_members[];
 extern PyMethodDef Genome_methods[];
 extern PyTypeObject GenomeType;
+int Genome_init(PyGenome*, PyObject*, PyObject*);
+void Genome_dealloc(PyGenome* self);
 
 #endif

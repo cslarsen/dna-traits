@@ -315,10 +315,22 @@ std::vector<RSID> Genome::intersect_snp(const Genome& genome) const
 
 std::vector<RSID> Genome::rsids() const
 {
-  std::vector<RSID> r;
+  std::vector<RSID> r(size());
 
+  size_t n = 0;
   for ( const auto i : pimpl->snps )
-    r.push_back(i.first);
+    r[n++] = i.first;
+
+  return r;
+}
+
+std::vector<SNP> Genome::snps() const
+{
+  std::vector<SNP> r(size());
+
+  size_t n = 0;
+  for ( const auto i : pimpl->snps )
+    r[n++] = i.second;
 
   return r;
 }

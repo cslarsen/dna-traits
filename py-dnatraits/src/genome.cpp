@@ -6,6 +6,48 @@
 #include <stdio.h>
 #include "genome.hpp"
 
+static char from_nucleotide(const Nucleotide& n)
+{
+  switch ( n ) {
+    case A: return 'A';
+    case T: return 'T';
+    case C: return 'C';
+    case G: return 'G';
+    case D: return 'D';
+    case I: return 'I';
+    case NONE: return '-';
+  }
+  return '?'; // appease compiler
+}
+
+static PyObject* snp_to_pyobj(const SNP& snp)
+{
+  assert(NO_CHR == 0); // due to comparison below
+
+  auto tuple = PyTuple_New(3);
+  const char genotype[3] = {
+    from_nucleotide(snp.genotype.first),
+    from_nucleotide(snp.genotype.second),
+    0};
+
+  PyObject* pchromo = NULL;
+  if ( snp.chromosome < CHR_MT ) {
+    pchromo = Py_BuildValue("I", snp.chromosome);
+  } else {
+    switch ( snp.chromosome ) {
+      case CHR_MT: pchromo = Py_BuildValue("s", "MT"); break;
+      case CHR_X:  pchromo = Py_BuildValue("s", "X");  break;
+      case CHR_Y:  pchromo = Py_BuildValue("s", "Y");  break;
+      default: break;
+    }
+  }
+
+  PyTuple_SetItem(tuple, 0, Py_BuildValue("s", genotype));
+  PyTuple_SetItem(tuple, 1, pchromo);
+  PyTuple_SetItem(tuple, 2, Py_BuildValue("I", snp.position));
+  return tuple;
+}
+
 PyMemberDef Genome_members[] = {
   {NULL, 0, 0, 0, NULL}
 };
@@ -33,6 +75,8 @@ PyMethodDef Genome_methods[] = {
     "Returns list of common SNPs."},
   {"rsids", (PyCFunction)Genome_rsids, METH_NOARGS,
     "Returns list of all RSIDs in this genome."},
+  {"snps", (PyCFunction)Genome_snps, METH_NOARGS,
+    "Returns all SNPs in this genome."},
   {NULL, NULL, 0, NULL}
 };
 
@@ -132,20 +176,6 @@ PyObject* Genome_load_factor(PyGenome* self)
   return Py_BuildValue("d", self->genome->load_factor());
 }
 
-static char from_nucleotide(const Nucleotide& n)
-{
-  switch ( n ) {
-    case A: return 'A';
-    case T: return 'T';
-    case C: return 'C';
-    case G: return 'G';
-    case D: return 'D';
-    case I: return 'I';
-    case NONE: return '-';
-  }
-  return '?'; // appease compiler
-}
-
 // Genome.__len__
 Py_ssize_t Genome_length(PyObject* self)
 {
@@ -172,33 +202,12 @@ PyObject* Genome_getitem(PyObject* self, PyObject* rsid_)
 
   if ( !genome->genome->has(rsid) ) {
     char err[32];
-    sprintf(err, "No rs%u in genome", rsid);
+    sprintf(err, "rs%u", rsid);
     PyErr_SetString(PyExc_KeyError, err);
     return NULL;
-  }
-
-  auto snp = genome->genome->operator[](rsid);
-  char genotype[3] = {from_nucleotide(snp.genotype.first),
-                 from_nucleotide(snp.genotype.second), 0};
-
-  PyObject* pchromo = NULL;
-  assert(NO_CHR == 0); // due to comparison below
-  if ( snp.chromosome < CHR_MT ) {
-    pchromo = Py_BuildValue("I", snp.chromosome);
   } else {
-    switch ( snp.chromosome ) {
-      case CHR_MT: pchromo = Py_BuildValue("s", "MT"); break;
-      case CHR_X: pchromo = Py_BuildValue("s", "X"); break;
-      case CHR_Y: pchromo = Py_BuildValue("s", "Y"); break;
-      default: break;
-    }
+    return snp_to_pyobj(genome->genome->operator[](rsid));
   }
-
-  auto tuple = PyTuple_New(3);
-  PyTuple_SetItem(tuple, 0, Py_BuildValue("s", genotype));
-  PyTuple_SetItem(tuple, 1, pchromo);
-  PyTuple_SetItem(tuple, 2, Py_BuildValue("I", snp.position));
-  return tuple;
 }
 
 PyObject* Genome_eq(PyGenome* self, PyObject* other)
@@ -241,11 +250,11 @@ PyObject* Genome_intersect_snp(PyGenome* self, PyObject* other)
   }
 
   const auto right = reinterpret_cast<PyGenome*>(other);
-  auto rsids = self->genome->intersect_snp(*right->genome);
+  const auto rsids = self->genome->intersect_snp(*right->genome);
 
   auto list = PyList_New(rsids.size());
   size_t n=0;
-  for ( auto rsid : rsids )
+  for ( const auto& rsid : rsids )
     PyList_SetItem(list, n++, Py_BuildValue("I", rsid));
 
   return list;
@@ -253,12 +262,26 @@ PyObject* Genome_intersect_snp(PyGenome* self, PyObject* other)
 
 PyObject* Genome_rsids(PyGenome* self)
 {
+  // TODO: Should use an iterator instead (preferrably that doesn't copy)
   const auto rsids = self->genome->rsids();
-  auto list = PyList_New(rsids.size());
+  auto list = PyTuple_New(rsids.size());
 
   size_t n=0;
-  for ( auto rsid : rsids )
-    PyList_SetItem(list, n++, Py_BuildValue("I", rsid));
+  for ( const auto& rsid : rsids )
+    PyTuple_SetItem(list, n++, Py_BuildValue("I", rsid));
+
+  return list;
+}
+
+PyObject* Genome_snps(PyGenome* self)
+{
+  // TODO: Should use an iterator instead (preferrably that doesn't copy)
+  const auto snps = self->genome->snps();
+  auto list = PyTuple_New(snps.size());
+
+  size_t n=0;
+  for ( const auto& snp : snps )
+    PyTuple_SetItem(list, n++, snp_to_pyobj(snp));
 
   return list;
 }
