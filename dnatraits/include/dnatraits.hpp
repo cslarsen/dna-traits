@@ -20,6 +20,9 @@ enum Nucleotide {
   NONE, A, G, C, T, D, I
 };
 
+/*
+ * CHR_MT denotes mitochondrial DNA
+ */
 enum Chromosome {
   NO_CHR=0,
   CHR1, CHR2, CHR3, CHR4, CHR5,
@@ -85,6 +88,32 @@ struct DLL_PUBLIC SNP {
 
 extern DLL_PUBLIC const SNP NONE_SNP;
 
+struct DLL_LOCAL GenomeIteratorImpl;
+
+struct DLL_PUBLIC RsidSNP {
+  RSID rsid;
+  SNP snp;
+
+  bool operator==(const RsidSNP& o) const
+  {
+    return rsid == o.rsid && snp == o.snp;
+  }
+};
+
+struct DLL_PUBLIC GenomeIterator {
+  // todo copy ctor, assignment op, dtor
+  GenomeIterator(GenomeIteratorImpl*);
+  ~GenomeIterator();
+  GenomeIterator(const GenomeIterator&);
+  GenomeIterator& operator=(const GenomeIterator&);
+  GenomeIterator& operator++();
+  bool operator==(const GenomeIterator&);
+  bool operator!=(const GenomeIterator&);
+  const RsidSNP operator*();
+private:
+  GenomeIteratorImpl* pimpl;
+};
+
 struct DLL_PUBLIC Genome {
   /*!
    * True if genome contains a Y-chromosome (with non-empty genotypes).
@@ -147,12 +176,15 @@ struct DLL_PUBLIC Genome {
   std::vector<RSID> rsids() const;
 
   /*!
-   * Returns all SNPs.
+   * Returns a copy of all SNPs.
    */
   std::vector<SNP> snps() const;
 
   bool operator==(const Genome&) const;
   bool operator!=(const Genome&) const;
+
+  GenomeIterator begin() const;
+  GenomeIterator end() const;
 
 private:
   struct DLL_LOCAL GenomeImpl;

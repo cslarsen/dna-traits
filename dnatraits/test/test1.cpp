@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
+#include <cassert>
 
 #include "dnatraits.hpp"
 
@@ -66,6 +67,24 @@ void summary(const Genome& genome)
     << endl;
 }
 
+void test_iterator(const Genome& genome)
+{
+  using namespace std;
+  size_t n=0;
+
+  auto last = *genome.begin();
+  for ( const auto p : genome ) {
+    if ( last.rsid < p.rsid ) last = p;
+    ++n;
+  }
+
+  auto actual_last = genome[genome.last];
+  cout << "Iterator test 1: " << (n == genome.size()? "OK" : "FAIL") << endl;
+  cout << "Iterator test 2: " << (last.snp == actual_last? "OK" : "FAIL") << endl;
+  cout << "Iterator test 3: " << (last.rsid == genome.last? "OK" : "FAIL") << endl;
+  cout << endl;
+}
+
 int main(int argc, char** argv)
 {
   using namespace std;
@@ -81,6 +100,8 @@ int main(int argc, char** argv)
 
       cout << "done" << endl; cout.flush();
       cout << "Read " << genome.size() << " unique SNPs" << endl << endl;
+
+      test_iterator(genome);
 
 #ifdef DEBUG
       cout << "Size of Genotype: " << sizeof(Genotype) << endl

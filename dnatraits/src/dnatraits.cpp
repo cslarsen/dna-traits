@@ -200,6 +200,63 @@ bool SNP::operator==(const Genotype& g) const
   return genotype == g;
 }
 
+struct GenomeIteratorImpl {
+  SNPMap::const_iterator it;
+
+  GenomeIteratorImpl(SNPMap::const_iterator& i):
+    it(i)
+  {
+  }
+};
+
+GenomeIterator::GenomeIterator(GenomeIteratorImpl* p):
+  pimpl(p)
+{
+}
+
+GenomeIterator::~GenomeIterator()
+{
+  delete pimpl;
+}
+
+GenomeIterator::GenomeIterator(const GenomeIterator& o):
+  pimpl(new GenomeIteratorImpl(o.pimpl->it))
+{
+}
+
+GenomeIterator& GenomeIterator::operator=(const GenomeIterator& o)
+{
+  if ( pimpl != o.pimpl ) {
+    delete pimpl;
+    pimpl = new GenomeIteratorImpl(o.pimpl->it);
+  }
+  return *this;
+}
+
+GenomeIterator& GenomeIterator::operator++()
+{
+  ++pimpl->it;
+  return *this;
+}
+
+const RsidSNP GenomeIterator::operator*()
+{
+  RsidSNP r;
+  r.rsid = (*pimpl->it).first;
+  r.snp = (*pimpl->it).second;
+  return r;
+}
+
+bool GenomeIterator::operator==(const GenomeIterator& o)
+{
+  return pimpl->it == o.pimpl->it;
+}
+
+bool GenomeIterator::operator!=(const GenomeIterator& o)
+{
+  return pimpl->it != o.pimpl->it;
+}
+
 struct DLL_LOCAL Genome::GenomeImpl {
   SNPMap snps;
 
@@ -231,7 +288,6 @@ struct DLL_LOCAL Genome::GenomeImpl {
     return !contains(rsid)? NONE_SNP : const_cast<SNPMap&>(snps)[rsid];
   }
 };
-
 
 Genome::Genome(const size_t size):
   y_chromosome(false),
@@ -337,23 +393,29 @@ std::vector<SNP> Genome::snps() const
 
 bool Genome::operator==(const Genome& o) const
 {
-  if ( first != o.first ) return false;
-  if ( last != o.last ) return false;
-  if ( y_chromosome != o.y_chromosome ) return false;
-  if ( o.size() != size() ) return false;
-
-  for ( const auto i : pimpl->snps ) {
-    if ( !o.has(i.first) )
-      return false;
-
-    if ( i.second != o[i.first] )
-      return false;
-  }
-
-  return true;
+  // cheap tests first
+  if ( !(first == o.first && last == o.last && y_chromosome == o.y_chromosome
+        && size() == o.size() ) )
+    return false;
+  else
+    return o.pimpl->snps == pimpl->snps;
 }
 
 bool Genome::operator!=(const Genome& o) const
 {
   return !(*this == o);
+}
+
+GenomeIterator Genome::begin() const
+{
+  auto i = const_cast<const SNPMap&>(pimpl->snps).begin();
+  auto p = new GenomeIteratorImpl(i);
+  return GenomeIterator(p);
+}
+
+GenomeIterator Genome::end() const
+{
+  auto i = const_cast<const SNPMap&>(pimpl->snps).end();
+  auto p = new GenomeIteratorImpl(i);
+  return GenomeIterator(p);
 }

@@ -20,6 +20,7 @@ OBJFILES := \
 	src/parse_file.o \
 
 TARGETS := $(OBJFILES) \
+	test/test1.o \
 	src/libdnatraits.o
 
 all: $(TARGETS)
@@ -30,7 +31,11 @@ src/libdnatraits.o: $(OBJFILES)
 libdnatraits.so: $(OBJFILES)
 	$(CXX) $(CXXFLAGS) -shared $^ -o $@
 
-check: $(TARGETS)
+test/test1: $(TARGETS) libdnatraits.so
+	$(CXX) $(LDFLAGS) $(CXXFLAGS) -L. -ldnatraits test/test1.o -o $@
+
+check: test/test1
+	test/test1 ../genomes/genome.txt
 
 clean:
 	rm -f $(TARGETS)
