@@ -71,12 +71,16 @@ Current issues
 
   * The Python module is not ready for PyPi
 
-  * Dependson GNU Make, but an incomplete CMake configuration is in progress.
+  * Depends on GNU Make, but an incomplete CMake configuration is in progress.
 
   * The Python API is currenty somewhat limited and inconsistent, but still
     very much usable!
 
   * Doesn't parse 23andMe internal IDs yet.
+
+  * Although loading the file is fast, whole genome iteration is insanely slow
+    in Python. It's because I don't really expose an iterator from C++ to
+    Python yet.
 
 Building
 ========
