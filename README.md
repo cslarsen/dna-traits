@@ -1,6 +1,12 @@
 The dna-traits 23andMe parser library
 =====================================
 
+*This project has been given a new name and moved over to
+https://github.com/cslarsen/arv*
+
+*The new version uses Cython and C++, and works on both Python 2 and 3. More
+importantly, you can install it with pip!*
+
 This is a *very* fast 23andMe raw genome file parser, letting you lookup SNPs
 from RSIDs in Python:
 
