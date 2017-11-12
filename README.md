@@ -1,5 +1,5 @@
-Moved to arv
-------------
+Project has moved!
+==================
 
 **This project has been abandoned in favor of the newer and better
 https://github.com/cslarsen/arv — which is faster, installable via pip and
